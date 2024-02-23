@@ -17,7 +17,6 @@ export default function Profile() {
   };
 
   const onEditDone = () => {
-    // 프로필 api 요청 , api 요청과 ui 변경을 한꺼번에 할 때 === thunk를 썼었다.
     const formData = new FormData();
     if (editingText) {
       formData.append('nickname', editingText);
