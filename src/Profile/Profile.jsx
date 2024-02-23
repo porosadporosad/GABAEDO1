@@ -22,7 +22,6 @@ export default function Profile() {
       formData.append('nickname', editingText);
     }
 
-    // dispatchEvent(editProfile(formData));
     alert('프로필 변경이 완료되었습니다.');
   };
 
@@ -49,11 +48,11 @@ export default function Profile() {
         <UserIntro placeholder="한 줄 소개를 입력해주세요."></UserIntro>
         {isEditing ? (
           <div>
-            <Button text="취소" onClick={() => setIsEditing(false)} />
+            <Button onClick={() => setIsEditing(false)}>취소</Button>
             <Button onClick={onEditDone} text="수정완료" disabled={!editingText && selectedImg === defaultImg} />
           </div>
         ) : (
-          <Button text="수정하기" onClick={() => setIsEditing(true)} />
+          <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
         )}
         <UserInputList>내가 만든 가배도</UserInputList>
       </ProfileWrapper>
@@ -78,7 +77,12 @@ const Avatar = styled.img`
 `;
 const UserId = styled.p``;
 const Button = styled.button`
-  padding: 15px 35px;
+  width: 100px;
+  height: 30px;
+`;
+const EditBtn = styled.button`
+  width: 200px;
+  height: 30px;
 `;
 const Nickname = styled.p``;
 const UserIntro = styled.input``;
