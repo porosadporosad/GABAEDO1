@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { getPosts } from '../axios/curations';
 import { useQuery } from 'react-query';
 
-export default function CurationList() {
+export default function CurationList({ keyword }) {
   const { isLoading, isError, data } = useQuery('posts', getPosts);
   console.log(data);
 
@@ -14,6 +14,11 @@ export default function CurationList() {
     return <h1>Error</h1>;
   }
 
+  const filteredData = data.filter(
+    (curation) =>
+      curation.title.includes(keyword) || curation.content.includes(keyword)
+  );
+
   return (
     <Article>
       <CurationHeader>
@@ -21,8 +26,8 @@ export default function CurationList() {
         <AddCurationBtn>+</AddCurationBtn>
       </CurationHeader>
       <AllSection>
-        {data.map((curation) => (
-          <CurationBox key={curation.postId}>
+      {filteredData.map((curation) => (
+        <CurationBox key={curation.postId}>
             <h2>{curation.title}</h2>
             <p>{curation.content}</p>
           </CurationBox>

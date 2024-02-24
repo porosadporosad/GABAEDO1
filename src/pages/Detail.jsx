@@ -19,7 +19,6 @@ function Detail() {
         style={{
           width: 'calc(100% - 300px)', 
           height: '100%', 
-          borderRadius: '20px', 
           marginLeft: '300px', 
         }}
       >
