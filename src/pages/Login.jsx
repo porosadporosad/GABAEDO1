@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../image/loginImg.png';
-import { Link } from 'react-router-dom';
 import api from '../axios/api';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
+  const [nickname, setNickname] = useState('');
   const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
+  const [loginChange, setLoginChange] = useState(false);
 
   const navigate = useNavigate();
+
+  // 회원가입
+  const signupSubmit = async (e) => {
+    e.preventDefault();
+    const newUser = {
+      id: userid,
+      password,
+      nickname
+    };
+    try {
+      await api.post('/register', newUser);
+      toast.success('회원가입 완료 로그인해주세요');
+      dataClear();
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   // 로그인
   const loginSubmit = async (e) => {
@@ -34,38 +52,82 @@ export default function Login() {
     }
   };
 
+  const dataClear = () => {
+    setUserid('');
+    setPassword('');
+    setNickname('');
+    setLoginChange(!loginChange);
+  };
+
   return (
     <LoginBody>
       <LoginMain>
-        <LoginH1>로그인☕️</LoginH1>
-        <LoginForm onSubmit={loginSubmit}>
-          <LoginInput
-            type="text"
-            placeholder="아이디"
-            required
-            value={userid}
-            onChange={(e) => {
-              setUserid(e.target.value);
-            }}
-          />
-          <LoginInput
-            type="password"
-            placeholder="비밀번호"
-            required
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <LoginBtn type="submit">로그인</LoginBtn>
-        </LoginForm>
-        <LoginLink to="/signup">회원가입</LoginLink>
+        <LoginH1>{loginChange ? '회원가입☕️' : '로그인☕️'}</LoginH1>
+        {loginChange ? (
+          <>
+            <LoginForm onSubmit={signupSubmit}>
+              <LoginInput
+                type="text"
+                placeholder="닉네임"
+                required
+                value={nickname}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                }}
+              />
+              <LoginInput
+                type="text"
+                placeholder="아이디"
+                required
+                value={userid}
+                onChange={(e) => {
+                  setUserid(e.target.value);
+                }}
+              />
+              <LoginInput
+                type="password"
+                placeholder="비밀번호"
+                required
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <LoginBtn type="submit">회원가입</LoginBtn>
+            </LoginForm>
+          </>
+        ) : (
+          <>
+            <LoginForm onSubmit={loginSubmit}>
+              <LoginInput
+                type="text"
+                placeholder="아이디"
+                required
+                value={userid}
+                onChange={(e) => {
+                  setUserid(e.target.value);
+                }}
+              />
+              <LoginInput
+                type="password"
+                placeholder="비밀번호"
+                required
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <LoginBtn type="submit">로그인</LoginBtn>
+            </LoginForm>
+          </>
+        )}
+        <LoginSpan onClick={dataClear}>{loginChange ? '로그인' : '회원가입'}</LoginSpan>
       </LoginMain>
     </LoginBody>
   );
 }
 
-export const LoginBody = styled.div`
+const LoginBody = styled.div`
   background-image: url(${loginImg});
   background-repeat: no-repeat;
   background-size: cover;
@@ -77,7 +139,7 @@ export const LoginBody = styled.div`
   color: black;
 `;
 
-export const LoginMain = styled.div`
+const LoginMain = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #fff9f3;
@@ -86,28 +148,24 @@ export const LoginMain = styled.div`
   border: 0.15rem solid #e0c3ae;
   padding: 1rem 1.2rem;
   gap: 0.6rem;
-  /* box-shadow: 0.3rem 0.3rem #e0c3ae; */
 `;
 
-export const LoginH1 = styled.h1`
+const LoginH1 = styled.h1`
   color: #784b31;
   font-size: 1.5rem;
   text-align: center;
   margin: 0.5rem;
 `;
 
-export const LoginInput = styled.input`
+const LoginInput = styled.input`
   border-radius: 0.8rem;
   margin-bottom: 1rem;
   padding: 1rem 0;
   border: none;
-  &::placeholder {
-    position: relative;
-    left: 0.6rem;
-  }
+  padding-left: 0.6rem;
 `;
 
-export const LoginBtn = styled.button`
+const LoginBtn = styled.button`
   color: white;
   background-color: #c70000;
   cursor: pointer;
@@ -118,14 +176,14 @@ export const LoginBtn = styled.button`
   border: none;
 `;
 
-export const LoginLink = styled(Link)`
+const LoginSpan = styled.span`
   color: #b6856a;
-  text-decoration-line: none;
   text-align: center;
   margin-top: 0.2rem;
+  cursor: pointer;
 `;
 
-export const LoginForm = styled.form`
+const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
