@@ -3,9 +3,7 @@ import Mypage from './Mypage';
 
 function Home() {
   return (
-    <div>
-      <Mypage />
-    </div>
+    <div>Home</div>
   );
 }
 

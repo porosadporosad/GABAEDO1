@@ -14,10 +14,10 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         {/*로그인 상관 없음*/}
-        <Route element={<Layout />}>
+        <Route element={<Layout />} >
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="detail/:id" element={<Detail />} />
+          <Route path="/detail" element={<Detail />} />
         </Route>
 
         {/*로그인이 반드시 필요 */}
