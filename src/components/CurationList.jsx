@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { getCurations } from '../axios/curations';
+import { getPosts } from '../axios/curations';
 import { useQuery } from 'react-query';
 
 export default function CurationList() {
-  const { isLoading, isError, data } = useQuery('cureations', getCurations);
+  const { isLoading, isError, data } = useQuery('posts', getPosts);
   console.log(data);
 
   if (isLoading) {
