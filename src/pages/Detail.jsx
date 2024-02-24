@@ -2,7 +2,6 @@ import React from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import styled from 'styled-components';
 
-
 function Detail() {
   return (
     <StFullScreenContainer>

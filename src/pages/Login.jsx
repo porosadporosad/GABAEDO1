@@ -13,6 +13,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  // 로그인
   const loginSubmit = async (e) => {
     e.preventDefault();
     const userLogin = {
@@ -22,11 +23,12 @@ export default function Login() {
     try {
       const response = await api.post('/login', userLogin);
 
+      // 로그인한 유저 정보
       const { accessToken, userId, success, avatar, nickname } = response.data;
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
-      localStorage.setItem('userId', JSON.stringify(userId));
-      localStorage.setItem('avatar', JSON.stringify(avatar));
-      localStorage.setItem('nickname', JSON.stringify(nickname));
+      // localStorage.setItem('userId', JSON.stringify(userId));
+      // localStorage.setItem('avatar', JSON.stringify(avatar));
+      // localStorage.setItem('nickname', JSON.stringify(nickname));
 
       toast.success(`${nickname}님 환영합니다!`);
       navigate('/');

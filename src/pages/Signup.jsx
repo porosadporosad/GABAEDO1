@@ -12,6 +12,7 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
+  // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
     const newUser = {
