@@ -18,7 +18,7 @@ const Router = () => {
 
         {/* 로그인 O */}
         <Route path="/mypage" element={<Mypage />} />
-        <Route path="detail/:id" element={<Detail />} />
+        <Route path="detail/" element={<Detail />} />
       </Routes>
     </BrowserRouter>
   );
