@@ -1,25 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../image/loginImg.png';
 import { Link } from 'react-router-dom';
+import api from '../axios/api';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Login() {
+export default function Login() {
+  const [userid, setUserid] = useState('');
+  const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
+
+  const loginSubmit = async (e) => {
+    e.preventDefault();
+    const userLogin = {
+      id: userid,
+      password
+    };
+    try {
+      const response = await api.post('/login', userLogin);
+      toast.success('로그인 성공');
+      navigate('/');
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <LoginBody>
       <LoginMain>
         <LoginH1>로그인☕️</LoginH1>
-        <LoginForm>
-          <LoginInput type="text" placeholder="아이디" required />
-          <LoginInput type="password" placeholder="비밀번호" required />
+        <LoginForm onSubmit={loginSubmit}>
+          <LoginInput
+            type="text"
+            placeholder="아이디"
+            required
+            value={userid}
+            onChange={(e) => {
+              setUserid(e.target.value);
+            }}
+          />
+          <LoginInput
+            type="password"
+            placeholder="비밀번호"
+            required
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
           <LoginBtn type="submit">로그인</LoginBtn>
         </LoginForm>
-        <LoginLink to="/register">회원가입</LoginLink>
+        <LoginLink to="/signup">회원가입</LoginLink>
       </LoginMain>
     </LoginBody>
   );
 }
-
-export default Login;
 
 export const LoginBody = styled.div`
   background-image: url(${loginImg});
