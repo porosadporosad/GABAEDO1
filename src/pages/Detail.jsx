@@ -1,6 +1,7 @@
 import React from 'react';
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, MapTypeControl, ZoomControl } from "react-kakao-maps-sdk";
 import styled from 'styled-components';
+
 
 function Detail() {
   return (
@@ -13,6 +14,8 @@ function Detail() {
           borderRadius: '20px',
         }}
       >
+        <MapTypeControl position={"TOPRIGHT"} />
+        <ZoomControl position={"RIGHT"} />
         {/* 지도에 보여줄 위치 지정 (위도, 경도) */}
         <MapMarker
           position={{ lat: 37.506320759000715, lng: 127.05368251210247 }}
