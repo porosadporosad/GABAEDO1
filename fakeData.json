@@ -1,101 +1,101 @@
 {
-    "curations": [
-        {
-           "postId": "1",
-            "userId" : "2",
-            "nickname" : "냠냠박사",
-            "gender": "F",
-            "createdAt": "2024-02-22T04:02:11.054Z",
-            "title":  "망원동 아늑한 카페",
-            "content": "망원동에서 분위기 좋은 곳을 모아봤어요."
-        },
-        {
-            "postId": "2",
-             "userId" : "1",
-             "nickname" : "다쿠아즈주세요",
-             "gender": "M",
-             "createdAt": "2024-02-22T03:58:02.861Z",
-             "title":  "홍대 조각케익 존엄리스트",
-             "content": "제가 보장합니다"
-         },
-         {
-            "postId": "3",
-            "userId": "3",
-            "nickname": "nickname11",
-            "gender": "F",
-            "createdAt": "2024-02-21 11:55:55",
-            "title": "성수동 이쁜 카페 추천해요",
-            "content": "분위기가 완전 좋아요!! 추천추천"
-        },
-        {
-            "postId": "4",
-            "userId": "1",
-            "nickname": "다쿠아즈주세요",
-            "gender":"M",
-            "createdAt": "2024-02-22T04:02:44.772Z",
-            "title": "업무하면서 차 한잔",
-            "content": "혼자 작업하기 좋은 곳"
-        },
-        {
-            "postId": "5",
-            "userId": "1",
-            "nickname": "다쿠아즈주세요",
-            "gender": "M",
-            "createdAt": "2024-02-21T04:02:44.772Z",
-            "title": "연남동 분위기 좋은 카페",
-            "content": "연남동 분위기 좋은 카페 추천이요!"
-        }
-    ],
-    "places": [
-        {
-            "postId": "1",
-            "placeId": "1",
-            "lat": "33.55635",
-            "lng": "126.795841",
-            "placeComment": "이 카페가 사진맛집으로 유명해요"
-        },
-        {
-            "postId": "1",
-            "placeId": "2",
-            "lat": "36.2683",
-            "lng": "127.6358",
-            "placeComment": "해질녘 루프탑에서 꼭 사진찍으세요"
-        },
-        {
-            "postId": "2",
-            "placeId": "1",
-            "lat": "36.2683",
-            "lng": "127.6358",
-            "placeComment": "레드벨벳 케이크 최고존엄"
-        }
-    ],
-    "user": [
-        {
-            "userid" : "1",
-            "nickname": "다쿠아즈주세요",
-            "userComment": "맛있는거짱",
-            "gender": "M",
-            "isloggedin": false,
-            "password": "asdf",
-            "avatar": "avatar1.jpg"
-        },
-        {
-            "userid" : "2",
-            "nickname": "냠냠박사",
-            "userComment": "먹는게 제일좋아",
-            "gender": "F",
-            "isloggedin": false,
-            "password": "asd123",
-            "avatar": "avatar2.jpg"
-        },
-        {
-            "userid" : "3",
-            "nickname": "nickname11",
-            "userComment": "반갑습니다",
-            "gender": "F",
-            "isloggedin": false,
-            "password": "asd123",
-            "avatar": "avatar3.jpg"
-        }
-    ]
+  "posts": [
+    {
+      "postId": "1",
+      "userId": "2",
+      "nickname": "냠냠박사",
+      "gender": "F",
+      "createdAt": "2024-02-22T04:02:11.054Z",
+      "title": "망원동 아늑한 카페",
+      "content": "망원동에서 분위기 좋은 곳을 모아봤어요."
+    },
+    {
+      "postId": "2",
+      "userId": "1",
+      "nickname": "다쿠아즈주세요",
+      "gender": "M",
+      "createdAt": "2024-02-22T03:58:02.861Z",
+      "title": "홍대 조각케익 존엄리스트",
+      "content": "제가 보장합니다"
+    },
+    {
+      "postId": "3",
+      "userId": "3",
+      "nickname": "nickname11",
+      "gender": "F",
+      "createdAt": "2024-02-21 11:55:55",
+      "title": "성수동 이쁜 카페 추천해요",
+      "content": "분위기가 완전 좋아요!! 추천추천"
+    },
+    {
+      "postId": "4",
+      "userId": "1",
+      "nickname": "다쿠아즈주세요",
+      "gender": "M",
+      "createdAt": "2024-02-22T04:02:44.772Z",
+      "title": "업무하면서 차 한잔",
+      "content": "혼자 작업하기 좋은 곳"
+    },
+    {
+      "postId": "5",
+      "userId": "1",
+      "nickname": "다쿠아즈주세요",
+      "gender": "M",
+      "createdAt": "2024-02-21T04:02:44.772Z",
+      "title": "연남동 분위기 좋은 카페",
+      "content": "연남동 분위기 좋은 카페 추천이요!"
+    }
+  ],
+  "places": [
+    {
+      "postId": "1",
+      "placeId": "1",
+      "lat": "33.55635",
+      "lng": "126.795841",
+      "placeComment": "이 카페가 사진맛집으로 유명해요"
+    },
+    {
+      "postId": "1",
+      "placeId": "2",
+      "lat": "36.2683",
+      "lng": "127.6358",
+      "placeComment": "해질녘 루프탑에서 꼭 사진찍으세요"
+    },
+    {
+      "postId": "2",
+      "placeId": "1",
+      "lat": "36.2683",
+      "lng": "127.6358",
+      "placeComment": "레드벨벳 케이크 최고존엄"
+    }
+  ],
+  "user": [
+    {
+      "userid": "1",
+      "nickname": "다쿠아즈주세요",
+      "userComment": "맛있는거짱",
+      "gender": "M",
+      "isloggedin": false,
+      "password": "asdf",
+      "avatar": "avatar1.jpg"
+    },
+    {
+      "userid": "2",
+      "nickname": "냠냠박사",
+      "userComment": "먹는게 제일좋아",
+      "gender": "F",
+      "isloggedin": false,
+      "password": "asd123",
+      "avatar": "avatar2.jpg"
+    },
+    {
+      "userid": "3",
+      "nickname": "nickname11",
+      "userComment": "반갑습니다",
+      "gender": "F",
+      "isloggedin": false,
+      "password": "asd123",
+      "avatar": "avatar3.jpg"
+    }
+  ]
 }

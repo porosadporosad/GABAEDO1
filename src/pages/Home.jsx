@@ -1,10 +1,12 @@
+import Banner from 'components/Banner';
+import CurationList from 'components/CurationList';
 import React from 'react';
-import Mypage from './Mypage';
 
 function Home() {
   return (
     <div>
-      <Mypage />
+      <Banner />
+      <CurationList />
     </div>
   );
 }
