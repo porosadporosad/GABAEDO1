@@ -14,7 +14,7 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         {/*로그인 상관 없음*/}
-        <Route >
+        <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/detail" element={<Detail />} />
