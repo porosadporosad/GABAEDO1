@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import defaultImg from '../assets/defaultImg.jpg';
+import defaultImg from '../../assets/defaultImg.jpg';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
