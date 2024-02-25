@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import loginImg from '../image/loginImg.png';
+import loginImg from 'assets/loginImg.png';
 import { Link } from 'react-router-dom';
 import api from '../axios/api';
 import { toast } from 'react-toastify';
