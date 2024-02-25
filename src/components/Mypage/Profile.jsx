@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import defaultImg from '../assets/defaultImg.jpg';
+import defaultImg from '../../assets/defaultImg.jpg';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +21,9 @@ export default function Profile() {
     if (editingText) {
       formData.append('nickname', editingText);
     }
+    if (selectedImg !== defaultImg) {
+      formData.append('avatar', selectedImg);
+    }
 
     alert('프로필 변경이 완료되었습니다.');
   };
@@ -28,10 +31,10 @@ export default function Profile() {
   return (
     <Container>
       <ProfileWrapper>
-        <h1>프로필</h1>
+        <ProfileTitle>프로필☕</ProfileTitle>
         <label>
           <Avatar src={selectedImg} />
-          <input type="file" onChange={imgChangeHandler} accept="image/*" />
+          <ImgFileSelect type="file" onChange={imgChangeHandler} accept="image/*" />
         </label>
         <UserId>userId</UserId>
         {isEditing ? (
@@ -45,7 +48,9 @@ export default function Profile() {
         ) : (
           <Nickname>nickname</Nickname>
         )}
-        <UserIntro placeholder="한 줄 소개를 입력해주세요."></UserIntro>
+
+        <UserIntro>내 취미는 카페투어!</UserIntro>
+
         {isEditing ? (
           <div>
             <Button onClick={() => setIsEditing(false)}>취소</Button>
@@ -62,6 +67,8 @@ export default function Profile() {
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
 `;
 
@@ -71,19 +78,33 @@ const ProfileWrapper = styled.section`
   border-radius: 20px;
   background-color: #fff9f3;
 `;
+
+const ProfileTitle = styled.h1`
+  text-align: center;
+  font-size: 2rem;
+
+  margin-bottom: 2rem;
+`;
+
 const Avatar = styled.img`
   width: 200px;
   height: 200px;
+`;
+
+const ImgFileSelect = styled.input`
+  cursor: pointer;
 `;
 const UserId = styled.p``;
 const Button = styled.button`
   width: 100px;
   height: 30px;
+  cursor: pointer;
 `;
 const EditBtn = styled.button`
   width: 200px;
   height: 30px;
+  cursor: pointer;
 `;
 const Nickname = styled.p``;
-const UserIntro = styled.input``;
+const UserIntro = styled.p``;
 const UserInputList = styled.ul``;

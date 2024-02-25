@@ -2,6 +2,7 @@ import { nowUser } from '../../axios/authUser';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { Navigate, Outlet } from 'react-router-dom';
+import Header from 'components/Header';
 
 export default function NonAuthLayout() {
   const { data } = useQuery('user', nowUser);
@@ -13,7 +14,7 @@ export default function NonAuthLayout() {
   }
   return (
     <>
-      <main />
+      <Header />
       <Outlet />
     </>
   );
