@@ -1,23 +1,59 @@
+import { useEffect, useState } from 'react';
 import { nowUser } from '../axios/authUser';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import defaultImg from '../assets/defaultImg.jpg';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
   const { data } = useQuery('user', nowUser);
-  const isLogin = data;
+  // const isLogin = data;
+  const [isLogin, setIsLogin] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
-  const menus = [
-    { id: 'about', info: '사이트 소개' },
-    { id: 'login', info: '로그인 / 회원가입' },
-    { id: 'mypage', info: '마이 페이지' }
-  ];
+  useEffect(() => {
+    if (data) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [data]);
+
+  // const menus = [
+  //   { id: 'about', info: '사이트 소개' },
+  //   { id: 'login', info: '로그인 / 회원가입' },
+  //   { id: 'mypage', info: '마이 페이지' }
+  // ];
 
   const logoutClick = () => {
     window.localStorage.clear();
+    setIsLogin(false);
+    toast.success('로그아웃되었습니다.');
   };
 
+  // 다른곳 클릭 시 메뉴 끄기
+  const userMenuOnBlur = () => {
+    setTimeout(() => {
+      setIsActive(false);
+    }, 200);
+  };
+
+  // 유저메뉴 열기 닫기
+  const userIsActiveBtn = () => {
+    setIsActive(!isActive);
+  };
+
+  // const userImage = () => {
+  //   const img = data.avatar;
+  //   if (img === null) {
+  //     return defaultImg;
+  //   } else {
+  //     console.log('img', img);
+  //     return img;
+  //   }
+  // };
   return (
     <MenuHeader>
       <StLink to="/">
@@ -25,14 +61,42 @@ export default function Header() {
       </StLink>
       <nav>
         <MenuUl>
-          {menus
+          <StLink to="/about">
+            <li>사이트 소개</li>
+          </StLink>
+          {isLogin ? (
+            <ProfileBtnDiv>
+              <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
+                <ImgStyle
+                  onClick={userIsActiveBtn}
+                  src={data.avatar !== null ? data.avatar : defaultImg}
+                  alt="프로필사진"
+                />
+              </ImgDiv>
+              <UserMenuDiv onBlur={userMenuOnBlur}>
+                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
+                <UserUl $isActive={isActive}>
+                  <UserLi>
+                    <StyledLink to="/mypage">마이 페이지</StyledLink>
+                  </UserLi>
+                  <UserLi>
+                    <Logout onClick={logoutClick}>로그아웃</Logout>
+                  </UserLi>
+                </UserUl>
+              </UserMenuDiv>
+            </ProfileBtnDiv>
+          ) : (
+            <StLink to="/login">
+              <li>로그인 / 회원가입</li>
+            </StLink>
+          )}
+          {/* {menus
             .filter((menu) => (isLogin ? menu.id !== 'login' : menu.id !== 'mypage'))
             .map((menu) => (
               <StLink to={`${menu.id}`} key={menu.id}>
                 <li>{menu.info}</li>
               </StLink>
-            ))}
-          {isLogin ? <li onClick={logoutClick}>로그아웃</li> : <></>}
+            ))} */}
         </MenuUl>
       </nav>
     </MenuHeader>
@@ -64,8 +128,76 @@ const StLink = styled(Link)`
 const MenuUl = styled.ul`
   display: flex;
   gap: 20px;
+  align-items: center;
 
   & li {
     color: #b6856a;
   }
+`;
+
+//dd
+
+const ImgDiv = styled.div`
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 50%;
+`;
+
+const ImgStyle = styled.img`
+  height: 100%;
+  object-fit: cover;
+`;
+
+const UserMenuDiv = styled.div`
+  position: relative;
+`;
+
+const UserBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const UserUl = styled.ul`
+  display: ${({ $isActive }) => ($isActive ? 'block' : 'none')};
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 7rem;
+  box-shadow: 0 0.5rem 2rem #f5f5f5;
+  z-index: 1;
+  color: #b6856a;
+`;
+
+const UserLi = styled.li`
+  list-style: none;
+`;
+
+const StyledLink = styled(Link)`
+  display: block;
+  padding: 0.6rem;
+  text-decoration: none;
+  color: #b6856a;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const Logout = styled.span`
+  display: block;
+  padding: 0.6rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const ProfileBtnDiv = styled.div`
+  display: flex;
+  align-items: center;
 `;

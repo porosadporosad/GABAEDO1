@@ -18,7 +18,6 @@ export const nowUser = async () => {
       nickname: response.data.nickname,
       isloggedin: true,
       avatar: response.data.avatar
-      //   gender, userComment
     };
     return user;
   } catch (error) {

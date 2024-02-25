@@ -4,10 +4,6 @@ import { loginInstance } from '../axios/api';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
-import { useMutation, useQueryClient } from 'react-query';
-import { nowUser } from '../axios/authUser';
-import { useQuery } from 'react-query';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
@@ -15,15 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loginChange, setLoginChange] = useState(false);
 
-  // const { data } = useQuery('user', userLogin);
-
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  // const mutation = useMutation(nowUser, {
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries('user');
-  //   }
-  // });
 
   // 회원가입
   const signupSubmit = async (e) => {
