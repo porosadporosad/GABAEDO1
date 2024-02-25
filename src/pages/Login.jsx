@@ -4,6 +4,10 @@ import { loginInstance } from '../axios/api';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase';
+import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs, query } from 'firebase/firestore';
+import defaultImg from '../assets/defaultImg.jpg';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
@@ -16,39 +20,75 @@ export default function Login() {
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
-    const newUser = {
-      id: userid,
-      password,
-      nickname
-    };
-    try {
-      await loginInstance.post('/register', newUser);
-      toast.success('회원가입 완료 로그인해주세요');
-      dataClear();
-    } catch (error) {
-      toast.error(error.response.data.message);
+    const users = query(collection(db, 'users'));
+    const usersNickname = await getDocs(users);
+    const initial = [];
+    usersNickname.forEach((doc) => {
+      initial.push({ ...doc.data() });
+    });
+    const nicknameIncludes = initial.some((prev) => prev.nickname === nickname);
+    if (nicknameIncludes) {
+      toast.warning('닉네임이 이미 존재합니다.');
+      return false;
+    } else {
+      try {
+        const register = await createUserWithEmailAndPassword(auth, userid, password);
+        const user = register.user;
+        console.log('user', user);
+        await updateProfile(user, {
+          displayName: nickname,
+          photoURL: defaultImg
+        });
+        console.log('userUpdate', user);
+        // await loginInstance.post('/register', newUser);
+        toast.success('회원가입 완료');
+        // navigate('/');
+      } catch (error) {
+        const errorCode = error.code;
+        if (errorCode === 'auth/email-already-in-use') {
+          toast.error('이미 가입된 이메일 입니다.');
+        }
+        toast.error(error);
+      }
     }
   };
 
   // 로그인
   const loginSubmit = async (e) => {
     e.preventDefault();
-    const userLogin = {
-      id: userid,
-      password
-    };
-    try {
-      const response = await loginInstance.post('/login', userLogin);
-      // console.log('로그인', response);
-      // 로그인한 유저 정보
-      const { accessToken, nickname } = response.data;
-      // mutation.mutate(accessToken);
-      localStorage.setItem('accessToken', JSON.stringify(accessToken));
+    // const userLogin = {
+    //   id: userid,
+    //   password
+    // };
+    const users = query(collection(db, 'users'));
+    const usersEmail = await getDocs(users);
+    const initial = [];
+    usersEmail.forEach((doc) => {
+      initial.push({ ...doc.data() });
+    });
+    const emailIncludes = initial.some((prev) => prev.nickname === nickname);
+    if (emailIncludes) {
+      toast.warning('이메일이 존재 하지 않습니다.');
+      return false;
+    } else {
+      try {
+        // const response = await loginInstance.post('/login', userLogin);
+        await signInWithEmailAndPassword(auth, userid, password);
+        // console.log('로그인', response);
+        // 로그인한 유저 정보
+        // const { accessToken, nickname } = response.data;
+        // mutation.mutate(accessToken);
+        // localStorage.setItem('accessToken', JSON.stringify(accessToken));
 
-      toast.success(`${nickname}님 환영합니다!`);
-      navigate('/');
-    } catch (error) {
-      toast.error(error.response.data.message);
+        toast.success(`로그인 되었습니다`);
+        navigate('/');
+      } catch (error) {
+        const errorCode = error.code;
+        if (errorCode === 'auth/invalid-credential') {
+          toast.error('비밀번호를 확인해주세요.');
+        }
+        console.log(error);
+      }
     }
   };
 
@@ -76,7 +116,7 @@ export default function Login() {
                 }}
               />
               <LoginInput
-                type="text"
+                type="email"
                 placeholder="아이디"
                 required
                 value={userid}
@@ -87,6 +127,7 @@ export default function Login() {
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
+                minLength={6}
                 required
                 value={password}
                 onChange={(e) => {
@@ -100,7 +141,7 @@ export default function Login() {
           <>
             <LoginForm onSubmit={loginSubmit}>
               <LoginInput
-                type="text"
+                type="email"
                 placeholder="아이디"
                 required
                 value={userid}
@@ -111,6 +152,7 @@ export default function Login() {
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
+                minLength={6}
                 required
                 value={password}
                 onChange={(e) => {

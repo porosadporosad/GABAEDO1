@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { nowUser } from '../axios/authUser';
 import { useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import defaultImg from '../assets/defaultImg.jpg';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
@@ -12,14 +14,37 @@ export default function Header() {
   // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  console.log('data', data);
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setIsLogin(true);
+  //   } else {
+  //     setIsLogin(false);
+  //   }
+  // }, [data]);
 
   useEffect(() => {
-    if (data) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [data]);
+    const loginCheck = () => {
+      // 현재 유저가 로그인 되어있는지 확인
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setIsLogin(true);
+          const fullEmail = user.email;
+          const nickname = user.displayName;
+          const avatar = user.photoURL;
+          console.log(fullEmail);
+          console.log('nickname', nickname);
+          console.log(avatar);
+        } else {
+          setIsLogin(false);
+        }
+      });
+    };
+    loginCheck();
+  }, []);
 
   // const menus = [
   //   { id: 'about', info: '사이트 소개' },
@@ -28,9 +53,21 @@ export default function Header() {
   // ];
 
   const logoutClick = () => {
-    window.localStorage.clear();
-    setIsLogin(false);
-    toast.success('로그아웃되었습니다.');
+    // window.localStorage.clear();
+    const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
+    if (logoutConfirm) {
+      //로그아웃
+      signOut(auth)
+        .then(() => {
+          toast.success('로그아웃되었습니다.');
+          navigate('/');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      return false;
+    }
   };
 
   // 다른곳 클릭 시 메뉴 끄기
@@ -69,8 +106,9 @@ export default function Header() {
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
                 <ImgStyle
                   onClick={userIsActiveBtn}
-                  src={data.avatar !== null ? data.avatar : defaultImg}
+                  src={defaultImg}
                   alt="프로필사진"
+                  // data.avatar !== null ? data.avatar :
                 />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
