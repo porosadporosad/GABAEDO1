@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { loginInstance } from '../axios/api';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../firebase';
+import { auth, db } from '../shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, query } from 'firebase/firestore';
 import defaultImg from '../assets/defaultImg.jpg';

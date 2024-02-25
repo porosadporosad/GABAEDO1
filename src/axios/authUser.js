@@ -1,4 +1,4 @@
-import { auth } from '../firebase';
+import { auth } from '../shared/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export const nowUser = (user) => {

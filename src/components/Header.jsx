@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import defaultImg from '../assets/defaultImg.jpg';
-import { auth } from '../firebase';
+import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Header() {
