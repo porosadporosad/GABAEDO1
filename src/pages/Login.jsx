@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../image/loginImg.png';
 import { loginInstance } from '../axios/api';
+import loginImg from 'assets/loginImg.png';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
