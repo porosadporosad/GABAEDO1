@@ -1,15 +1,27 @@
+import { nowUser } from '../axios/authUser';
+import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  const isLogin = false;
+  const { data, isError, isLoading, error } = useQuery('user', nowUser);
+  const isLogin = data;
+
+  console.log('data', data);
+  console.log('isError', isError);
+  console.log('isLoading', isLoading);
+  console.log('error', error);
 
   const menus = [
     { id: 'about', info: '사이트 소개' },
     { id: 'login', info: '로그인 / 회원가입' },
     { id: 'mypage', info: '마이 페이지' }
   ];
+
+  const logoutClick = () => {
+    window.localStorage.clear();
+  };
 
   return (
     <MenuHeader>
@@ -25,6 +37,7 @@ export default function Header() {
                 <li>{menu.info}</li>
               </StLink>
             ))}
+          {isLogin ? <li onClick={logoutClick}>로그아웃</li> : <></>}
         </MenuUl>
       </nav>
     </MenuHeader>

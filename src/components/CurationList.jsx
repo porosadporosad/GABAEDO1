@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 
 export default function CurationList() {
   const { isLoading, isError, data } = useQuery('posts', getPosts);
-  console.log(data);
+  // console.log(data);
 
   if (isLoading) {
     return <h1>Loading</h1>;

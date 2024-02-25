@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../image/loginImg.png';
-import api from '../axios/api';
+import { loginInstance } from '../axios/api';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import { useMutation, useQueryClient } from 'react-query';
+import { nowUser } from '../axios/authUser';
+import { useQuery } from 'react-query';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
@@ -12,7 +15,15 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loginChange, setLoginChange] = useState(false);
 
+  // const { data } = useQuery('user', userLogin);
+
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  // const mutation = useMutation(nowUser, {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries('user');
+  //   }
+  // });
 
   // 회원가입
   const signupSubmit = async (e) => {
@@ -23,7 +34,7 @@ export default function Login() {
       nickname
     };
     try {
-      await api.post('/register', newUser);
+      await loginInstance.post('/register', newUser);
       toast.success('회원가입 완료 로그인해주세요');
       dataClear();
     } catch (error) {
@@ -39,10 +50,11 @@ export default function Login() {
       password
     };
     try {
-      const response = await api.post('/login', userLogin);
-
+      const response = await loginInstance.post('/login', userLogin);
+      // console.log('로그인', response);
       // 로그인한 유저 정보
-      const { accessToken, userId, success, avatar, nickname } = response.data;
+      const { accessToken, nickname } = response.data;
+      // mutation.mutate(accessToken);
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
 
       toast.success(`${nickname}님 환영합니다!`);
