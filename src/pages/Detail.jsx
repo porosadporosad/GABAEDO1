@@ -10,9 +10,9 @@ function Detail() {
       <Map
         center={{ lat: 37.506320759000715, lng: 127.05368251210247 }}
         style={{
-          width: 'calc(100% - 300px)', 
-          height: '100%', 
-          marginLeft: '300px', 
+          width: 'calc(100% - 300px)',
+          height: '100%',
+          marginLeft: '400px'
         }}
       >
         <MapTypeControl position={'TOPRIGHT'} />
