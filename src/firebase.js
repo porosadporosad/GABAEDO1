@@ -6,7 +6,14 @@ import { getFirestore } from 'firebase/firestore';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {};
+const firebaseConfig = {
+  apiKey: 'AIzaSyApzJmIoQIh6CHvVxlJQkIvdJCuv2L_R7c',
+  authDomain: 'gabaedo-7fda6.firebaseapp.com',
+  projectId: 'gabaedo-7fda6',
+  storageBucket: 'gabaedo-7fda6.appspot.com',
+  messagingSenderId: '816387183671',
+  appId: '1:816387183671:web:cfe441af3943655e7a9bb2'
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

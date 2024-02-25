@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getPosts } from '../axios/curations';
+import { getPosts } from 'shared/database';
 import { useQuery } from 'react-query';
 
 export default function CurationList({ keyword }) {
@@ -26,7 +26,7 @@ export default function CurationList({ keyword }) {
       </CurationHeader>
       <AllSection>
         {filteredData.map((curation) => (
-          <CurationBox key={curation.postId}>
+          <CurationBox key={curation.id}>
             <h2>{curation.title}</h2>
             <p>{curation.content}</p>
           </CurationBox>

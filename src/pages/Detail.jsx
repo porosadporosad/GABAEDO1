@@ -3,7 +3,7 @@ import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sd
 import styled from 'styled-components';
 import SidePage from 'components/detail/SidePage';
 
-function Detail() {
+export default function Detail() {
   return (
     <StFullScreenContainer>
       <SidePage />
@@ -12,8 +12,7 @@ function Detail() {
         style={{
           width: 'calc(100% - 300px)',
           height: '100%',
-          borderRadius: '20px',
-          marginLeft: '300px'
+          marginLeft: '400px'
         }}
       >
         <MapTypeControl position={'TOPRIGHT'} />
@@ -25,8 +24,6 @@ function Detail() {
     </StFullScreenContainer>
   );
 }
-
-export default Detail;
 
 const StFullScreenContainer = styled.div`
   width: 100vw;
