@@ -5,13 +5,8 @@ import styled from 'styled-components';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  const { data, isError, isLoading, error } = useQuery('user', nowUser);
+  const { data } = useQuery('user', nowUser);
   const isLogin = data;
-
-  console.log('data', data);
-  console.log('isError', isError);
-  console.log('isLoading', isLoading);
-  console.log('error', error);
 
   const menus = [
     { id: 'about', info: '사이트 소개' },
