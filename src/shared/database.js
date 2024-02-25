@@ -45,7 +45,7 @@ export const getPlaces = async () => {
 
 //회원가입, 로그인은 따로
 
-//파이어베이스에 게시글 리스트 추가 가져다쓰기
+//파이어베이스에 게시글 리스트 추가하기
 export const addPosts = async () => {
   const newPost = {
     postId: crypto.randomUUID(),
@@ -66,7 +66,7 @@ export const addPosts = async () => {
   }
 };
 
-// 파이어베이스에 장소 리스트 추가 가져다쓰기
+// 파이어베이스에 장소 리스트 추가하기
 export const addPlace = async () => {
   const newPlace = {
     postId: crypto.randomUUID(),
