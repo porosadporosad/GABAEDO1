@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../assets/defaultImg.jpg';
+import { useQuery } from 'react-query';
+import { getUsers } from 'shared/database';
 
 export default function Profile() {
+  const { isLoading, isError, data } = useQuery('posts', getUsers);
+  console.log(isLoading, isError, data);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setIsEditingText] = useState('');
   const [selectedImg, setSelectedImg] = useState(defaultImg);
@@ -28,6 +33,19 @@ export default function Profile() {
     alert('프로필 변경이 완료되었습니다.');
   };
 
+  if (isLoading) {
+    return <h1>로딩중...</h1>;
+  }
+
+  if (isError) {
+    return <h1>Error</h1>;
+  }
+
+  // Firebase에서 가져온 유저 정보
+  const user = data[0];
+  console.log(user);
+  const { id, nickname } = user;
+
   return (
     <Container>
       <ProfileWrapper>
@@ -36,7 +54,7 @@ export default function Profile() {
           <Avatar src={selectedImg} />
           <ImgFileSelect type="file" onChange={imgChangeHandler} accept="image/*" />
         </label>
-        <UserId>userId</UserId>
+        <UserId>{id}</UserId>
         {isEditing ? (
           <input
             autoFocus
@@ -46,7 +64,7 @@ export default function Profile() {
             }}
           />
         ) : (
-          <Nickname>nickname</Nickname>
+          <Nickname>{nickname}</Nickname>
         )}
 
         <UserIntro>내 취미는 카페투어!</UserIntro>
