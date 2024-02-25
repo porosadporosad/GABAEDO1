@@ -34,12 +34,12 @@ export default function SidePage() {
           <h3>망원동에서 분위기 좋은 곳을 모아봤어요.</h3>
         </PostBox>
         <HashtagBox>
-          <Hashtag>분위기가 좋은</Hashtag>
-          <Hashtag>디저트가 맛있는</Hashtag>
+          <Hashtag>✨분위기가 좋은</Hashtag>
+          <Hashtag>🧁디저트가 맛있는</Hashtag>
         </HashtagBox>
         <BrownLine />
         <WriterBox>
-          <img src={userImg} width="25" style={{ borderRadius: '50%' }} />
+          <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
           <WriterNickname>냠냠박사</WriterNickname>
         </WriterBox>
       </PostInfo>
@@ -162,7 +162,7 @@ const HashtagBox = styled.div`
 `;
 
 const Hashtag = styled.span`
-  background-color: #e0c3ae;
+  background-color: #fff9f3;
   border-radius: 12px;
   font-size: 10pt;
 `;
