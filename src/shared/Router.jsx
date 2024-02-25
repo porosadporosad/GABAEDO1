@@ -20,7 +20,7 @@ export default function Router() {
         </Route>
 
         {/*상단바가 없는 지도페이지*/}
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/detail/:id" element={<Detail />} />
 
         {/*로그인이 반드시 필요 */}
         <Route element={<AuthLayout />}>
