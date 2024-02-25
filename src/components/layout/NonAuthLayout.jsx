@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import Header from 'components/Header';
 
 export default function NonAuthLayout() {
   const isLoggedin = false;
@@ -10,7 +11,7 @@ export default function NonAuthLayout() {
   }
   return (
     <>
-      <main />
+      <Header />
       <Outlet />
     </>
   );
