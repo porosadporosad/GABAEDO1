@@ -1,4 +1,4 @@
-import Profile from 'Profile/Profile';
+import Profile from '../components/mypage/Profile';
 import React from 'react';
 
 function Mypage() {

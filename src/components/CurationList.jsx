@@ -15,8 +15,7 @@ export default function CurationList({ keyword }) {
   }
 
   const filteredData = data.filter(
-    (curation) =>
-      curation.title.includes(keyword) || curation.content.includes(keyword)
+    (curation) => curation.title.includes(keyword) || curation.content.includes(keyword)
   );
 
   return (
@@ -26,8 +25,8 @@ export default function CurationList({ keyword }) {
         <AddCurationBtn>+</AddCurationBtn>
       </CurationHeader>
       <AllSection>
-      {filteredData.map((curation) => (
-        <CurationBox key={curation.postId}>
+        {filteredData.map((curation) => (
+          <CurationBox key={curation.postId}>
             <h2>{curation.title}</h2>
             <p>{curation.content}</p>
           </CurationBox>

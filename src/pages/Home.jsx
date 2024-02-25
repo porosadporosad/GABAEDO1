@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Banner from '../components/Banner';
 import CurationList from '../components/CurationList';
 
-function Home() {
+export default function Home() {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   return (
@@ -12,5 +12,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
