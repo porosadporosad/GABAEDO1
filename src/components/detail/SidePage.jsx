@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SearchBar } from 'components/Mapsearch';
+import { SearchBar } from '../Mapsearch';
 import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
 
