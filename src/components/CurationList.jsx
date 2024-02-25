@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { getPosts } from 'shared/database';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router';
 
 export default function CurationList({ keyword }) {
   const { isLoading, isError, data } = useQuery('posts', getPosts);
-  // console.log(data);
+  const navigate = useNavigate();
+  console.log(data);
 
   if (isLoading) {
     return <h1>Loading</h1>;
@@ -18,6 +20,10 @@ export default function CurationList({ keyword }) {
     (curation) => curation.title.includes(keyword) || curation.content.includes(keyword)
   );
 
+  const boxClickHandler = (id) => {
+    navigate(`detail/${id}`);
+  };
+
   return (
     <Article>
       <CurationHeader>
@@ -26,7 +32,7 @@ export default function CurationList({ keyword }) {
       </CurationHeader>
       <AllSection>
         {filteredData.map((curation) => (
-          <CurationBox key={curation.id}>
+          <CurationBox key={curation.id} onClick={() => boxClickHandler(curation.id)}>
             <h2>{curation.title}</h2>
             <p>{curation.content}</p>
           </CurationBox>
@@ -97,6 +103,7 @@ const CurationBox = styled.div`
   padding: 10px;
   margin: 10px 0;
   text-align: center;
+  cursor: pointer;
 
   /* border: 1px solid #c70000; */
   border-radius: 20px;
