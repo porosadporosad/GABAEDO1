@@ -43,11 +43,9 @@ export default function Profile() {
           console.error('유저 정보 가져오기 에러:', error);
         }
       } else {
-        // 사용자가 로그아웃한 경우 프로필 정보
         setCurrentUser(null);
       }
     });
-    // 컴포넌트가 언마운트될 때 정리
     return () => fetchData();
   }, []);
 
@@ -124,10 +122,11 @@ export default function Profile() {
           <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
         )}
         <UserInputList>
-          내가만든가배도
+          [내가만든가배도]
           {myPosts.map((post) => (
             <li key={post.id}>
               <div>{post.title}</div>
+              <button>삭제</button>
             </li>
           ))}
         </UserInputList>
