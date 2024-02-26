@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import CreatePost from './CreatePost';
+import { hashtageData } from 'shared/hashtageData';
 
 export default function PostList({ keyword }) {
   const { isLoading, data } = useQuery('posts', getPosts);
@@ -45,6 +46,11 @@ export default function PostList({ keyword }) {
           ))}
         </AllSection>
         <ListTitle>태그별 가배도</ListTitle>
+        <HashtagNav>
+          {hashtageData.map((item) => (
+            <button key={item}>{item}</button>
+          ))}
+        </HashtagNav>
       </Article>
     </>
   );
@@ -139,5 +145,25 @@ const PostListBox = styled.div`
   & p {
     padding: 10px;
     color: #b6856a;
+  }
+`;
+
+const HashtagNav = styled.nav`
+  height: 50px;
+  line-height: 50px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-around;
+
+  background-color: #fff9f3;
+  border: 1px solid #e0c3ae;
+  border-radius: 15px;
+
+  & button {
+    font-family: 'SunBatang-Medium';
+    color: #b6856a;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
   }
 `;

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
+import { hashtageData } from 'shared/hashtageData';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
@@ -82,16 +83,15 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
           <option value="default" disabled>
             # 태그를 골라주세요. (1개~4개)
           </option>
-          <option value="✨ 분위기가 좋은">✨ 분위기가 좋은</option>
-          <option value="🧁 디저트가 맛있는">🧁 디저트가 맛있는</option>
-          <option value="📚 집중하기 좋은">📚 집중하기 좋은</option>
-          <option value="📷 사진찍기 좋은">📷 사진찍기 좋은</option>
-          <option value="☕️ 커피 찐맛집">☕️ 커피 찐맛집</option>
-          <option value="👫 어울리기 좋은">👫 어울리기 좋은</option>
+          {hashtageData.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
         </PostSelect>
         <HashtagSection>
           {hashtag.map((item) => (
-            <p key={item}>#{item}</p>
+            <p key={item}>{item}</p>
           ))}
         </HashtagSection>
         <BtnSection>
