@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { getPosts } from 'shared/database';
 import { getPlaces } from 'shared/database';
 
-export default function SidePage() {
+export default function SidePage({ onSearch }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
@@ -62,7 +62,7 @@ export default function SidePage() {
         </WriterBox>
       </PostInfo>
       {isEditing ? (
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={onSearch} />
       ) : (
         <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
       )}

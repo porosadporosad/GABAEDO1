@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { auth, db } from 'shared/firebase';
 

@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
+import { styled } from 'styled-components';
 
 export function SearchBar({ onSearch }) {
   const [inputValue, setInputValue] = useState('');
 
-  function handleSearch() {
+  const handleSubmit = (e) => {
+    e.preventDefault(); 
     onSearch(inputValue); 
-  }
+  };
 
   return (
     <div style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="장소 검색..."
-        style={{ marginRight: '5px' }}
-      />
-      <button onClick={handleSearch}>검색</button>
+      <form onSubmit={handleSubmit}>
+        <Stinput 
+                  type="text" 
+                  value={inputValue} 
+                  id="keyword" 
+                  size="15" 
+                  onChange={(e) => setInputValue(e.target.value)} 
+                /> 
+        <button type="submit">검색하기</button> 
+      </form>
     </div>
   );
 }
+
+const Stinput = styled.input`
+  width: 200px;
+  height: 30px;
+  margin: 0 auto;
+  border: 1px solid #b6856a;
+  border-radius: 10px;
+`;
