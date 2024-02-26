@@ -41,6 +41,7 @@ function Detail() {
     setSelectedPlace(placeData[index]);
   };
 
+
   return (
     <StFullScreenContainer>
       <SidePage postData={postData} placeData={placeData} />
