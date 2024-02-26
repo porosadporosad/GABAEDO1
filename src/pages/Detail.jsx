@@ -1,16 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
+import { useQuery } from 'react-query';
+import { getPosts, getPlaces } from 'shared/database';
 import SidePage from 'components/detail/SidePage';
+import { useParams } from 'react-router';
 
 function Detail() {
-  const [savedPlaces, setSavedPlaces] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 37.578611, lng: 126.977222 }); // 디폴트 위치: 광화문
+  const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 }); // 초기값 설정
+
+  /** 파이어베이스에서 게시글 & 장소 정보를 불러옴 */
+  const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
+  const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
+  const { id } = useParams();
+  const postData = postsData && postsData.find((post) => post.id === id);
+  const placeData = placesData && placesData.filter((item) => item.postId === id);
 
   useEffect(() => {
     // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-  }, [savedPlaces, searchResults]);
+    if (searchResults.length > 0) {
+      setMapCenter({ lat: searchResults[0].y, lng: searchResults[0].x });
+    }
+  }, [searchResults]);
+
+  //   useEffect(() => {
+  //   // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
+  // }, [savedPlaces, searchResults]);
+
+  if (isLoadingPosts || isLoadingPlaces) {
+    return <h1>Loading</h1>;
+  }
+
+  if (isErrorPosts || isErrorPlaces) {
+    return <h1>Error</h1>;
+  }
+
+  console.log('불러온 게시글', postData);
+  console.log('해당 게시글에 등록된 장소', placeData);
+
+  const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
   const handleSearch = (searchQuery) => {
     // kakao.maps.services.Places 객체 생성
@@ -37,19 +66,20 @@ function Detail() {
 
   return (
     <StFullScreenContainer>
-       <SidePage onSearch={handleSearch} />
+      <SidePage postData={postData} placeData={placeData} onSearch={handleSearch} />
       <Map
-        center={mapCenter}
+        center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
         style={{
-          width: 'calc(100% - 400px)', 
+          width: 'calc(100% - 400px)',
           height: '100%',
           marginLeft: '400px'
         }}
       >
         <MapTypeControl position={'TOPRIGHT'} />
         <ZoomControl position={'RIGHT'} />
-        <MapMarker position={mapCenter}>
-        </MapMarker>
+        {searchResults.length > 0
+          ? searchResults.map((result) => <MapMarker key={result.id} position={{ lat: result.y, lng: result.x }} />)
+          : placeData.map((place) => <MapMarker key={place.name} position={{ lat: place.lat, lng: place.lng }} />)}
       </Map>
     </StFullScreenContainer>
   );
@@ -63,3 +93,21 @@ const StFullScreenContainer = styled.div`
   display: flex;
 `;
 
+//   return (
+//     <StFullScreenContainer>
+//       <SidePage onSearch={handleSearch} />
+//       <Map
+//         center={mapCenter}
+//         style={{
+//           width: 'calc(100% - 400px)',
+//           height: '100%',
+//           marginLeft: '400px'
+//         }}
+//       >
+//         <MapTypeControl position={'TOPRIGHT'} />
+//         <ZoomControl position={'RIGHT'} />
+//         <MapMarker position={mapCenter}></MapMarker>
+//       </Map>
+//     </StFullScreenContainer>
+//   );
+// }

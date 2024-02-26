@@ -5,21 +5,21 @@ export function SearchBar({ onSearch }) {
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
-    onSearch(inputValue); 
+    e.preventDefault();
+    onSearch(inputValue);
   };
 
   return (
     <div style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
       <form onSubmit={handleSubmit}>
-        <Stinput 
-                  type="text" 
-                  value={inputValue} 
-                  id="keyword" 
-                  size="15" 
-                  onChange={(e) => setInputValue(e.target.value)} 
-                /> 
-        <button type="submit">검색하기</button> 
+        <Stinput
+          type="text"
+          value={inputValue}
+          id="keyword"
+          size="15"
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button type="submit">검색하기</button>
       </form>
     </div>
   );
