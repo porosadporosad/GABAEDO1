@@ -5,10 +5,15 @@ import { useQuery } from 'react-query';
 import { getPosts, getPlaces } from 'shared/database';
 import SidePage from 'components/detail/SidePage';
 import { useParams } from 'react-router';
+import Searchmodal from 'components/detail/Searchmodal';
 
 function Detail() {
-  const [searchResults, setSearchResults] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 }); // 초기값 설정
+  const [isOpenIndex, setIsOpenIndex] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소를 관리합니다.
+
+  const closeModal = () => {
+    setSelectedPlace(null);
+  };
 
   /** 파이어베이스에서 게시글 & 장소 정보를 불러옴 */
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
@@ -16,17 +21,6 @@ function Detail() {
   const { id } = useParams();
   const postData = postsData && postsData.find((post) => post.id === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
-
-  useEffect(() => {
-    // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-    if (searchResults.length > 0) {
-      setMapCenter({ lat: searchResults[0].y, lng: searchResults[0].x });
-    }
-  }, [searchResults]);
-
-  //   useEffect(() => {
-  //   // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-  // }, [savedPlaces, searchResults]);
 
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
@@ -41,31 +35,21 @@ function Detail() {
 
   const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
-  const handleSearch = (searchQuery) => {
-    // kakao.maps.services.Places 객체 생성
-    const ps = new window.kakao.maps.services.Places();
-
-    // 키워드 검색 완료 시 호출되는 콜백
-    const placesSearchCB = (data, status) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        console.log('검색 결과:', data);
-        // 검색 결과 중 첫 번째 위치로 지도 중심 업데이트
-        setMapCenter({ lat: data[0].y, lng: data[0].x });
-        setSearchResults(data); // 검색 결과 상태 업데이트
-      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
-      } else if (status === window.kakao.maps.services.Status.ERROR) {
-        alert('검색 중 오류가 발생했습니다.');
-      }
-    };
-
-    // 키워드로 장소 검색 요청
-    ps.keywordSearch(searchQuery, placesSearchCB);
+  /** 클릭한 마커의 인덱스를 저장 */
+  const handleMarkerClick = (index) => {
+    setIsOpenIndex(index);
+    setSelectedPlace(placeData[index]);
   };
+
 
   return (
     <StFullScreenContainer>
-      <SidePage postData={postData} placeData={placeData} onSearch={handleSearch} />
+      <SidePage postData={postData} placeData={placeData} />
+      {selectedPlace && ( // 선택된 장소가 있을 때만 모달을 렌더링합니다.
+        <ModalContainer>
+          <Searchmodal closeModal={closeModal} placeData={placeData} selectedPlace={selectedPlace} />
+        </ModalContainer>
+      )}
       <Map
         center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
         style={{
@@ -76,14 +60,26 @@ function Detail() {
       >
         <MapTypeControl position={'TOPRIGHT'} />
         <ZoomControl position={'RIGHT'} />
-        {searchResults.length > 0
-          ? searchResults.map((result) => <MapMarker key={result.id} position={{ lat: result.y, lng: result.x }} />)
-          : placeData.map((place) => <MapMarker key={place.name} position={{ lat: place.lat, lng: place.lng }} />)}
+        {placeData.map((place, index) => (
+          <MapMarker
+            key={place.name}
+            position={{ lat: place.lat, lng: place.lng }}
+            clickable={true}
+            onClick={() => handleMarkerClick(index)}
+          >
+            {isOpenIndex === index && (
+              <div>
+                <div style={{ textAlign: 'center', padding: '10px', minWidth: '150px', color: '#784b31' }}>
+                  {place.name}
+                </div>
+              </div>
+            )}
+          </MapMarker>
+        ))}
       </Map>
     </StFullScreenContainer>
   );
 }
-
 export default Detail;
 
 const StFullScreenContainer = styled.div`
@@ -92,21 +88,14 @@ const StFullScreenContainer = styled.div`
   display: flex;
 `;
 
-//   return (
-//     <StFullScreenContainer>
-//       <SidePage onSearch={handleSearch} />
-//       <Map
-//         center={mapCenter}
-//         style={{
-//           width: 'calc(100% - 400px)',
-//           height: '100%',
-//           marginLeft: '400px'
-//         }}
-//       >
-//         <MapTypeControl position={'TOPRIGHT'} />
-//         <ZoomControl position={'RIGHT'} />
-//         <MapMarker position={mapCenter}></MapMarker>
-//       </Map>
-//     </StFullScreenContainer>
-//   );
-// }
+const ModalContainer = styled.div`
+  position: absolute;
+  border-right: 1px solid #001d84;
+  top: 0;
+  left: 400px;
+  width: 350px;
+  height: 100%;
+  background-color: white;
+  z-index: 9999;
+  transition: right 0.3s ease;
+`;

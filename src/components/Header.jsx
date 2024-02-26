@@ -130,8 +130,10 @@ const MenuHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   border-bottom: 1px solid #001d84;
+  position: relative;
+  z-index: 1000;
+  background-color: white;
 
   & h2 {
   }
@@ -142,7 +144,7 @@ const StLink = styled(Link)`
 
   & h3 {
     font-family: 'SunBatang-Medium';
-    color: #784b31;
+    color: #784b31; 
   }
 `;
 
@@ -159,8 +161,8 @@ const MenuUl = styled.ul`
 //dd
 
 const ImgDiv = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
   overflow: hidden;
   border-radius: 50%;

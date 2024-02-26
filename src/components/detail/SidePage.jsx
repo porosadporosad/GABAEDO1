@@ -8,6 +8,10 @@ export default function SidePage({ postData, placeData, onSearch }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
 
+  const AddPlaceBtnHandler = () => {
+    setIsEditing(true);
+  };
+
   const GoBackClickHandler = () => {
     navigate(`/`);
   };
@@ -16,58 +20,56 @@ export default function SidePage({ postData, placeData, onSearch }) {
     console.log(searchTerm);
   };
 
-  const AddPlaceBtnHandler = () => {
-    setIsEditing((prev) => !prev);
-  };
-
   return (
-    <SidePageContainer>
-      <GoBackButton onClick={GoBackClickHandler} title="돌아가기">
-        ◀
-      </GoBackButton>
-      <PostInfo>
-        <PostBox>
-          <h2>
-            ✧☕✧
-            <br />
-            {postData.title}
-          </h2>
-          <h3>{postData.content}</h3>
-        </PostBox>
-        <HashtagBox>
-          {postData.hashtag.map((hashtag) => {
-            return <Hashtag key={hashtag}>{hashtag}</Hashtag>;
-          })}
-        </HashtagBox>
-        <BrownLine />
-        <WriterBox>
-          <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
-          <WriterNickname>{postData.nickname}</WriterNickname>
-        </WriterBox>
-      </PostInfo>
-      {isEditing ? (
-        <SearchBar onSearch={onSearch} />
-      ) : (
-        <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
-      )}
-      <PlacesBox>
-        {placeData.length === 0 ? (
-          <Place>아직 등록된 카페가 없습니다.</Place>
+    <>
+      <SidePageContainer>
+        <GoBackButton onClick={GoBackClickHandler} title="돌아가기">
+          ◀
+        </GoBackButton>
+        <PostInfo>
+          <PostBox>
+            <h2>
+              ✧☕✧
+              <br />
+              {postData.title}
+            </h2>
+            <h3>{postData.content}</h3>
+          </PostBox>
+          <HashtagBox>
+            {postData.hashtag.map((hashtag) => {
+              return <Hashtag key={hashtag}>{hashtag}</Hashtag>;
+            })}
+          </HashtagBox>
+          <BrownLine />
+          <WriterBox>
+            <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
+            <WriterNickname>{postData.nickname}</WriterNickname>
+          </WriterBox>
+        </PostInfo>
+        {isEditing ? (
+          <SearchBar onSearch={onSearch} />
         ) : (
-          placeData.map((place) => {
-            return (
-              <Place key={place.id}>
-                <PlaceInfo>
-                  <h2>{place.name}</h2>
-                  <h4>{place.address}</h4>
-                </PlaceInfo>
-                <h3>{place.placeComment}</h3>
-              </Place>
-            );
-          })
+          <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
         )}
-      </PlacesBox>
-    </SidePageContainer>
+        <PlacesBox>
+          {placeData.length === 0 ? (
+            <Place>아직 등록된 카페가 없습니다.</Place>
+          ) : (
+            placeData.map((place) => {
+              return (
+                <Place key={place.id}>
+                  <PlaceInfo>
+                    <h2>{place.name}</h2>
+                    <h4>{place.address}</h4>
+                  </PlaceInfo>
+                  <h3>{place.placeComment}</h3>
+                </Place>
+              );
+            })
+          )}
+        </PlacesBox>
+      </SidePageContainer>
+    </>
   );
 }
 
@@ -77,8 +79,8 @@ const SidePageContainer = styled.div`
   top: 0;
   width: 400px;
   height: 100%;
-  border-right: 1px solid #001d84;
-  background-color: #fff9f3;
+  border-right: 1px solid #c70000;
+  background-color: #e0c3ae;
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -173,6 +175,7 @@ const PlacesBox = styled.div`
 `;
 
 const Place = styled.div`
+  background-color: #fff9f3;
   border: 1px solid #b6856a;
   border-radius: 12px;
   padding: 20px;
