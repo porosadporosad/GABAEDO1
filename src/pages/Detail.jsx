@@ -17,17 +17,6 @@ function Detail() {
   const postData = postsData && postsData.find((post) => post.id === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
 
-  useEffect(() => {
-    // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-    if (searchResults.length > 0) {
-      setMapCenter({ lat: searchResults[0].y, lng: searchResults[0].x });
-    }
-  }, [searchResults]);
-
-  //   useEffect(() => {
-  //   // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-  // }, [searchResults]);
-
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
   }

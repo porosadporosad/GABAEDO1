@@ -1,4 +1,3 @@
-// 필요한 모듈 import
 import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
