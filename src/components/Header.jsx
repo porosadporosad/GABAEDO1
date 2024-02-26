@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getUsers } from 'shared/database';
+import { useCurrentUser } from 'shared/database';
+// import { useQuery } from 'react-query';
+// import { getCurrentUser } from 'shared/database';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  const { data } = useQuery('users', getUsers);
   // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
   const navigate = useNavigate();
-  const now = auth.currentUser;
+  const { data } = useCurrentUser();
 
   useEffect(() => {
     const loginCheck = () => {
@@ -79,7 +79,7 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle onClick={userIsActiveBtn} src={now.photoURL} alt="프로필사진" />
+                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
                 <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>

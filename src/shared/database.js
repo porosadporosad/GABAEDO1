@@ -1,5 +1,6 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from 'shared/firebase';
+import { useQuery } from 'react-query';
+import { auth, db } from 'shared/firebase';
 
 //파이어베이스에서 유저 정보 불러오기
 export const getUsers = async () => {
@@ -12,6 +13,26 @@ export const getUsers = async () => {
   } catch (error) {
     console.error('유저 정보 불러오기 에러', error);
   }
+};
+
+// 현재유저 정보 가져오기
+const getCurrentUser = () => {
+  const user = auth.currentUser;
+  if (!user) {
+    return false;
+  }
+  const getUser = {
+    fullEmail: user.email,
+    nickname: user.displayName,
+    avatar: user.photoURL
+  };
+
+  return getUser;
+};
+
+// 커스텀
+export const useCurrentUser = () => {
+  return useQuery('currentUser', getCurrentUser);
 };
 
 //파이어베이스에서 게시글 리스트 불러오기
