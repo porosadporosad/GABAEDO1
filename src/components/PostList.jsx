@@ -38,7 +38,7 @@ export default function PostList({ keyword }) {
         </PostListHeader>
         <AllSection>
           {filteredData.map((post) => (
-            <PostListBox key={post.id} onClick={() => boxClickHandler(post.id)}>
+            <PostListBox key={post.id} onClick={() => boxClickHandler(post.postId)}>
               <h2>{post.title}</h2>
               <p>{post.content}</p>
             </PostListBox>

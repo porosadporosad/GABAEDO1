@@ -1,12 +1,23 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
+  const navigate = useNavigate();
+  const { data } = useCurrentUser();
+  const { fullEmail, nickname } = data;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
+  const [postId, setPostId] = useState('');
+
+  // 모달이 켜지면 포스트 id 가 만들어집니다.
+  useEffect(() => {
+    setPostId(crypto.randomUUID());
+  }, []);
 
   const addHashtag = (e) => {
     if (hashtag.length >= 4) {
@@ -28,20 +39,21 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
 
     const newPost = {
-      postId: crypto.randomUUID(),
-      userId: '',
-      nickname: '',
+      postId,
+      userId: fullEmail,
+      nickname,
       createdAt: new Date().toISOString(),
       title,
       content,
       hashtag
     };
+
     try {
-      const docRef = await addDoc(collection(db, 'posts'), newPost);
+      await addDoc(collection(db, 'posts'), newPost);
 
       // 모달 끄기
       setModalIsOpen(!modalIsOpen);
-      return docRef.id;
+      navigate(`detail/${postId}`);
     } catch (error) {
       console.error('게시글 추가하기 에러', error);
       throw error;
