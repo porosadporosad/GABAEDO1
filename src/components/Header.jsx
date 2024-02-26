@@ -117,7 +117,10 @@ const MenuHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1000;
 
+  background-color: white;
   border-bottom: 1px solid #001d84;
 
   & h2 {
