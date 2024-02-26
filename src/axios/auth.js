@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const authAPI = axios.create({
-  baseURL: 'https://moneyfulpublicpolicy.co.kr',
+  baseURL: process.env.REACT_APP_JWP_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
