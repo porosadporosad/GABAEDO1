@@ -5,8 +5,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 export default function AuthLayout() {
   // const { data } = useQuery('users', getUsers);
-  const { data } = useCurrentUser();
-  const isLoggedin = data;
+  // const { data } = useCurrentUser();
+  const userId = JSON.parse(localStorage.getItem('userId'));
+  const isLoggedin = userId;
   if (!isLoggedin) {
     alert(`로그인이 필요한 페이지입니다.`);
     console.log(`로그인 필요`);

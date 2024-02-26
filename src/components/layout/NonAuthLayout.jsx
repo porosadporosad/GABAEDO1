@@ -6,8 +6,8 @@ import Header from 'components/Header';
 
 export default function NonAuthLayout() {
   // const { data } = useQuery('users', getUsers);
-  const { data } = useCurrentUser();
-  const isLoggedin = data;
+  const userId = JSON.parse(localStorage.getItem('userId'));
+  const isLoggedin = userId;
   if (isLoggedin) {
     alert(`이미 로그인된 상태입니다.`);
     console.log(`이미 로그인됨`);

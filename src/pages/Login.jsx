@@ -10,7 +10,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth';
-import { collection, setDoc, doc } from 'firebase/firestore';
+import { collection, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { getUsers } from 'shared/database';
 
@@ -20,6 +20,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
+  const [docId, setDocId] = useState('');
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
@@ -42,7 +43,8 @@ export default function Login() {
             // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
             photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
           });
-          localStorage.setItem('accessToken', JSON.stringify(user.accessToken));
+          localStorage.setItem('userId', JSON.stringify(user.uid));
+          localStorage.setItem('fullEmail', JSON.stringify(user.email));
 
           onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -50,6 +52,7 @@ export default function Login() {
                 fullEmail: user.email,
                 nickname: user.displayName,
                 avatar: user.photoURL
+                // isloggedin: true
               };
 
               try {
@@ -87,7 +90,16 @@ export default function Login() {
       try {
         const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
         const loginData = loginUser.user;
-        localStorage.setItem('accessToken', JSON.stringify(loginData.accessToken));
+        localStorage.setItem('userId', JSON.stringify(loginData.uid));
+        localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+
+        // const querySnapshot = await getDocs(collection(db, 'users'));
+        // querySnapshot.forEach((doc) => {
+        //   const data = doc.data();
+        //   if (data.email === fullEmail) setDocId(doc.id);
+        // });
+        // const infoRef = doc(db, 'users', docId);
+        // await updateDoc(infoRef, { isloggedin: true });
 
         toast.success(`로그인 되었습니다`);
         navigate('/');
@@ -108,6 +120,13 @@ export default function Login() {
     setLoginChange(!loginChange);
   };
 
+  const emailOption = [
+    { value: '', content: '선택해주세요' },
+    { value: 'naver.com', content: 'naver.com' },
+    { value: 'hanmail.com', content: 'hanmail.com' },
+    { value: 'gmail.com', content: 'gmail.com' }
+  ];
+
   return (
     <LoginBody>
       <LoginMain>
@@ -124,6 +143,11 @@ export default function Login() {
                   setFullEmail(e.target.value);
                 }}
               />
+              {/* <select>
+                {emailOption.map((prev) => {
+                  return <option value={prev.value}>{prev.content}</option>;
+                })}
+              </select> */}
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
