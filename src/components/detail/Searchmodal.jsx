@@ -1,27 +1,74 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { SearchBar } from 'components/Mapsearch';
+import { useState } from 'react';
+import axios from 'axios';
 
 // 요 컴포넌트 지금은 필요 없는데 임시로 일단 두겠습니다..! //
 
-export default function Searchmodal({ closeModal, onSearch }) {
-  const handleSearch = (searchTerm) => {
-    console.log(searchTerm);
-  };
+export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
+  const cafe = placeData.find((cafes) => cafes.name === selectedPlace.name);
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+          params: {
+            key: process.env.REACT_APP_YOUTUBE_API_KEY,
+            part: 'snippet',
+            q: '로우머', // 기본 검색어 설정
+            type: 'video',
+            maxResults: 5
+          }
+        });
+        console.log('검색결과', response.data.items);
+        setSearchResults(response.data.items);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData(); // 컴포넌트가 마운트되면 기본 검색어로 데이터를 가져옴
+  }, []);
 
   const closeModalHandler = () => {
     closeModal();
   };
 
+  console.log('선택된카페', selectedPlace);
+  console.log('카페 리스트', placeData);
+
   return (
     <ModalContainer>
       <SearchBarBox>
-        <h2>카페 추가하기</h2>
-        <h3>나만 알긴 아까우니까!</h3>
-        <SearchBar onSearch={onSearch} />
+        <h2>{cafe.name}</h2>
       </SearchBarBox>
+      <h3>영상으로 카페 미리보기</h3>
       <BrownLine />
-      <button onClick={closeModalHandler}>취소</button>
+      <VideoContainer>
+        <div>
+          {searchResults.map((item, index) => (
+            <>
+              {' '}
+              <VideoBox key={index}>
+                <div>
+                  {' '}
+                  <a
+                    href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={item.snippet.thumbnails.default.url} />
+                  </a>
+                </div>
+                <div>{item.snippet.title}</div>
+              </VideoBox>
+              <BrownLine />
+            </>
+          ))}
+        </div>
+      </VideoContainer>
+      <button onClick={closeModalHandler}>확인</button>
     </ModalContainer>
   );
 }
@@ -49,11 +96,20 @@ const ModalContainer = styled.div`
 const SearchBarBox = styled.div`
   background-size: 100%;
   padding: 20px;
-  padding-top: 100px;
+  padding-top: 10px;
 `;
 
 const BrownLine = styled.div`
   width: 100%;
   height: 1px;
   background-color: #e0c3ae;
+  margin: 10px;
+`;
+
+const VideoContainer = styled.div``;
+
+const VideoBox = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 `;
