@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 export default function SearchSidePage({ onSearch, searchResults  }) {
   const navigate = useNavigate();
-
+  const { id } = useParams();
   const GoBackClickHandler = () => {
-    navigate(`/`);
+    navigate(`/detail/${id}`);
   };
 
   return (
@@ -20,10 +21,13 @@ export default function SearchSidePage({ onSearch, searchResults  }) {
           <StSearchResultsContainer>
           {searchResults.map((result, index) => (
             <StResultitem key={index}>
-              <StName>{result.place_name}</StName>
-              <StAddress>{result.address_name}</StAddress>
+                <StResultContent>
+                <StName>{result.place_name}</StName>
+                <StAddress>{result.address_name}</StAddress>
+                </StResultContent>
+                <AddPlaceBtn>+</AddPlaceBtn>
             </StResultitem>
-          ))}
+            ))}
         </StSearchResultsContainer>
       </StSidePageContainer>
     </>
@@ -56,14 +60,7 @@ const StGoBackButton = styled.div`
 
 const StSearchResultsContainer = styled.div`
   margin-top: 20px;
-`;
-
-const StResultitem = styled.div`
-  background-color: #fff9f3;
-  border: 1px solid #b6856a;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  width: 100%;
 `;
 
 const StName = styled.p`
@@ -83,4 +80,31 @@ const BrownLine = styled.div`
   width: 100%;
   height: 2px;
   background-color: #784b31;
+`;
+
+const StResultitem = styled.div`
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  background-color: #fff9f3;
+  border: 1px solid #b6856a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+`;
+
+const StResultContent = styled.div`
+  flex-grow: 1;
+  margin-right: 20px; 
+`;
+
+const AddPlaceBtn = styled.button`
+  min-width: 40px;
+  height: 40px;
+  background-color: #c70000;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 30px;
+  cursor: pointer;
 `;
