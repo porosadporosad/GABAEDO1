@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
-import Searchmodal from './Searchmodal';
 
 export default function SidePage({ postData, placeData, onSearch }) {
   const navigate = useNavigate();
@@ -85,17 +84,6 @@ const SidePageContainer = styled.div`
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
-`;
-
-const ModalContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 400px;
-  width: 300px;
-  height: 100%;
-  background-color: white;
-  border-right: 1px solid #001d84;
-  z-index: 9999;
 `;
 
 const GoBackButton = styled.div`
