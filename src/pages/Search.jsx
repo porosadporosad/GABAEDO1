@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import { SearchBar } from '../components/Mapsearch'; 
 import SearchSidePage from '../components/search/SearchSidePage';
 
 function Search() {
@@ -35,6 +34,8 @@ function Search() {
             marginLeft: '400px'
           }}
       >
+         <MapTypeControl position={'TOPRIGHT'} />
+        <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
           <MapMarker key={index} position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }} />
         ))}

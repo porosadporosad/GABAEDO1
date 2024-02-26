@@ -41,6 +41,7 @@ const StSidePageContainer = styled.div`
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 const StGoBackButton = styled.div`

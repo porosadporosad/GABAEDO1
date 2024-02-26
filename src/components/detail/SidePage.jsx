@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
+import { useParams } from 'react-router-dom';
 
 export default function SidePage({ postData, placeData }) {
   const navigate = useNavigate();
-
+  const { id } = useParams();
   const GoBackClickHandler = () => {
     navigate(`/`);
   };
 
-  const AddPlaceBtnHandler = (id) => {
+  const AddPlaceBtnHandler = () => {
     navigate(`/search/${id}`);
   };
 
