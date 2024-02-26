@@ -1,22 +1,54 @@
 import React, { useState } from 'react';
+import { styled } from 'styled-components';
 
 export function SearchBar({ onSearch }) {
   const [inputValue, setInputValue] = useState('');
 
-  function handleSearch() {
-    onSearch(inputValue); 
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(inputValue);
+  };
 
   return (
-    <div style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="장소 검색..."
-        style={{ marginRight: '5px' }}
-      />
-      <button onClick={handleSearch}>검색</button>
-    </div>
+    <StSearchContainer>
+      <form onSubmit={handleSubmit}>
+        <Stinput
+          type="text"
+          value={inputValue}
+          id="keyword"
+          size="15"
+          placeholder="카페명을 입력하세요."
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <StBtn type="submit">검색하기</StBtn>
+      </form>
+    </StSearchContainer>
   );
 }
+
+const StSearchContainer = styled.div`
+  padding: 10px;
+  width: 400px;
+  margin-left: 40px;
+`;
+
+const Stinput = styled.input`
+  width: 200px;
+  height: 30px;
+  padding: 3px;
+  margin: 0 auto;
+  border: 1px solid #b6856a;
+  border-radius: 10px;
+`;
+
+const StBtn = styled.button`
+  width: 80px;
+  height: 30px;
+  margin-left: 10px;
+  background-color: #784B31;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff9f3;
+`;
