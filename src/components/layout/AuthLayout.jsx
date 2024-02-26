@@ -2,6 +2,7 @@ import { getUsers, useCurrentUser } from 'shared/database';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { Navigate, Outlet } from 'react-router-dom';
+import Header from 'components/Header';
 
 export default function AuthLayout() {
   // const { data } = useQuery('users', getUsers);
@@ -14,7 +15,7 @@ export default function AuthLayout() {
   }
   return (
     <>
-      <main />
+      <Header />
       <Outlet />
     </>
   );

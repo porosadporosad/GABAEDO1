@@ -108,6 +108,9 @@ const MenuHeader = styled.header`
 
   background-color: white;
   border-bottom: 1px solid #001d84;
+  position: relative;
+  z-index: 1000;
+  background-color: white;
 
   & h2 {
   }
@@ -135,8 +138,8 @@ const MenuUl = styled.ul`
 //dd
 
 const ImgDiv = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
   overflow: hidden;
   border-radius: 50%;
