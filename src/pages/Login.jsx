@@ -10,7 +10,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth';
-import { collection, setDoc, doc } from 'firebase/firestore';
+import { collection, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { getUsers } from 'shared/database';
 
@@ -18,7 +18,9 @@ export default function Login() {
   const [nickname, setNickname] = useState('');
   const [fullEmail, setFullEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
+  const [docId, setDocId] = useState('');
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
@@ -31,42 +33,48 @@ export default function Login() {
       toast.warning('닉네임이 이미 존재합니다.');
       return false;
     } else {
-      try {
-        const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
-        const user = register.user;
-        // 유저닉네임 업데이트
-        await updateProfile(user, {
-          displayName: nickname,
-          // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
-          photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
-        });
-        localStorage.setItem('accessToken', JSON.stringify(user.accessToken));
+      if (password === confirmPwd) {
+        try {
+          const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
+          const user = register.user;
+          // 유저닉네임 업데이트
+          await updateProfile(user, {
+            displayName: nickname,
+            // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
+            photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
+          });
+          localStorage.setItem('userId', JSON.stringify(user.uid));
+          localStorage.setItem('fullEmail', JSON.stringify(user.email));
 
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const newData = {
-              fullEmail: user.email,
-              nickname: user.displayName,
-              avatar: user.photoURL
-            };
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              const newData = {
+                fullEmail: user.email,
+                nickname: user.displayName,
+                avatar: user.photoURL
+                // isloggedin: true
+              };
 
-            try {
-              const collectionRef = collection(db, 'users');
-              const docRef = doc(collectionRef, user.uid);
-              await setDoc(docRef, newData);
-            } catch (error) {
-              console.error(error);
+              try {
+                const collectionRef = collection(db, 'users');
+                const docRef = doc(collectionRef, user.uid);
+                await setDoc(docRef, newData);
+              } catch (error) {
+                console.error(error);
+              }
             }
+          });
+          toast.success('회원가입 완료');
+          navigate('/');
+        } catch (error) {
+          const errorCode = error.code;
+          if (errorCode === 'auth/email-already-in-use') {
+            toast.error('이미 가입된 이메일 입니다.');
           }
-        });
-        toast.success('회원가입 완료');
-        navigate('/');
-      } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/email-already-in-use') {
-          toast.error('이미 가입된 이메일 입니다.');
+          toast.error(error);
         }
-        toast.error(error);
+      } else {
+        toast.error('비밀번호를 확인해주세요');
       }
     }
   };
@@ -82,7 +90,16 @@ export default function Login() {
       try {
         const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
         const loginData = loginUser.user;
-        localStorage.setItem('accessToken', JSON.stringify(loginData.accessToken));
+        localStorage.setItem('userId', JSON.stringify(loginData.uid));
+        localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+
+        // const querySnapshot = await getDocs(collection(db, 'users'));
+        // querySnapshot.forEach((doc) => {
+        //   const data = doc.data();
+        //   if (data.email === fullEmail) setDocId(doc.id);
+        // });
+        // const infoRef = doc(db, 'users', docId);
+        // await updateDoc(infoRef, { isloggedin: true });
 
         toast.success(`로그인 되었습니다`);
         navigate('/');
@@ -103,6 +120,13 @@ export default function Login() {
     setLoginChange(!loginChange);
   };
 
+  const emailOption = [
+    { value: '', content: '선택해주세요' },
+    { value: 'naver.com', content: 'naver.com' },
+    { value: 'hanmail.com', content: 'hanmail.com' },
+    { value: 'gmail.com', content: 'gmail.com' }
+  ];
+
   return (
     <LoginBody>
       <LoginMain>
@@ -110,15 +134,6 @@ export default function Login() {
         {loginChange ? (
           <>
             <LoginForm onSubmit={signupSubmit}>
-              <LoginInput
-                type="text"
-                placeholder="닉네임"
-                required
-                value={nickname}
-                onChange={(e) => {
-                  setNickname(e.target.value);
-                }}
-              />
               <LoginInput
                 type="email"
                 placeholder="아이디"
@@ -128,6 +143,11 @@ export default function Login() {
                   setFullEmail(e.target.value);
                 }}
               />
+              {/* <select>
+                {emailOption.map((prev) => {
+                  return <option value={prev.value}>{prev.content}</option>;
+                })}
+              </select> */}
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
@@ -136,6 +156,25 @@ export default function Login() {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
+                }}
+              />
+              <LoginInput
+                type="password"
+                placeholder="비밀번호확인"
+                minLength={6}
+                required
+                value={confirmPwd}
+                onChange={(e) => {
+                  setConfirmPwd(e.target.value);
+                }}
+              />
+              <LoginInput
+                type="text"
+                placeholder="닉네임"
+                required
+                value={nickname}
+                onChange={(e) => {
+                  setNickname(e.target.value);
                 }}
               />
               <LoginBtn type="submit">회원가입</LoginBtn>

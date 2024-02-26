@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { auth } from '../shared/firebase';
+import { auth, db } from '../shared/firebase';
+import { collection, doc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useCurrentUser } from 'shared/database';
 // import { useQuery } from 'react-query';
@@ -13,15 +14,21 @@ export default function Header() {
   // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [userImg, setUserImg] = useState('');
 
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
+  // const { data } = useCurrentUser();
+
+  const userId = JSON.parse(localStorage.getItem('userId'));
+
+  // console.log('userDocRef', userDocRef);
 
   useEffect(() => {
     const loginCheck = () => {
       // 현재 유저가 로그인 되어있는지 확인
       onAuthStateChanged(auth, (user) => {
         if (user) {
+          setUserImg(user.photoURL);
           setIsLogin(true);
         } else {
           setIsLogin(false);
@@ -36,9 +43,15 @@ export default function Header() {
   //   { id: 'mypage', info: '마이 페이지' }
   // ];
 
-  const logoutClick = () => {
+  const logoutClick = async () => {
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
     if (logoutConfirm) {
+      // await updateDoc(userDocRef, { isloggedin: false })
+      // const userDocRef = doc(db, 'users', userId);
+      // await userDocRef.doc(userId).update({ isloggedin: false });
+      // const infoRef = doc(db, 'users', userId);
+      // await updateDoc(infoRef, { isloggedin: false });
+
       //로그아웃
       signOut(auth)
         .then(() => {
@@ -79,7 +92,7 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
+                <ImgStyle onClick={userIsActiveBtn} src={userImg} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
                 <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
