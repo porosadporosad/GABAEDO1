@@ -3,7 +3,6 @@ import Home from 'pages/Home';
 import Login from 'pages/Login';
 import Detail from 'pages/Detail';
 import Mypage from 'pages/Mypage';
-import Signup from 'pages/Signup';
 import About from 'pages/About';
 import NonAuthLayout from 'components/layout/NonAuthLayout';
 import AuthLayout from 'components/layout/AuthLayout';
@@ -30,7 +29,6 @@ export default function Router() {
         {/* 이미 로그인이 되었다면 접근 X */}
         <Route element={<NonAuthLayout />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
         </Route>
       </Routes>
     </BrowserRouter>
