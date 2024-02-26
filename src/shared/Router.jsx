@@ -7,6 +7,7 @@
   import NonAuthLayout from 'components/layout/NonAuthLayout';
   import AuthLayout from 'components/layout/AuthLayout';
   import Layout from 'components/layout/Layout';
+  import Search from '../pages/Search';
 
   export default function Router() {
     return (
@@ -20,6 +21,7 @@
 
           {/*상단바가 없는 지도페이지*/}
           <Route path="/detail/:id" element={<Detail />} />
+          <Route path="/search/:id" element={<Search />} />
 
           {/*로그인이 반드시 필요 */}
           <Route element={<AuthLayout />}>

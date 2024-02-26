@@ -26,7 +26,7 @@ function Detail() {
 
   //   useEffect(() => {
   //   // savedPlaces 또는 searchResults가 변경될 때 지도 중심 업데이트
-  // }, [savedPlaces, searchResults]);
+  // }, [searchResults]);
 
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
@@ -68,7 +68,11 @@ function Detail() {
     <StFullScreenContainer>
       <SidePage postData={postData} placeData={placeData} onSearch={handleSearch} />
       <Map
-        center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
+        center={
+          searchResults.length > 0
+            ? { lat: parseFloat(searchResults[0].y), lng: parseFloat(searchResults[0].x) }
+            : { lat: firstPlace.lat, lng: firstPlace.lng }
+        }
         style={{
           width: 'calc(100% - 400px)',
           height: '100%',
@@ -93,21 +97,4 @@ const StFullScreenContainer = styled.div`
   display: flex;
 `;
 
-//   return (
-//     <StFullScreenContainer>
-//       <SidePage onSearch={handleSearch} />
-//       <Map
-//         center={mapCenter}
-//         style={{
-//           width: 'calc(100% - 400px)',
-//           height: '100%',
-//           marginLeft: '400px'
-//         }}
-//       >
-//         <MapTypeControl position={'TOPRIGHT'} />
-//         <ZoomControl position={'RIGHT'} />
-//         <MapMarker position={mapCenter}></MapMarker>
-//       </Map>
-//     </StFullScreenContainer>
-//   );
-// }
+
