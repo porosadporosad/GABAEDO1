@@ -10,10 +10,11 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
 
   const addHashtag = (e) => {
     if (hashtag.length >= 4) {
-      // 4개까지 고를 수 있도록
+      // 4개까지만 고를 수 있도록 배열 길이 조절
       hashtag.length = 4;
     } else {
       setHashtag((prev) => {
+        // 중복 해시태그 방지
         if (!prev.includes(e.target.value)) {
           return [...prev, e.target.value];
         } else {
@@ -38,6 +39,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     try {
       const docRef = await addDoc(collection(db, 'posts'), newPost);
 
+      // 모달 끄기
       setModalIsOpen(!modalIsOpen);
       return docRef.id;
     } catch (error) {
@@ -98,7 +100,6 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
 
 const AddPostModalbody = styled.section`
   width: 400px;
-  /* height: 420px; */
   margin: auto;
   padding: 20px;
   display: flex;
