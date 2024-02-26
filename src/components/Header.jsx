@@ -11,17 +11,15 @@ import { useCurrentUser } from 'shared/database';
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [userImg, setUserImg] = useState('');
 
   const navigate = useNavigate();
-  // const { data } = useCurrentUser();
+  const { data } = useCurrentUser();
 
   useEffect(() => {
     const loginCheck = () => {
       // 현재 유저가 로그인 되어있는지 확인
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          setUserImg(user.photoURL);
           setIsLogin(true);
         } else {
           setIsLogin(false);
@@ -74,7 +72,7 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle onClick={userIsActiveBtn} src={userImg} alt="프로필사진" />
+                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
                 <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
