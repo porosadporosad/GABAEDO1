@@ -14,9 +14,7 @@ export default function PostList({ keyword }) {
     return <h1>Loading</h1>;
   }
 
-  const filteredData = data.filter(
-    (curation) => curation.title.includes(keyword) || curation.content.includes(keyword)
-  );
+  const filteredData = data.filter((post) => post.title.includes(keyword) || post.content.includes(keyword));
 
   const boxClickHandler = (id) => {
     navigate(`detail/${id}`);
@@ -28,22 +26,22 @@ export default function PostList({ keyword }) {
         <CreatePost modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
       </AddPostModal>
       <Article>
-        <CurationHeader>
+        <PostListHeader>
           <ListTitle>가배도 모아보기</ListTitle>
-          <AddCurationBtn
+          <CreatePostBtn
             onClick={() => {
               setModalIsOpen(!modalIsOpen);
             }}
           >
             +
-          </AddCurationBtn>
-        </CurationHeader>
+          </CreatePostBtn>
+        </PostListHeader>
         <AllSection>
-          {filteredData.map((curation) => (
-            <CurationBox key={curation.id} onClick={() => boxClickHandler(curation.id)}>
-              <h2>{curation.title}</h2>
-              <p>{curation.content}</p>
-            </CurationBox>
+          {filteredData.map((post) => (
+            <PostListBox key={post.id} onClick={() => boxClickHandler(post.id)}>
+              <h2>{post.title}</h2>
+              <p>{post.content}</p>
+            </PostListBox>
           ))}
         </AllSection>
         <ListTitle>태그별 가배도</ListTitle>
@@ -69,7 +67,7 @@ const AddPostModal = styled.article`
   background-color: #ffffff58;
 `;
 
-const CurationHeader = styled.header`
+const PostListHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -84,7 +82,7 @@ const ListTitle = styled.h1`
   color: #784b31;
 `;
 
-const AddCurationBtn = styled.button`
+const CreatePostBtn = styled.button`
   width: 40px;
   height: 40px;
   margin: 10px 10px 0 0;
@@ -118,7 +116,7 @@ const AllSection = styled.section`
   }
 `;
 
-const CurationBox = styled.div`
+const PostListBox = styled.div`
   width: 380px;
   height: 100px;
   padding: 10px;
