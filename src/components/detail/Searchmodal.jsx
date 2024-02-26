@@ -16,7 +16,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
           params: {
             key: process.env.REACT_APP_YOUTUBE_API_KEY,
             part: 'snippet',
-            q: '로우머', // 기본 검색어 설정
+            q: `카페 ${cafe.name}`, // 기본 검색어 설정
             type: 'video',
             maxResults: 5
           }
@@ -29,7 +29,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
     };
 
     fetchData(); // 컴포넌트가 마운트되면 기본 검색어로 데이터를 가져옴
-  }, []);
+  }, [cafe]);
 
   const closeModalHandler = () => {
     closeModal();
@@ -58,7 +58,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <img src={item.snippet.thumbnails.default.url} />
+                    <img src={item.snippet.thumbnails.default.url} style={{ borderRadius: '12%' }} />
                   </a>
                 </Thumbnail>
                 <Title>{item.snippet.title}</Title>
@@ -110,10 +110,16 @@ const VideoContainer = styled.div``;
 
 const VideoBox = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  text-align: left;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
 `;
 
-const Thumbnail = styled.div``;
+const Thumbnail = styled.div`
+  width: 40%;
+`;
 
-const Title = styled.div``;
+const Title = styled.div`
+  width: 60%;
+`;
