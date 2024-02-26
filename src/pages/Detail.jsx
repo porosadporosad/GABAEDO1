@@ -67,7 +67,11 @@ function Detail() {
     <StFullScreenContainer>
       <SidePage postData={postData} placeData={placeData} onSearch={handleSearch} />
       <Map
-        center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
+        center={
+          searchResults.length > 0
+            ? { lat: parseFloat(searchResults[0].y), lng: parseFloat(searchResults[0].x) }
+            : { lat: firstPlace.lat, lng: firstPlace.lng }
+        }
         style={{
           width: 'calc(100% - 400px)',
           height: '100%',
