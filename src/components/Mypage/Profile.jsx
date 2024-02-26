@@ -1,11 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../assets/defaultImg.jpg';
+import { useQuery } from 'react-query';
+import { getUsers } from '../../shared/database';
+import { auth, db } from 'shared/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export default function Profile() {
+  const { isLoading, isError, data } = useQuery('users', getUsers);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setIsEditingText] = useState('');
   const [selectedImg, setSelectedImg] = useState(defaultImg);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchData = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userProfile = await getUsers(auth.currentUser.uid); // 현재 사용자의 UID를 기준으로 사용자 프로필 가져옴
+          setCurrentUser(userProfile);
+        } catch (error) {
+          console.error('유저 정보 가져오기 에러:', error);
+        }
+      } else {
+        // 사용자가 로그아웃한 경우 프로필 정보
+        setCurrentUser(null);
+      }
+    });
+    // 컴포넌트가 언마운트될 때 정리
+    return () => fetchData();
+  }, []);
+
+  if (isLoading) {
+    return <h1>로딩중...</h1>;
+  }
+
+  if (isError) {
+    return <h1>Error</h1>;
+  }
+
+  const user = data[0];
+  // console.log(user); // o
+  const { id, nickname } = user;
 
   const imgChangeHandler = (e) => {
     const imgFile = e.target.files[0];
@@ -16,16 +53,25 @@ export default function Profile() {
     setSelectedImg(imgURL);
   };
 
-  const onEditDone = () => {
-    const formData = new FormData();
-    if (editingText) {
-      formData.append('nickname', editingText);
-    }
-    if (selectedImg !== defaultImg) {
-      formData.append('avatar', selectedImg);
+  const onEditNameHandler = (e) => {
+    setIsEditingText(e.target.value);
+  };
+
+  const updateUserProfile = async (userId, newNickname) => {
+    // const userDocRef = doc(db, 'users', userId);
+
+    try {
+      await updateDoc(doc(db, 'users', userId), {
+        nickname: newNickname
+      });
+
+      alert('프로필 변경이 완료되었습니다.');
+    } catch (error) {
+      console.error('프로필 업데이트 중 오류 발생', error);
+      alert('프로필 변경에 실패했습니다.');
     }
 
-    alert('프로필 변경이 완료되었습니다.');
+    setIsEditing(false);
   };
 
   return (
@@ -36,17 +82,11 @@ export default function Profile() {
           <Avatar src={selectedImg} />
           <ImgFileSelect type="file" onChange={imgChangeHandler} accept="image/*" />
         </label>
-        <UserId>userId</UserId>
+        <UserId>{id}</UserId>
         {isEditing ? (
-          <input
-            autoFocus
-            defaultValue="nickname"
-            onChange={(e) => {
-              setIsEditingText(e.target.value);
-            }}
-          />
+          <input autoFocus defaultValue={nickname} onChange={onEditNameHandler} />
         ) : (
-          <Nickname>nickname</Nickname>
+          <Nickname>{nickname}</Nickname>
         )}
 
         <UserIntro>내 취미는 카페투어!</UserIntro>
@@ -54,7 +94,13 @@ export default function Profile() {
         {isEditing ? (
           <div>
             <Button onClick={() => setIsEditing(false)}>취소</Button>
-            <Button onClick={onEditDone} text="수정완료" disabled={!editingText && selectedImg === defaultImg} />
+            {/* <Button onClick={onEditDone} text="수정완료" disabled={!editingText && selectedImg === defaultImg} /> */}
+            <Button
+              onClick={() => updateUserProfile(id, editingText)}
+              disabled={!editingText && selectedImg === defaultImg}
+            >
+              수정완료
+            </Button>
           </div>
         ) : (
           <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
