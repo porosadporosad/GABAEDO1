@@ -15,29 +15,29 @@ export const getUsers = async () => {
   }
 };
 
-// // 현재유저 정보 가져오기
-// const getCurrentUser = () => {
-//   auth.onAuthStateChanged((user) => {
-//     if (user) {
-//       return {
-//         fullEmail: user.email,
-//         nickname: user.displayName,
-//         avatar: user.photoURL
-//       };
-//     } else {
-//       return false;
-//     }
-//   });
-//   // const user = auth.currentUser;
-//   // if (!user) {
-//   //   return false;
-//   // }
-// };
+// 현재유저 정보 가져오기
+const getCurrentUser = () => {
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      return {
+        fullEmail: user.email,
+        nickname: user.displayName,
+        avatar: user.photoURL
+      };
+    } else {
+      return false;
+    }
+  });
+  // const user = auth.currentUser;
+  // if (!user) {
+  //   return false;
+  // }
+};
 
-// // 커스텀
-// export const useCurrentUser = () => {
-//   return useQuery('currentUser', getCurrentUser);
-// };
+// 커스텀
+export const useCurrentUser = () => {
+  return useQuery('currentUser', getCurrentUser);
+};
 
 //파이어베이스에서 게시글 리스트 불러오기
 export const getPosts = async () => {
