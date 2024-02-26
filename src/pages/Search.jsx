@@ -1,28 +1,24 @@
-// Search.js
+// 필요한 모듈 import
 import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import SearchBar from '../components/detail/SidePage'; 
+import { SearchBar } from '../components/Mapsearch'; 
+import SearchSidePage from '../components/search/SearchSidePage';
 
 function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
 
   const handleSearch = (searchQuery) => {
-    // kakao.maps.services.Places 객체 생성
     const ps = new window.kakao.maps.services.Places();
 
-    // 키워드 검색 완료 시 호출되는 콜백
     const placesSearchCB = (data, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        console.log('검색 결과:', data);
-        // 검색 결과 중 첫 번째 위치로 지도 중심 업데이트
         setMapCenter({ lat: parseFloat(data[0].y), lng: parseFloat(data[0].x) });
-        setSearchResults(data); // 검색 결과 상태 업데이트
-      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
-      } else if (status === window.kakao.maps.services.Status.ERROR) {
-        alert('검색 중 오류가 발생했습니다.');
+        setSearchResults(data);
+        console.log('검색 결과:', data);
+      } else {
+        alert('검색 결과를 찾을 수 없습니다.');
       }
     };
 
@@ -30,20 +26,28 @@ function Search() {
   };
 
   return (
-    <div>
-      <SearchBar onSearch={handleSearch} />
+    <StFullScreenContainer>
+      <SearchSidePage onSearch={handleSearch} searchResults={searchResults} />
       <Map
         center={mapCenter}
-        style={{ width: '100%', height: '400px' }}
+        style={{
+            width: 'calc(100% - 400px)',
+            height: '100%',
+            marginLeft: '400px'
+          }}
       >
-        <MapTypeControl position={'TOPRIGHT'} />
-        <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
           <MapMarker key={index} position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }} />
         ))}
       </Map>
-    </div>
+    </StFullScreenContainer>
   );
 }
 
 export default Search;
+
+const StFullScreenContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+`;

@@ -10,7 +10,7 @@ export function SearchBar({ onSearch }) {
   };
 
   return (
-    <div style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px' }}>
+    <StSearchContainer>
       <form onSubmit={handleSubmit}>
         <Stinput
           type="text"
@@ -20,16 +20,35 @@ export function SearchBar({ onSearch }) {
           placeholder="카페명을 입력하세요."
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button type="submit">검색하기</button>
+        <StBtn type="submit">검색하기</StBtn>
       </form>
-    </div>
+    </StSearchContainer>
   );
 }
+
+const StSearchContainer = styled.div`
+  padding: 10px;
+  width: 400px;
+  margin-left: 40px;
+`;
 
 const Stinput = styled.input`
   width: 200px;
   height: 30px;
+  padding: 3px;
   margin: 0 auto;
   border: 1px solid #b6856a;
   border-radius: 10px;
+`;
+
+const StBtn = styled.button`
+  width: 80px;
+  height: 30px;
+  margin-left: 10px;
+  background-color: #784B31;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff9f3;
 `;
