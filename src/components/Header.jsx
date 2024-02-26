@@ -1,30 +1,21 @@
 import { useEffect, useState } from 'react';
-import { nowUser } from '../axios/authUser';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import defaultImg from '../assets/defaultImg.jpg';
 import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { getUsers } from 'shared/database';
 
 export default function Header() {
   // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  const { data } = useQuery('user', nowUser);
+  const { data } = useQuery('users', getUsers);
   // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  console.log('data', data);
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setIsLogin(true);
-  //   } else {
-  //     setIsLogin(false);
-  //   }
-  // }, [data]);
+  const now = auth.currentUser;
 
   useEffect(() => {
     const loginCheck = () => {
@@ -32,12 +23,6 @@ export default function Header() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setIsLogin(true);
-          const fullEmail = user.email;
-          const nickname = user.displayName;
-          const avatar = user.photoURL;
-          console.log(fullEmail);
-          console.log('nickname', nickname);
-          console.log(avatar);
         } else {
           setIsLogin(false);
         }
@@ -45,7 +30,6 @@ export default function Header() {
     };
     loginCheck();
   }, []);
-
   // const menus = [
   //   { id: 'about', info: '사이트 소개' },
   //   { id: 'login', info: '로그인 / 회원가입' },
@@ -53,12 +37,12 @@ export default function Header() {
   // ];
 
   const logoutClick = () => {
-    // window.localStorage.clear();
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
     if (logoutConfirm) {
       //로그아웃
       signOut(auth)
         .then(() => {
+          window.localStorage.clear();
           toast.success('로그아웃되었습니다.');
           navigate('/');
         })
@@ -82,15 +66,6 @@ export default function Header() {
     setIsActive(!isActive);
   };
 
-  // const userImage = () => {
-  //   const img = data.avatar;
-  //   if (img === null) {
-  //     return defaultImg;
-  //   } else {
-  //     console.log('img', img);
-  //     return img;
-  //   }
-  // };
   return (
     <MenuHeader>
       <StLink to="/">
@@ -104,12 +79,7 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle
-                  onClick={userIsActiveBtn}
-                  src={defaultImg}
-                  alt="프로필사진"
-                  // data.avatar !== null ? data.avatar :
-                />
+                <ImgStyle onClick={userIsActiveBtn} src={now.photoURL} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
                 <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>

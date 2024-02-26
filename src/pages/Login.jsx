@@ -4,44 +4,63 @@ import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../shared/firebase';
-import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, getDocs, query } from 'firebase/firestore';
-import defaultImg from '../assets/defaultImg.jpg';
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from 'firebase/auth';
+import { collection, setDoc, doc } from 'firebase/firestore';
+import { useQuery } from 'react-query';
+import { getUsers } from 'shared/database';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
-  const [userid, setUserid] = useState('');
+  const [fullEmail, setFullEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginChange, setLoginChange] = useState(false);
 
   const navigate = useNavigate();
+  const { data } = useQuery('users', getUsers);
 
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
-    const users = query(collection(db, 'users'));
-    const usersNickname = await getDocs(users);
-    const initial = [];
-    usersNickname.forEach((doc) => {
-      initial.push({ ...doc.data() });
-    });
-    const nicknameIncludes = initial.some((prev) => prev.nickname === nickname);
+    const nicknameIncludes = data.some((prev) => prev.nickname === nickname);
     if (nicknameIncludes) {
       toast.warning('닉네임이 이미 존재합니다.');
       return false;
     } else {
       try {
-        const register = await createUserWithEmailAndPassword(auth, userid, password);
+        const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
         const user = register.user;
-        console.log('user', user);
+        // 유저닉네임 업데이트
         await updateProfile(user, {
           displayName: nickname,
-          photoURL: defaultImg
+          // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
+          photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
         });
-        console.log('userUpdate', user);
-        // await loginInstance.post('/register', newUser);
+        localStorage.setItem('accessToken', JSON.stringify(user.accessToken));
+
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const newData = {
+              fullEmail: user.email,
+              nickname: user.displayName,
+              avatar: user.photoURL
+            };
+
+            try {
+              const collectionRef = collection(db, 'users');
+              const docRef = doc(collectionRef, user.uid);
+              await setDoc(docRef, newData);
+            } catch (error) {
+              console.error(error);
+            }
+          }
+        });
         toast.success('회원가입 완료');
-        // navigate('/');
+        navigate('/');
       } catch (error) {
         const errorCode = error.code;
         if (errorCode === 'auth/email-already-in-use') {
@@ -55,29 +74,15 @@ export default function Login() {
   // 로그인
   const loginSubmit = async (e) => {
     e.preventDefault();
-    // const userLogin = {
-    //   id: userid,
-    //   password
-    // };
-    const users = query(collection(db, 'users'));
-    const usersEmail = await getDocs(users);
-    const initial = [];
-    usersEmail.forEach((doc) => {
-      initial.push({ ...doc.data() });
-    });
-    const emailIncludes = initial.some((prev) => prev.nickname === nickname);
-    if (emailIncludes) {
+    const emailIncludes = data.some((prev) => prev.fullEmail === fullEmail);
+    if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
       return false;
     } else {
       try {
-        // const response = await loginInstance.post('/login', userLogin);
-        await signInWithEmailAndPassword(auth, userid, password);
-        // console.log('로그인', response);
-        // 로그인한 유저 정보
-        // const { accessToken, nickname } = response.data;
-        // mutation.mutate(accessToken);
-        // localStorage.setItem('accessToken', JSON.stringify(accessToken));
+        const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
+        const loginData = loginUser.user;
+        localStorage.setItem('accessToken', JSON.stringify(loginData.accessToken));
 
         toast.success(`로그인 되었습니다`);
         navigate('/');
@@ -92,7 +97,7 @@ export default function Login() {
   };
 
   const dataClear = () => {
-    setUserid('');
+    setFullEmail('');
     setPassword('');
     setNickname('');
     setLoginChange(!loginChange);
@@ -118,9 +123,9 @@ export default function Login() {
                 type="email"
                 placeholder="아이디"
                 required
-                value={userid}
+                value={fullEmail}
                 onChange={(e) => {
-                  setUserid(e.target.value);
+                  setFullEmail(e.target.value);
                 }}
               />
               <LoginInput
@@ -143,9 +148,9 @@ export default function Login() {
                 type="email"
                 placeholder="아이디"
                 required
-                value={userid}
+                value={fullEmail}
                 onChange={(e) => {
-                  setUserid(e.target.value);
+                  setFullEmail(e.target.value);
                 }}
               />
               <LoginInput
