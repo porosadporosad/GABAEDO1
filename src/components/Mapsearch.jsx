@@ -17,6 +17,7 @@ export function SearchBar({ onSearch }) {
           value={inputValue}
           id="keyword"
           size="15"
+          placeholder="카페명을 입력하세요."
           onChange={(e) => setInputValue(e.target.value)}
         />
         <button type="submit">검색하기</button>
