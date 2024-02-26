@@ -217,12 +217,13 @@ const Place = styled.div`
   & h4 {
     font-family: 'SunBatang-Medium';
     font-size: 14px;
-    margin-left: 10px;
+    line-height: 180%;
     color: #b6856a;
   }
 `;
 
 const PlaceInfo = styled.div`
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
 `;
