@@ -51,7 +51,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
             <>
               {' '}
               <VideoBox key={index}>
-                <div>
+                <Thumbnail>
                   {' '}
                   <a
                     href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
@@ -60,8 +60,8 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
                   >
                     <img src={item.snippet.thumbnails.default.url} />
                   </a>
-                </div>
-                <div>{item.snippet.title}</div>
+                </Thumbnail>
+                <Title>{item.snippet.title}</Title>
               </VideoBox>
               <BrownLine />
             </>
@@ -113,3 +113,7 @@ const VideoBox = styled.div`
   justify-content: center;
   gap: 10px;
 `;
+
+const Thumbnail = styled.div``;
+
+const Title = styled.div``;
