@@ -2,18 +2,16 @@ import styled from 'styled-components';
 import { getPosts } from 'shared/database';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import CreatePost from './CreatePost';
 
-export default function CurationList({ keyword }) {
-  const { isLoading, isError, data } = useQuery('posts', getPosts);
+export default function PostList({ keyword }) {
+  const { isLoading, data } = useQuery('posts', getPosts);
   const navigate = useNavigate();
-  console.log(data);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   if (isLoading) {
     return <h1>Loading</h1>;
-  }
-
-  if (isError) {
-    return <h1>Error</h1>;
   }
 
   const filteredData = data.filter(
@@ -25,27 +23,50 @@ export default function CurationList({ keyword }) {
   };
 
   return (
-    <Article>
-      <CurationHeader>
-        <ListTitle>가배도 모아보기</ListTitle>
-        <AddCurationBtn>+</AddCurationBtn>
-      </CurationHeader>
-      <AllSection>
-        {filteredData.map((curation) => (
-          <CurationBox key={curation.id} onClick={() => boxClickHandler(curation.id)}>
-            <h2>{curation.title}</h2>
-            <p>{curation.content}</p>
-          </CurationBox>
-        ))}
-      </AllSection>
-      <ListTitle>태그별 가배도</ListTitle>
-    </Article>
+    <>
+      <AddPostModal modalIsOpen={modalIsOpen}>
+        <CreatePost modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
+      </AddPostModal>
+      <Article>
+        <CurationHeader>
+          <ListTitle>가배도 모아보기</ListTitle>
+          <AddCurationBtn
+            onClick={() => {
+              setModalIsOpen(!modalIsOpen);
+            }}
+          >
+            +
+          </AddCurationBtn>
+        </CurationHeader>
+        <AllSection>
+          {filteredData.map((curation) => (
+            <CurationBox key={curation.id} onClick={() => boxClickHandler(curation.id)}>
+              <h2>{curation.title}</h2>
+              <p>{curation.content}</p>
+            </CurationBox>
+          ))}
+        </AllSection>
+        <ListTitle>태그별 가배도</ListTitle>
+      </Article>
+    </>
   );
 }
 
 const Article = styled.article`
   width: 1200px;
   margin: 0 auto;
+`;
+
+const AddPostModal = styled.article`
+  position: absolute;
+  display: ${(props) => (props.modalIsOpen ? 'flex' : 'none')};
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: #ffffff58;
 `;
 
 const CurationHeader = styled.header`
