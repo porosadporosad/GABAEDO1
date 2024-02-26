@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
@@ -40,7 +40,6 @@ function Detail() {
     setIsOpenIndex(index);
     setSelectedPlace(placeData[index]);
   };
-
 
   return (
     <StFullScreenContainer>
