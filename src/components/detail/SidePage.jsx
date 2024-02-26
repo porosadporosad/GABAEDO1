@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
+import { useQuery } from 'react-query';
+import { getPosts } from 'shared/database';
+import { getPlaces } from 'shared/database';
 
 export default function SidePage() {
-  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
+  const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
+  const { id } = useParams();
+  const postData = postsData && postsData.find((post) => post.id === id);
+  const placeData = placesData && placesData.filter((item) => item.postId === id);
+
+  if (isLoadingPosts || isLoadingPlaces) {
+    return <h1>Loading</h1>;
+  }
+
+  if (isErrorPosts || isErrorPlaces) {
+    return <h1>Error</h1>;
+  }
+
   const handleSearch = (searchTerm) => {
     console.log(searchTerm);
   };
@@ -29,18 +46,19 @@ export default function SidePage() {
           <h2>
             ✧☕✧
             <br />
-            망원동 아늑한 카페
+            {postData.title}
           </h2>
-          <h3>망원동에서 분위기 좋은 곳을 모아봤어요.</h3>
+          <h3>{postData.content}</h3>
         </PostBox>
         <HashtagBox>
-          <Hashtag>✨분위기가 좋은</Hashtag>
-          <Hashtag>🧁디저트가 맛있는</Hashtag>
+          {postData.hashtag.map((hashtag) => {
+            return <Hashtag key={hashtag}>{hashtag}</Hashtag>;
+          })}
         </HashtagBox>
         <BrownLine />
         <WriterBox>
           <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
-          <WriterNickname>냠냠박사</WriterNickname>
+          <WriterNickname>{postData.nickname}</WriterNickname>
         </WriterBox>
       </PostInfo>
       {isEditing ? (
@@ -49,27 +67,21 @@ export default function SidePage() {
         <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
       )}
       <PlacesBox>
-        <Place>
-          <PlaceInfo>
-            <h2>망원 모을</h2>
-            <h4>망원로 123길 45</h4>
-          </PlaceInfo>
-          <h3>인스타 거기!! 1층 포토스팟</h3>
-        </Place>
-        <Place>
-          <PlaceInfo>
-            <h2>망원 모을</h2>
-            <h4>망원로 123길 45</h4>
-          </PlaceInfo>
-          <h3>인스타 거기!! 1층 포토스팟</h3>
-        </Place>
-        <Place>
-          <PlaceInfo>
-            <h2>망원 모을</h2>
-            <h4>망원로 123길 45</h4>
-          </PlaceInfo>
-          <h3>인스타 거기!! 1층 포토스팟</h3>
-        </Place>
+        {placeData.length === 0 ? (
+          <Place>아직 등록된 카페가 없습니다.</Place>
+        ) : (
+          placeData.map((place) => {
+            return (
+              <Place key={place.id}>
+                <PlaceInfo>
+                  <h2>{place.name}</h2>
+                  <h4>{place.address}</h4>
+                </PlaceInfo>
+                <h3>{place.placeComment}</h3>
+              </Place>
+            );
+          })
+        )}
       </PlacesBox>
     </SidePageContainer>
   );
