@@ -1,35 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
-import { useQuery } from 'react-query';
-import { getPosts } from 'shared/database';
-import { getPlaces } from 'shared/database';
 
-export default function SidePage() {
+export default function SidePage({ postData, placeData, onSearch }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
-  const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
-  const { id } = useParams();
-  const postData = postsData && postsData.find((post) => post.id === id);
-  const placeData = placesData && placesData.filter((item) => item.postId === id);
-
-  if (isLoadingPosts || isLoadingPlaces) {
-    return <h1>Loading</h1>;
-  }
-
-  if (isErrorPosts || isErrorPlaces) {
-    return <h1>Error</h1>;
-  }
-
-  const handleSearch = (searchTerm) => {
-    console.log(searchTerm);
-  };
 
   const GoBackClickHandler = () => {
     navigate(`/`);
+  };
+
+  const handleSearch = (searchTerm) => {
+    console.log(searchTerm);
   };
 
   const AddPlaceBtnHandler = () => {
@@ -62,7 +46,7 @@ export default function SidePage() {
         </WriterBox>
       </PostInfo>
       {isEditing ? (
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={onSearch} />
       ) : (
         <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
       )}
@@ -86,15 +70,6 @@ export default function SidePage() {
     </SidePageContainer>
   );
 }
-
-// const CurationBox = styled.div`
-//   width: 380px;
-//   height: 100px;
-//   padding: 10px;
-//   margin: 10px 0;
-//   text-align: center;
-//   border-radius: 20px;
-// `;
 
 const SidePageContainer = styled.div`
   position: absolute;
