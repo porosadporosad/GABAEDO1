@@ -4,7 +4,7 @@ import defaultImg from '../../assets/defaultImg.jpg';
 import { useQuery } from 'react-query';
 import { getUsers } from '../../shared/database';
 import { auth, db } from 'shared/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 export default function Profile() {
   const { isLoading, isError, data } = useQuery('users', getUsers);
@@ -13,12 +13,31 @@ export default function Profile() {
   const [editingText, setIsEditingText] = useState('');
   const [selectedImg, setSelectedImg] = useState(defaultImg);
   const [currentUser, setCurrentUser] = useState(null);
+  const [myPosts, setMyPosts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const userEmail = JSON.parse(localStorage.getItem('fullEmail'));
+      if (userEmail) {
+        try {
+          const q = query(collection(db, 'posts'), where('fullEmail', '==', userEmail));
+          const querySnapshot = await getDocs(q);
+          const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          console.log(posts);
+          setMyPosts(posts);
+        } catch (error) {
+          console.error('Error fetching user documents:', error);
+          throw error;
+        }
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const fetchData = auth.onAuthStateChanged(async (user) => {
       if (user) {
         try {
-          const userProfile = await getUsers(auth.currentUser.uid); // 현재 사용자의 UID를 기준으로 사용자 프로필 가져옴
+          const userProfile = await getUsers(auth.currentUser.uid); // 현재 사용자 fullEmail 기준으로 사용자 프로필 가져옴
           setCurrentUser(userProfile);
         } catch (error) {
           console.error('유저 정보 가져오기 에러:', error);
@@ -94,7 +113,6 @@ export default function Profile() {
         {isEditing ? (
           <div>
             <Button onClick={() => setIsEditing(false)}>취소</Button>
-            {/* <Button onClick={onEditDone} text="수정완료" disabled={!editingText && selectedImg === defaultImg} /> */}
             <Button
               onClick={() => updateUserProfile(id, editingText)}
               disabled={!editingText && selectedImg === defaultImg}
@@ -105,7 +123,14 @@ export default function Profile() {
         ) : (
           <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
         )}
-        <UserInputList>내가 만든 가배도</UserInputList>
+        <UserInputList>
+          내가만든가배도
+          {myPosts.map((post) => (
+            <li key={post.id}>
+              <div>{post.title}</div>
+            </li>
+          ))}
+        </UserInputList>
       </ProfileWrapper>
     </Container>
   );
