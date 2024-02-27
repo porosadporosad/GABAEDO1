@@ -9,7 +9,7 @@ import { updateProfile } from 'firebase/auth';
 
 export default function UserIntroPage() {
   const { data } = useCurrentUser();
-
+  console.log(data);
   const postUser = auth.currentUser;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -102,7 +102,10 @@ export default function UserIntroPage() {
           <ImgFileSelect type="file" onChange={uploadProfile} accept="image/*" />
         </div>
       ) : (
-        <Nickname>{data.nickname}</Nickname>
+        <>
+          <Nickname>{data.nickname}</Nickname>
+          <p>{data.fullEmail}</p>
+        </>
       )}
 
       <Introduce>내 취미는 카페투어!</Introduce>
