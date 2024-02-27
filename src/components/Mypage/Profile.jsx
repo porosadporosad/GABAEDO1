@@ -6,7 +6,8 @@ import { getPosts } from '../../shared/database';
 
 export default function Profile() {
   const { isLoading: PostsIsLoading, data: postsData } = useQuery('posts', getPosts); //모든 게시글
-  const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
+  // const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
+  const { isLoading: UserIsLoading, data: userData } = useQuery('users', getCurrentUser); //현재 로그인한 사람의 정보
 
   if (PostsIsLoading || UserIsLoading) {
     return <h1>데이터 로드중...</h1>;
@@ -14,9 +15,9 @@ export default function Profile() {
 
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
 
-  console.log('11111게시글데이터', postsData);
-  console.log('222222현재 유저 데이터', userData);
-  console.log('3333333내가 쓴 글 데이터', myPosts);
+  // console.log('11111게시글데이터', postsData);
+  // console.log('222222현재 유저 데이터', userData);
+  // console.log('3333333내가 쓴 글 데이터', myPosts);
 
   return (
     <Container>
