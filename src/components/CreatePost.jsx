@@ -6,6 +6,7 @@ import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
 import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
@@ -15,6 +16,13 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
   const queryClient = useQueryClient();
+
+  const handleOnInput = (e, maxlength) => {
+    const {
+      target: { value }
+    } = e;
+    if (value.length > maxlength) e.target.value = value.substr(0, maxlength);
+  };
 
   const addHashtag = (e) => {
     if (hashtag.length >= 3) {
@@ -34,6 +42,19 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
 
   const addPost = async (e) => {
     e.preventDefault();
+
+    if (!title) {
+      toast.warning('타이틀을 입력해 주세요.');
+      return;
+    }
+    if (!content) {
+      toast.warning('소개 한마디를 입력해 주세요.');
+      return;
+    }
+    if (hashtag.length === 0) {
+      toast.warning('태그를 1개 이상 골라주세요.');
+      return;
+    }
 
     const newPost = {
       userId: fullEmail,
@@ -66,6 +87,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
         <PostInput
           type="text"
           value={title}
+          onInput={(e) => handleOnInput(e, 18)}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="ex) 공부하기 좋은 잠실 카페"
         />
@@ -73,6 +95,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
         <PostInput
           type="text"
           value={content}
+          onInput={(e) => handleOnInput(e, 20)}
           onChange={(e) => setContent(e.target.value)}
           placeholder="ex) 작업하러 가기 좋았던 곳들이에요."
         />
