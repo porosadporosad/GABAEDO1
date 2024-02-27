@@ -22,7 +22,6 @@ export default function Login() {
   const [loginChange, setLoginChange] = useState(false);
   const [option, setOption] = useState('');
   const [emailType, setEmailType] = useState('email');
-  const [realEmail, setRealEmail] = useState(fullEmail);
   // const [realEmail, setRealEmail] = useState(fullEmail);
 
   const navigate = useNavigate();
