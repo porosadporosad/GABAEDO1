@@ -107,7 +107,7 @@ const CreatePostBtn = styled.button`
 `;
 
 const AllSection = styled.section`
-  height: 242px;
+  height: 280px;
   padding: 0 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -129,7 +129,7 @@ const AllSection = styled.section`
 
 const PostListBox = styled.div`
   width: 380px;
-  height: 110px;
+  height: 120px;
   padding: 10px;
   margin: 10px 0;
   text-align: center;
@@ -155,10 +155,18 @@ const PostListBox = styled.div`
 
 const HashtagList = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 4px;
+  margin: 5px 0;
 
   & p {
-    font-size: 13px;
+    padding: 2px 10px;
+
+    color: #b6856a;
+    background-color: #fff9f3;
+    /* border: 1px solid #e0c3ae7f; */
+    border-radius: 20px;
+    font-size: 12px;
   }
 `;
 
