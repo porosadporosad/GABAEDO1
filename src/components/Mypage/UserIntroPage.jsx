@@ -42,7 +42,6 @@ export default function UserIntroPage() {
 
       toast.success('프로필 사진이 업데이트되었습니다.');
     } catch (error) {
-      console.error('프로필 사진 업데이트 중 오류 발생:', error);
       toast.error('프로필 사진 업데이트에 실패했습니다.');
     }
   };
@@ -63,7 +62,6 @@ export default function UserIntroPage() {
         throw new Error('사용자 문서가 존재하지 않습니다.');
       }
     } catch (error) {
-      console.error('닉네임 업데이트 중 오류 발생:', error);
       toast.error('닉네임 업데이트에 실패했습니다.');
     }
   };
@@ -92,6 +90,5 @@ export default function UserIntroPage() {
 const ProfileTitle = styled.h1`
   text-align: center;
   font-size: 2rem;
-
   margin-bottom: 2rem;
 `;

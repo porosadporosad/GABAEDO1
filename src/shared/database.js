@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { auth, db } from 'shared/firebase';
 
@@ -32,6 +32,17 @@ export const getCurrentUser = () => {
 // 커스텀
 export const useCurrentUser = () => {
   return useQuery('currentUser', getCurrentUser);
+};
+
+// 파이어스토어에서 해당 포스트 문서 삭제
+export const deletePost = async (postId) => {
+  try {
+    await deleteDoc(doc(db, 'posts', postId));
+    console.log('포스트 삭제 완료:', postId);
+  } catch (error) {
+    console.error('포스트 삭제 중 오류 발생:', error);
+    throw error;
+  }
 };
 
 //파이어베이스에서 게시글 리스트 불러오기

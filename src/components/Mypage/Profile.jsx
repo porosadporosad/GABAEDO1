@@ -2,22 +2,29 @@ import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { getCurrentUser } from '../../shared/database';
 import UserIntroPage from './UserIntroPage';
-import { getPosts } from '../../shared/database';
+import { getPosts, deletePost } from '../../shared/database';
+import { useState } from 'react';
 
 export default function Profile() {
-  const { isLoading: PostsIsLoading, data: postsData } = useQuery('posts', getPosts); //모든 게시글
-  // const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
+  const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
   const { isLoading: UserIsLoading, data: userData } = useQuery('users', getCurrentUser); //현재 로그인한 사람의 정보
+  const [deletedPostId, setDeletedPostId] = useState(null);
+
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId);
+      setDeletedPostId(postId);
+      await refetchPosts();
+    } catch (error) {
+      console.error('게시물 삭제 중 오류 발생:', error);
+    }
+  };
 
   if (PostsIsLoading || UserIsLoading) {
     return <h1>데이터 로드중...</h1>;
   }
 
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
-
-  // console.log('11111게시글데이터', postsData);
-  // console.log('222222현재 유저 데이터', userData);
-  // console.log('3333333내가 쓴 글 데이터', myPosts);
 
   return (
     <Container>
@@ -29,7 +36,7 @@ export default function Profile() {
             myPosts.map((post) => (
               <li key={post.id}>
                 <div>{post.title || '제목 없음'}</div>
-                <button>삭제</button>
+                <button onClick={() => handleDeletePost(post.id)}>삭제</button>
               </li>
             ))
           ) : (
