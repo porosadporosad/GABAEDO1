@@ -6,8 +6,8 @@ function AddModal({ isOpen, onCancel, onAdd, placeName }) {
   if (!isOpen) return null;
 
   const handleAdd = () => {
-    onAdd(placeComment); // onAdd에 comment도 함께 넘겨줍니다.
-    setPlaceComment(''); // 추가 후 입력 필드 초기화
+    onAdd(placeComment); 
+    setPlaceComment(''); 
   };
 
   return (
@@ -42,7 +42,7 @@ const Overlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5); // 배경색 추가, 반투명 검정색으로 모달 뒤를 어둡게 처리
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
 `;
 

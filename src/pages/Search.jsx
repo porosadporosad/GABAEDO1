@@ -33,18 +33,16 @@ export default function Search() {
   };
 
   const handleMarkerClick = (result) => {
-    setSelectedPlace(result); // 클릭한 장소의 정보를 설정
-    setIsModalOpen(true); // 모달을 엽니다.
+    setSelectedPlace(result); 
+    setIsModalOpen(true); 
   };
 
-  // 모달의 '취소하기' 버튼 핸들러
   const handleModalCancel = () => {
-    setIsModalOpen(false); // 모달을 닫습니다.
+    setIsModalOpen(false); 
   };
 
-  // 모달의 '추가하기' 버튼 핸들러
   const handleModalAdd = () => {
-    setIsModalOpen(false); // 모달을 닫습니다.
+    setIsModalOpen(false);
   };
 
   return (
