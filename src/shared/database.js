@@ -16,7 +16,7 @@ export const getUsers = async () => {
 };
 
 // 현재유저 정보 가져오기
-const getCurrentUser = () => {
+export const getCurrentUser = () => {
   const user = auth.currentUser;
   if (!user) {
     return false;
