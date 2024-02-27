@@ -1,5 +1,4 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { useQuery } from 'react-query';
 import { auth, db } from 'shared/firebase';
 
 //파이어베이스에서 유저 정보 불러오기
@@ -27,11 +26,6 @@ export const getCurrentUser = () => {
     avatar: user.photoURL
   };
   return getUser;
-};
-
-// 커스텀
-export const useCurrentUser = () => {
-  return useQuery('currentUser', getCurrentUser);
 };
 
 //파이어베이스에서 게시글 리스트 불러오기

@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Header from 'components/Header';
 
 export default function NonAuthLayout() {
-  const userId = JSON.parse(localStorage.getItem('userId'));
+  const userId = localStorage.getItem('userId');
   const isLoggedin = userId;
 
   if (isLoggedin) {

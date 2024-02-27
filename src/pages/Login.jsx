@@ -43,11 +43,11 @@ export default function Login() {
     const emailCheck = userId.includes('@');
 
     if (!option && !regex.test(realEmail)) {
-      toast.warning('이메일 형식으로 작성해 주세요');
+      toast.warning('이메일로 가입할 수 있습니다.');
       return;
     }
     if (option && emailCheck) {
-      toast.warning('이메일 형식 안하셔도 됩니다');
+      toast.warning('아이디 형식이 잘못되었습니다.');
       return;
     }
     if (password !== confirmPwd) {
@@ -67,7 +67,7 @@ export default function Login() {
         // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
         photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
       });
-      localStorage.setItem('userId', JSON.stringify(user.email));
+      localStorage.setItem('userId', user.email);
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {

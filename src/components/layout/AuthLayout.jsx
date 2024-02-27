@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import Header from 'components/Header';
 
-export default function AuthLayout() {
-  const userId = JSON.parse(localStorage.getItem('userId'));
+export default function NonAuthLayout() {
+  const userId = localStorage.getItem('userId');
   const isLoggedin = userId;
 
   if (!isLoggedin) {
