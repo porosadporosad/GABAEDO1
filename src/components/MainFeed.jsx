@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getPosts, useCurrentUser } from 'shared/database';
+import { getPosts, getCurrentUser } from 'shared/database';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
 import CreatePost from './CreatePost';
@@ -8,7 +8,7 @@ import PostsList from './PostsList';
 import RankList from './RankList';
 
 export default function MainFeed({ keyword }) {
-  const { data: loginUserData } = useCurrentUser();
+  const { data: loginUserData } = useQuery('user', getCurrentUser);
   const { isLoading, data } = useQuery('posts', getPosts);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [menu, setMenu] = useState('');

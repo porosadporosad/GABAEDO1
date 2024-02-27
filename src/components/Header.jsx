@@ -4,13 +4,15 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useCurrentUser } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
+import { useQuery } from 'react-query';
 
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
+
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
+  const { data } = useQuery('user', getCurrentUser);
 
   useEffect(() => {
     const loginCheck = () => {
@@ -73,7 +75,7 @@ export default function Header() {
                 <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                <UserBtn onClick={userIsActiveBtn}>⬇️</UserBtn>
+                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>

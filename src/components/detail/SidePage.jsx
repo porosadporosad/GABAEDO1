@@ -67,11 +67,11 @@ const SidePageContainer = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  width: 400px;
+  width: 450px;
   height: 100%;
   border-right: 1px solid #c70000;
   background-color: #e0c3ae;
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
   overflow-y: auto;
 `;
@@ -170,6 +170,7 @@ const Place = styled.div`
   border: 1px solid #b6856a;
   border-radius: 12px;
   padding: 20px;
+  cursor: pointer;
 
   & h2 {
     font-family: 'SunBatang-Bold';

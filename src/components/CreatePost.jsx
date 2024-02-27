@@ -1,17 +1,17 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCurrentUser } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
-  const { fullEmail, nickname } = data;
+  const { data } = useQuery('user', getCurrentUser);
+  const { userId, nickname } = data;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
@@ -57,7 +57,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     }
 
     const newPost = {
-      userId: fullEmail,
+      userId,
       nickname,
       createdAt: new Date().toISOString(),
       title,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
@@ -16,41 +16,50 @@ import { getUsers } from 'shared/database';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
-  const [fullEmail, setFullEmail] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
   const [option, setOption] = useState('');
-  const [emailType, setEmailType] = useState('email');
-  // const [realEmail, setRealEmail] = useState(fullEmail);
+  const [realEmail, setRealEmail] = useState(userId);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
 
   // 이메일 설정 확인
-  // useEffect(() => {
-  //   if (option) {
-  //     setRealEmail(fullEmail + option);
-  //   } else {
-  //     setRealEmail(fullEmail);
-  //   }
-  // }, [option, fullEmail]);
+  useEffect(() => {
+    if (option) {
+      setRealEmail(userId + option);
+    } else {
+      setRealEmail(userId);
+    }
+  }, [option, userId]);
 
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
+    const regex = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const emailCheck = userId.includes('@');
 
-    if (!nicknameIncludes) {
-      toast.warning('닉네임이 이미 존재합니다.');
+    if (!option && !regex.test(realEmail)) {
+      toast.warning('이메일로 가입할 수 있습니다.');
+      return;
+    }
+    if (option && emailCheck) {
+      toast.warning('아이디 형식이 잘못되었습니다.');
       return;
     }
     if (password !== confirmPwd) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
+    if (!nicknameIncludes) {
+      toast.warning('닉네임이 이미 존재합니다.');
+      return;
+    }
     try {
-      const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
+      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
       const user = register.user;
       // 유저닉네임 업데이트
       await updateProfile(user, {
@@ -58,13 +67,12 @@ export default function Login() {
         // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
         photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
       });
-      localStorage.setItem('userId', JSON.stringify(user.uid));
-      localStorage.setItem('fullEmail', JSON.stringify(user.email));
+      localStorage.setItem('userId', user.email);
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           const newData = {
-            fullEmail: user.email,
+            userId: user.email,
             nickname: user.displayName,
             avatar: user.photoURL
           };
@@ -91,16 +99,15 @@ export default function Login() {
   // 로그인
   const loginSubmit = async (e) => {
     e.preventDefault();
-    const emailIncludes = data.some((prev) => prev.fullEmail === fullEmail);
+    const emailIncludes = data.some((prev) => prev.userId === userId);
     if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
       return;
     }
     try {
-      const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
+      const loginUser = await signInWithEmailAndPassword(auth, userId, password);
       const loginData = loginUser.user;
-      localStorage.setItem('userId', JSON.stringify(loginData.uid));
-      localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+      localStorage.setItem('userId', loginData.email);
 
       toast.success(`로그인 되었습니다`);
       navigate('/');
@@ -115,12 +122,11 @@ export default function Login() {
 
   // 전환시 초기화
   const dataClear = () => {
-    setFullEmail('');
+    setUserId('');
     setPassword('');
     setNickname('');
     setOption('');
     setConfirmPwd('');
-    setEmailType('email');
     setLoginChange(!loginChange);
   };
 
@@ -135,11 +141,6 @@ export default function Login() {
   // 이메일 선택시 아이디창 타입 변경
   const emailOptionNow = (e) => {
     setOption(e.target.value);
-    if (e.target.value) {
-      setEmailType('text');
-    } else {
-      setEmailType('email');
-    }
   };
 
   return (
@@ -150,12 +151,12 @@ export default function Login() {
           <>
             <LoginForm onSubmit={signupSubmit}>
               <LoginInput
-                type={emailType}
+                type="text"
                 placeholder="아이디"
                 required
-                value={fullEmail}
+                value={userId}
                 onChange={(e) => {
-                  setFullEmail(e.target.value);
+                  setUserId(e.target.value);
                 }}
               />
               <LoginSelect value={option} onChange={emailOptionNow}>
@@ -203,12 +204,12 @@ export default function Login() {
           <>
             <LoginForm onSubmit={loginSubmit}>
               <LoginInput
-                type="email"
+                type="emailId"
                 placeholder="아이디"
                 required
-                value={fullEmail}
+                value={userId}
                 onChange={(e) => {
-                  setFullEmail(e.target.value);
+                  setUserId(e.target.value);
                 }}
               />
               <LoginInput
