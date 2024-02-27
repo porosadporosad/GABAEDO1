@@ -28,13 +28,13 @@ export default function Login() {
   const { data } = useQuery('users', getUsers);
 
   // 이메일 설정 확인
-  useEffect(() => {
-    if (option) {
-      setRealEmail(fullEmail + option);
-    } else {
-      setRealEmail(fullEmail);
-    }
-  }, [option, fullEmail]);
+  // useEffect(() => {
+  //   if (option) {
+  //     setRealEmail(fullEmail + option);
+  //   } else {
+  //     setRealEmail(fullEmail);
+  //   }
+  // }, [option, fullEmail]);
 
   // 회원가입
   const signupSubmit = async (e) => {
@@ -50,7 +50,7 @@ export default function Login() {
       return;
     }
     try {
-      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
+      const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
       const user = register.user;
       // 유저닉네임 업데이트
       await updateProfile(user, {
@@ -203,7 +203,7 @@ export default function Login() {
           <>
             <LoginForm onSubmit={loginSubmit}>
               <LoginInput
-                type="email"
+                type="emailId"
                 placeholder="아이디"
                 required
                 value={fullEmail}

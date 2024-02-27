@@ -5,8 +5,6 @@ import styled from 'styled-components';
 import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useCurrentUser } from 'shared/database';
-// import { useQuery } from 'react-query';
-// import { getCurrentUser } from 'shared/database';
 
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
