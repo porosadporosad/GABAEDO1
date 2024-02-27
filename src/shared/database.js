@@ -17,21 +17,16 @@ export const getUsers = async () => {
 
 // 현재유저 정보 가져오기
 const getCurrentUser = () => {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      return {
-        fullEmail: user.email,
-        nickname: user.displayName,
-        avatar: user.photoURL
-      };
-    } else {
-      return false;
-    }
-  });
-  // const user = auth.currentUser;
-  // if (!user) {
-  //   return false;
-  // }
+  const user = auth.currentUser;
+  if (!user) {
+    return false;
+  }
+  const getUser = {
+    fullEmail: user.email,
+    nickname: user.displayName,
+    avatar: user.photoURL
+  };
+  return getUser;
 };
 
 // 커스텀

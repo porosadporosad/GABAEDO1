@@ -2,33 +2,19 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { auth, db } from '../shared/firebase';
-import { collection, doc, updateDoc } from 'firebase/firestore';
+import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useCurrentUser } from 'shared/database';
-// import { useQuery } from 'react-query';
-// import { getCurrentUser } from 'shared/database';
-
 export default function Header() {
-  // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [userImg, setUserImg] = useState('');
-
   const navigate = useNavigate();
-  // const { data } = useCurrentUser();
-
-  const userId = JSON.parse(localStorage.getItem('userId'));
-
-  // console.log('userDocRef', userDocRef);
-
+  const { data } = useCurrentUser();
   useEffect(() => {
     const loginCheck = () => {
       // 현재 유저가 로그인 되어있는지 확인
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          setUserImg(user.photoURL);
           setIsLogin(true);
         } else {
           setIsLogin(false);
@@ -37,21 +23,9 @@ export default function Header() {
     };
     loginCheck();
   }, []);
-  // const menus = [
-  //   { id: 'about', info: '사이트 소개' },
-  //   { id: 'login', info: '로그인 / 회원가입' },
-  //   { id: 'mypage', info: '마이 페이지' }
-  // ];
-
-  const logoutClick = async () => {
+  const logoutClick = () => {
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
     if (logoutConfirm) {
-      // await updateDoc(userDocRef, { isloggedin: false })
-      // const userDocRef = doc(db, 'users', userId);
-      // await userDocRef.doc(userId).update({ isloggedin: false });
-      // const infoRef = doc(db, 'users', userId);
-      // await updateDoc(infoRef, { isloggedin: false });
-
       //로그아웃
       signOut(auth)
         .then(() => {
@@ -66,19 +40,16 @@ export default function Header() {
       return false;
     }
   };
-
   // 다른곳 클릭 시 메뉴 끄기
   const userMenuOnBlur = () => {
     setTimeout(() => {
       setIsActive(false);
     }, 200);
   };
-
   // 유저메뉴 열기 닫기
   const userIsActiveBtn = () => {
     setIsActive(!isActive);
   };
-
   return (
     <MenuHeader>
       <StLink to="/">
@@ -92,10 +63,10 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle onClick={userIsActiveBtn} src={userImg} alt="프로필사진" />
+                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
+                <UserBtn onClick={userIsActiveBtn}>:작은_아래쪽_화살표:</UserBtn>
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>
@@ -111,55 +82,43 @@ export default function Header() {
               <li>로그인 / 회원가입</li>
             </StLink>
           )}
-          {/* {menus
-            .filter((menu) => (isLogin ? menu.id !== 'login' : menu.id !== 'mypage'))
-            .map((menu) => (
-              <StLink to={`${menu.id}`} key={menu.id}>
-                <li>{menu.info}</li>
-              </StLink>
-            ))} */}
         </MenuUl>
       </nav>
     </MenuHeader>
   );
 }
-
 const MenuHeader = styled.header`
   height: 50px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1000;
+  background-color: white;
   border-bottom: 1px solid #001d84;
   position: relative;
   z-index: 1000;
   background-color: white;
-
   & h2 {
   }
 `;
-
 const StLink = styled(Link)`
   text-decoration: none;
-
   & h3 {
     font-family: 'SunBatang-Medium';
-    color: #784b31; 
+    color: #784b31;
   }
 `;
-
 const MenuUl = styled.ul`
   display: flex;
   gap: 20px;
   align-items: center;
-
   & li {
     color: #b6856a;
   }
 `;
-
 //dd
-
 const ImgDiv = styled.div`
   width: 2.5rem;
   height: 2.5rem;
@@ -167,22 +126,18 @@ const ImgDiv = styled.div`
   overflow: hidden;
   border-radius: 50%;
 `;
-
 const ImgStyle = styled.img`
   height: 100%;
   object-fit: cover;
 `;
-
 const UserMenuDiv = styled.div`
   position: relative;
 `;
-
 const UserBtn = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
 `;
-
 const UserUl = styled.ul`
   display: ${({ $isActive }) => ($isActive ? 'block' : 'none')};
   position: absolute;
@@ -194,11 +149,9 @@ const UserUl = styled.ul`
   z-index: 1;
   color: #b6856a;
 `;
-
 const UserLi = styled.li`
   list-style: none;
 `;
-
 const StyledLink = styled(Link)`
   display: block;
   padding: 0.6rem;
@@ -208,7 +161,6 @@ const StyledLink = styled(Link)`
     background-color: #f5f5f5;
   }
 `;
-
 const Logout = styled.span`
   display: block;
   padding: 0.6rem;
@@ -219,7 +171,6 @@ const Logout = styled.span`
     background-color: #f5f5f5;
   }
 `;
-
 const ProfileBtnDiv = styled.div`
   display: flex;
   align-items: center;
