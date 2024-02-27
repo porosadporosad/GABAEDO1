@@ -5,6 +5,7 @@ import { useState } from 'react';
 import CreatePost from './CreatePost';
 import { hashtageData } from 'shared/hashtageData';
 import PostsList from './PostsList';
+import RankList from './RankList';
 
 export default function MainFeed({ keyword }) {
   const { data: loginUserData } = useCurrentUser();
@@ -14,6 +15,26 @@ export default function MainFeed({ keyword }) {
 
   if (isLoading) {
     return <h1>Loading</h1>;
+  }
+
+  // 포스트에서 유저를 가져와 글을 쓴 만큼 카운트를 올려 객체에 넣어줍니다.
+  const writerUsers = {};
+
+  data.forEach((post) =>
+    writerUsers[post.nickname] ? (writerUsers[post.nickname] += 1) : (writerUsers[post.nickname] = 1)
+  );
+
+  // 배열에 유저별로 넣은 뒤 높은 순으로 정렬
+  let UserRank = [];
+
+  for (let user in writerUsers) {
+    UserRank.push({ nickname: user, number: writerUsers[user] });
+  }
+
+  UserRank.sort((a, b) => b.number - a.number);
+
+  if (UserRank.length >= 5) {
+    UserRank.length = 5;
   }
 
   // const searchedData = data.filter((post) => post.title.includes(keyword) || post.content.includes(keyword));
@@ -27,7 +48,10 @@ export default function MainFeed({ keyword }) {
       </AddPostModal>
       <Article>
         <PostListHeader>
-          <ListTitle>가배도 모아보기</ListTitle>
+          <TitleBox>
+            <ListTitle>가배도 모아보기</ListTitle>
+            <TitleInfo>원하는 태그별로 지도를 모아보세요.</TitleInfo>
+          </TitleBox>
           <CreatePostBtn
             isLoggenIn={loginUserData}
             onClick={() => {
@@ -57,9 +81,17 @@ export default function MainFeed({ keyword }) {
           ))}
         </HashtagMenu>
         <PostsList postsData={filteredData} />
-        <ListTitle>카페 모아보기</ListTitle>
+        <TitleBox>
+          <ListTitle>BEST MAPMAKER</ListTitle>
+          <TitleInfo>가배도의 베스트 제작자들을 소개합니다.</TitleInfo>
+        </TitleBox>
+        <RankList UserRank={UserRank} />
+        {/* <ListTitle>카페 모아보기</ListTitle> */}
         {/* <PostsList searchedData={searchedData} /> */}
-        <ListTitle>가배도 전체보기</ListTitle>
+        <TitleBox>
+          <ListTitle>가배도 전체보기</ListTitle>
+          <TitleInfo>가배도의 모든 지도들을 모아보세요.</TitleInfo>
+        </TitleBox>
         <PostsList postsData={data} />
       </Article>
     </>
@@ -89,13 +121,21 @@ const PostListHeader = styled.header`
   align-items: center;
 `;
 
-const ListTitle = styled.h1`
+const TitleBox = styled.div`
   height: 60px;
   line-height: 80px;
+  display: flex;
+  gap: 10px;
+`;
 
+const ListTitle = styled.h1`
   font-family: 'SunBatang-Medium';
   font-size: 25px;
   color: #784b31;
+`;
+
+const TitleInfo = styled.h2`
+  color: #b6856a;
 `;
 
 const CreatePostBtn = styled.button`
