@@ -4,10 +4,14 @@ import userImg from 'assets/defaultImg.jpg';
 import { useParams } from 'react-router-dom';
 import { getCurrentUser } from 'shared/database';
 import { useQuery } from 'react-query';
+import { useState } from 'react';
+import { db } from 'shared/firebase';
+import { collection, doc, getDoc, updateDoc } from '@firebase/firestore';
 
 export default function SidePage({ postData, placeData }) {
+  const [isAdding, setIsAdding] = useState(false);
+  const uid = localStorage.getItem('uid');
   const { isLoading, data } = useQuery('user', getCurrentUser);
-  const writerInfo = postData.userId;
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -23,7 +27,29 @@ export default function SidePage({ postData, placeData }) {
     return <div>로딩중</div>;
   }
 
-  const BookmarkClickHandler = () => {};
+  const writerInfo = postData.userId;
+  const userDocRef = doc(db, 'users', uid);
+
+  const BookmarkClickHandler = async () => {
+    try {
+      setIsAdding(true);
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const updatedBookmark = [...userData.bookmark, id];
+        const newData = { ...userData, bookmark: updatedBookmark };
+        await updateDoc(userDocRef, newData);
+        console.log('북마크 업데이트 성공');
+      } else {
+        console.log('해당 사용자의 데이터가 없다');
+      }
+    } catch (error) {
+      console.error('북마크 추가 에러 발생', error.message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <>
@@ -32,6 +58,7 @@ export default function SidePage({ postData, placeData }) {
           ◀
         </GoBackButton>
         <PostInfo>
+          {!isLoading && data.userId === writerInfo ? <Edit>수정</Edit> : null}
           <PostBox>
             <h2>
               ✧☕✧
@@ -48,7 +75,13 @@ export default function SidePage({ postData, placeData }) {
           <BrownLine />
           <BookmarkAndWriter>
             <Bookmark>
-              <img src="/bookmark_default.png" width="20" alt="북마크" />
+              <img
+                src="/bookmark_default.png"
+                onClick={BookmarkClickHandler}
+                disabled={isAdding}
+                width="20"
+                alt="북마크"
+              />
             </Bookmark>
             <Writer>
               <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
@@ -56,7 +89,7 @@ export default function SidePage({ postData, placeData }) {
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
-        {!isLoading && data.userId == writerInfo ? (
+        {!isLoading && data.userId === writerInfo ? (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
@@ -137,6 +170,7 @@ const Bookmark = styled.div`
 const WriterNickname = styled.span`
   font-family: 'SunBatang-Bold';
   color: #784b31;
+  margin-right: 5px;
 `;
 
 const Writer = styled.div`
@@ -225,4 +259,16 @@ const PlaceInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+const Edit = styled.div`
+  width: 50px;
+  height: 20px;
+  background-color: #b6856a;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
