@@ -105,7 +105,7 @@ export default function UserIntroPage() {
         <Nickname>{data.nickname}</Nickname>
       )}
 
-      <Introduce>내 취미는 카페투어!</Introduce>
+      <Introduce placeholder="회원님의 한마디를 작성해보세요"></Introduce>
 
       {isEditing ? (
         <div>
@@ -158,5 +158,5 @@ const EditBtn = styled.button`
   height: 30px;
   cursor: pointer;
 `;
-const Introduce = styled.div``;
+const Introduce = styled.input``;
 const Nickname = styled.p``;
