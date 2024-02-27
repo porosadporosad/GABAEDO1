@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { useCurrentUser } from '../../shared/database';
+import { getCurrentUser } from '../../shared/database';
 import { auth, db, storage } from 'shared/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import defaultImg from '../../assets/defaultImg.jpg';
 import { updateProfile } from 'firebase/auth';
+import { useQuery } from 'react-query';
 
 export default function UserIntroPage() {
-  const { data } = useCurrentUser();
+  const { data } = useQuery('user', getCurrentUser);
   console.log('현재현재유저데이터', data);
   const postUser = auth.currentUser;
 
