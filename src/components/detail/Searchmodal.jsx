@@ -49,10 +49,8 @@
 //         <div>
 //           {searchResults.map((item, index) => (
 //             <>
-//               {' '}
 //               <VideoBox key={index}>
 //                 <Thumbnail>
-//                   {' '}
 //                   <a
 //                     href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
 //                     target="_blank"
@@ -73,7 +71,7 @@
 //   );
 // }
 
-// const ModalContainer = styled.div`
+// // const ModalContainer = styled.div`
 //   width: 100%;
 //   height: 100%;
 //   padding: 20px;

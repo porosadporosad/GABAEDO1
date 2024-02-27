@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
+import { useParams } from 'react-router-dom';
 
-export default function SidePage({ postData, placeData, onSearch }) {
+export default function SidePage({ postData, placeData }) {
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-
-  const AddPlaceBtnHandler = () => {
-    setIsEditing(true);
-  };
-
+  const { id } = useParams();
   const GoBackClickHandler = () => {
     navigate(`/`);
+  };
+
+  const AddPlaceBtnHandler = () => {
+    navigate(`/search/${id}`);
   };
 
   return (
@@ -42,11 +40,7 @@ export default function SidePage({ postData, placeData, onSearch }) {
             <WriterNickname>{postData.nickname}</WriterNickname>
           </WriterBox>
         </PostInfo>
-        {isEditing ? (
-          <SearchBar onSearch={onSearch} />
-        ) : (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
-        )}
         <PlacesBox>
           {placeData.length === 0 ? (
             <Place style={{ textAlign: 'center' }}>아직 등록된 카페가 없습니다.</Place>
