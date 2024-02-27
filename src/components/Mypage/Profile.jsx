@@ -4,33 +4,56 @@ import defaultImg from '../../assets/defaultImg.jpg';
 import { useQuery } from 'react-query';
 import { getUsers } from '../../shared/database';
 import { auth, db } from 'shared/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 export default function Profile() {
   const { isLoading, isError, data } = useQuery('users', getUsers);
-
+  // console.log(data);
+  const postUser = auth.currentUser;
+  // console.log(postUser.email); //유저의 이메일
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setIsEditingText] = useState('');
   const [selectedImg, setSelectedImg] = useState(defaultImg);
   const [currentUser, setCurrentUser] = useState(null);
+  const [myPosts, setMyPosts] = useState([]);
 
   useEffect(() => {
-    const fetchData = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const userProfile = await getUsers(auth.currentUser.uid); // 현재 사용자의 UID를 기준으로 사용자 프로필 가져옴
-          setCurrentUser(userProfile);
-        } catch (error) {
-          console.error('유저 정보 가져오기 에러:', error);
-        }
-      } else {
-        // 사용자가 로그아웃한 경우 프로필 정보
-        setCurrentUser(null);
+    let isMounted = true; // 컴포넌트의 마운트 상태를 추적
+    if (!isLoading && !isError && data) {
+      const userEmailFromLocalStorage = JSON.parse(localStorage.getItem('fullEmail'));
+
+      const targetUser = data.find((user) => user.fullEmail === userEmailFromLocalStorage);
+      console.log(targetUser.fullEmail);
+      setCurrentUser(targetUser);
+
+      if (targetUser) {
+        const fetchUserFeed = async () => {
+          const q = query(collection(db, 'posts'), where('fullEmail', '==', targetUser.fullEmail));
+          const querySnapshot = await getDocs(q);
+          const userPostData = [];
+          // map 대신 forEach
+          querySnapshot.forEach((doc) => {
+            userPostData.push({ id: doc.id, ...doc.data() });
+          });
+          // setMyPosts(userPostData);
+          if (isMounted) {
+            setMyPosts(userPostData);
+          }
+        };
+
+        const fetchAndSetPosts = async () => {
+          try {
+            await fetchUserFeed();
+          } catch (error) {
+            console.error('글 fetch 에러네..', error);
+            throw error;
+          }
+        };
+
+        fetchAndSetPosts();
       }
-    });
-    // 컴포넌트가 언마운트될 때 정리
-    return () => fetchData();
-  }, []);
+    }
+  }, [isLoading, isError, data]);
 
   if (isLoading) {
     return <h1>로딩중...</h1>;
@@ -40,9 +63,9 @@ export default function Profile() {
     return <h1>Error</h1>;
   }
 
-  const user = data[0];
-  // console.log(user); // o
-  const { id, nickname } = user;
+  // const user = data[0];
+  // // console.log(user); // o
+  // const { id, nickname } = user;
 
   const imgChangeHandler = (e) => {
     const imgFile = e.target.files[0];
@@ -82,11 +105,11 @@ export default function Profile() {
           <Avatar src={selectedImg} />
           <ImgFileSelect type="file" onChange={imgChangeHandler} accept="image/*" />
         </label>
-        <UserId>{id}</UserId>
+        <UserId>{data.id}</UserId>
         {isEditing ? (
-          <input autoFocus defaultValue={nickname} onChange={onEditNameHandler} />
+          <input autoFocus defaultValue={data.nickname} onChange={onEditNameHandler} />
         ) : (
-          <Nickname>{nickname}</Nickname>
+          <Nickname>{data.nickname}</Nickname>
         )}
 
         <UserIntro>내 취미는 카페투어!</UserIntro>
@@ -94,9 +117,8 @@ export default function Profile() {
         {isEditing ? (
           <div>
             <Button onClick={() => setIsEditing(false)}>취소</Button>
-            {/* <Button onClick={onEditDone} text="수정완료" disabled={!editingText && selectedImg === defaultImg} /> */}
             <Button
-              onClick={() => updateUserProfile(id, editingText)}
+              onClick={() => updateUserProfile(data.id, editingText)}
               disabled={!editingText && selectedImg === defaultImg}
             >
               수정완료
@@ -105,7 +127,19 @@ export default function Profile() {
         ) : (
           <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
         )}
-        <UserInputList>내가 만든 가배도</UserInputList>
+        <UserInputList>
+          [내가만든가배도]
+          {myPosts ? (
+            myPosts.map((post) => (
+              <li key={post.id}>
+                <div>{post.title || '제목 없음'}</div>
+                <button>삭제</button>
+              </li>
+            ))
+          ) : (
+            <p>작성한 게시물이 없습니다.</p>
+          )}
+        </UserInputList>
       </ProfileWrapper>
     </Container>
   );

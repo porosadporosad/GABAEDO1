@@ -26,7 +26,6 @@ const getCurrentUser = () => {
     nickname: user.displayName,
     avatar: user.photoURL
   };
-
   return getUser;
 };
 

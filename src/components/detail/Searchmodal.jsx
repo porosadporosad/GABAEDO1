@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
 
-// 요 컴포넌트 지금은 필요 없는데 임시로 일단 두겠습니다..! //
-
 export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
   const cafe = placeData.find((cafes) => cafes.name === selectedPlace.name);
   const [searchResults, setSearchResults] = useState([]);
@@ -49,10 +47,8 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
         <div>
           {searchResults.map((item, index) => (
             <>
-              {' '}
               <VideoBox key={index}>
                 <Thumbnail>
-                  {' '}
                   <a
                     href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
                     target="_blank"
