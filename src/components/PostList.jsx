@@ -27,6 +27,12 @@ export default function PostList({ keyword }) {
         <CreatePost modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
       </AddPostModal>
       <Article>
+        <ListTitle>태그별 가배도</ListTitle>
+        <HashtagNav>
+          {hashtageData.map((item) => (
+            <button key={item}>{item}</button>
+          ))}
+        </HashtagNav>
         <PostListHeader>
           <ListTitle>가배도 모아보기</ListTitle>
           <CreatePostBtn
@@ -41,16 +47,15 @@ export default function PostList({ keyword }) {
           {filteredData.map((post) => (
             <PostListBox key={post.id} onClick={() => boxClickHandler(post.id)}>
               <h2>{post.title}</h2>
-              <p>{post.content}</p>
+              <h3>{post.content}</h3>
+              <HashtagList>
+                {post.hashtag.map((item) => (
+                  <p>{item}</p>
+                ))}
+              </HashtagList>
             </PostListBox>
           ))}
         </AllSection>
-        <ListTitle>태그별 가배도</ListTitle>
-        <HashtagNav>
-          {hashtageData.map((item) => (
-            <button key={item}>{item}</button>
-          ))}
-        </HashtagNav>
       </Article>
     </>
   );
@@ -124,7 +129,7 @@ const AllSection = styled.section`
 
 const PostListBox = styled.div`
   width: 380px;
-  height: 100px;
+  height: 110px;
   padding: 10px;
   margin: 10px 0;
   text-align: center;
@@ -142,9 +147,18 @@ const PostListBox = styled.div`
     color: #784b31;
   }
 
-  & p {
+  & h3 {
     padding: 10px;
     color: #b6856a;
+  }
+`;
+
+const HashtagList = styled.div`
+  display: flex;
+  justify-content: space-around;
+
+  & p {
+    font-size: 13px;
   }
 `;
 
