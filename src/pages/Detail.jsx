@@ -11,6 +11,7 @@ function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소를 관리합니다.
 
+
   const closeModal = () => {
     setSelectedPlace(null);
   };
