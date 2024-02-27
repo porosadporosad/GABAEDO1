@@ -39,8 +39,8 @@ export default function Login() {
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
-    const nicknameIncludes = data.some((prev) => prev.nickname === nickname);
-    if (nicknameIncludes) {
+    const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
+    if (!nicknameIncludes) {
       toast.warning('닉네임이 이미 존재합니다.');
       return;
     } else {
@@ -48,6 +48,7 @@ export default function Login() {
         toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
+
       try {
         const register = await createUserWithEmailAndPassword(auth, realEmail, password);
         const user = register.user;
@@ -95,23 +96,22 @@ export default function Login() {
     const emailIncludes = data.some((prev) => prev.fullEmail === fullEmail);
     if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
-      return false;
-    } else {
-      try {
-        const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
-        const loginData = loginUser.user;
-        localStorage.setItem('userId', JSON.stringify(loginData.uid));
-        localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+      return;
+    }
+    try {
+      const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
+      const loginData = loginUser.user;
+      localStorage.setItem('userId', JSON.stringify(loginData.uid));
+      localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
 
-        toast.success(`로그인 되었습니다`);
-        navigate('/');
-      } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/invalid-credential') {
-          toast.error('비밀번호를 확인해주세요.');
-        }
-        console.log(error);
+      toast.success(`로그인 되었습니다`);
+      navigate('/');
+    } catch (error) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/invalid-credential') {
+        toast.error('비밀번호를 확인해주세요.');
       }
+      console.log(error);
     }
   };
 
@@ -126,6 +126,7 @@ export default function Login() {
     setLoginChange(!loginChange);
   };
 
+  // 이메일 메뉴
   const emailOption = [
     { value: '', content: '선택해주세요' },
     { value: '@naver.com', content: 'naver.com' },
@@ -133,6 +134,7 @@ export default function Login() {
     { value: '@gmail.com', content: 'gmail.com' }
   ];
 
+  // 이메일 선택시 아이디창 타입 변경
   const emailOptionNow = (e) => {
     setOption(e.target.value);
     if (e.target.value) {
