@@ -1,13 +1,17 @@
-// 필요한 모듈 import
 import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import { SearchBar } from '../components/Mapsearch';
 import SearchSidePage from '../components/search/SearchSidePage';
 
 function Search() {
   const [searchResults, setSearchResults] = useState([]);
+  const [zoomLevel, setZoomLevel] = useState(5);
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
+
+  const moveToLocation = (lat, lng) => {
+    setMapCenter({ lat, lng });
+    setZoomLevel(2); // 줌 레벨을 변경하는 값, 필요에 따라 조정
+  };
 
   const handleSearch = (searchQuery) => {
     const ps = new window.kakao.maps.services.Places();
@@ -27,7 +31,7 @@ function Search() {
 
   return (
     <StFullScreenContainer>
-      <SearchSidePage onSearch={handleSearch} searchResults={searchResults} />
+      <SearchSidePage onSearch={handleSearch} searchResults={searchResults} onMoveToLocation={moveToLocation} />
       <Map
         center={mapCenter}
         style={{
@@ -35,7 +39,10 @@ function Search() {
           height: '100%',
           marginLeft: '400px'
         }}
+        level={zoomLevel}
       >
+        <MapTypeControl position={'TOPRIGHT'} />
+        <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
           <MapMarker key={index} position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }} />
         ))}
