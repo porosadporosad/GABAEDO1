@@ -1,6 +1,5 @@
-import { getUsers, useCurrentUser } from 'shared/database';
+import { useCurrentUser } from 'shared/database';
 import React from 'react';
-import { useQuery } from 'react-query';
 import { Navigate, Outlet } from 'react-router-dom';
 import Header from 'components/Header';
 

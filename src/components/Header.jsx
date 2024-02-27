@@ -9,8 +9,6 @@ import { useCurrentUser } from 'shared/database';
 // import { getCurrentUser } from 'shared/database';
 
 export default function Header() {
-  // 로그인 기능 만들어지면 여기서 로그인 됐는지 확인하면 될 거 같습니다.
-  // const isLogin = data;
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -30,11 +28,6 @@ export default function Header() {
     };
     loginCheck();
   }, []);
-  // const menus = [
-  //   { id: 'about', info: '사이트 소개' },
-  //   { id: 'login', info: '로그인 / 회원가입' },
-  //   { id: 'mypage', info: '마이 페이지' }
-  // ];
 
   const logoutClick = () => {
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
@@ -98,13 +91,6 @@ export default function Header() {
               <li>로그인 / 회원가입</li>
             </StLink>
           )}
-          {/* {menus
-            .filter((menu) => (isLogin ? menu.id !== 'login' : menu.id !== 'mypage'))
-            .map((menu) => (
-              <StLink to={`${menu.id}`} key={menu.id}>
-                <li>{menu.info}</li>
-              </StLink>
-            ))} */}
         </MenuUl>
       </nav>
     </MenuHeader>
@@ -117,6 +103,10 @@ const MenuHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1000;
+
+  background-color: white;
   border-bottom: 1px solid #001d84;
   position: relative;
   z-index: 1000;
@@ -131,7 +121,7 @@ const StLink = styled(Link)`
 
   & h3 {
     font-family: 'SunBatang-Medium';
-    color: #784b31; 
+    color: #784b31;
   }
 `;
 

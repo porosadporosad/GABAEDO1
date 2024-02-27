@@ -43,7 +43,7 @@ export default function SidePage({ postData, placeData }) {
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
         <PlacesBox>
           {placeData.length === 0 ? (
-            <Place>아직 등록된 카페가 없습니다.</Place>
+            <Place style={{ textAlign: 'center' }}>아직 등록된 카페가 없습니다.</Place>
           ) : (
             placeData.map((place) => {
               return (
@@ -136,6 +136,7 @@ const PostBox = styled.div`
 const HashtagBox = styled.div`
   justify-content: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 10px;
 `;
