@@ -3,6 +3,7 @@ import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sd
 import styled from 'styled-components';
 import SearchSidePage from '../components/search/SearchSidePage';
 import AddModal from 'components/search/Addmodal';
+import { useParams } from 'react-router';
 
 export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
@@ -10,6 +11,7 @@ export default function Search() {
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const { id } = useParams();
 
   const moveToLocation = (lat, lng) => {
     setMapCenter({ lat, lng });
@@ -33,15 +35,11 @@ export default function Search() {
   };
 
   const handleMarkerClick = (result) => {
-    setSelectedPlace(result); 
-    setIsModalOpen(true); 
+    setSelectedPlace(result);
+    setIsModalOpen(true);
   };
 
   const handleModalCancel = () => {
-    setIsModalOpen(false); 
-  };
-
-  const handleModalAdd = () => {
     setIsModalOpen(false);
   };
 
@@ -51,21 +49,22 @@ export default function Search() {
       <Map
         center={mapCenter}
         style={{
-          width: 'calc(100% - 400px)',
+          width: 'calc(100% - 450px)',
           height: '100%',
-          marginLeft: '400px'
+          marginLeft: '450px'
         }}
         level={zoomLevel}
       >
         <MapTypeControl position={'TOPRIGHT'} />
         <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
-          <MapMarker key={index}
-          position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }}
-          onClick={() => handleMarkerClick(result)}
-        />
+          <MapMarker
+            key={index}
+            position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }}
+            onClick={() => handleMarkerClick(result)}
+          />
         ))}
-        <AddModal isOpen={isModalOpen} onCancel={handleModalCancel} onAdd={handleModalAdd} placeName={selectedPlace ? selectedPlace.place_name : ''} />
+        <AddModal isOpen={isModalOpen} onCancel={handleModalCancel} selectedPlace={selectedPlace} id={id} />
       </Map>
     </StFullScreenContainer>
   );

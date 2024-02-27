@@ -2,45 +2,16 @@ import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
-import { addDoc, collection } from '@firebase/firestore';
-import { db } from 'shared/firebase';
 
 export default function SearchSidePage({ onSearch, searchResults, onMoveToLocation }) {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { id } = useParams();
   const GoBackClickHandler = () => {
     navigate(`/detail/${id}`);
   };
 
-  const addPlace = async (result) => {
-    if (!window.confirm('해당 카페를 추가하시겠습니까?')) {
-      return;
-    } else {
-      const newPlace = {
-        address: result.address_name,
-        lat: result.y,
-        lng: result.x,
-        name: result.place_name,
-        placeComment: '존맛집입니다',
-        postId: id
-      };
-      try {
-        const docRef = await addDoc(collection(db, 'places'), newPlace);
-        await queryClient.invalidateQueries('places');
-        navigate(`/detail/${id}`);
-        console.log('카페 추가 완료', docRef);
-      } catch (error) {
-        console.error('카페 추가하기 에러', error);
-        throw error;
-      }
-    }
-  };
-
-  const plusBtnClickHandler = (result) => {
-    onMoveToLocation(parseFloat(result.y), parseFloat(result.x));
-    addPlace(result);
+  const plusBtnClickHandler = (a, b) => {
+    onMoveToLocation(parseFloat(a), parseFloat(b));
   };
 
   return (
@@ -58,7 +29,7 @@ export default function SearchSidePage({ onSearch, searchResults, onMoveToLocati
                 <StName>{result.place_name}</StName>
                 <StAddress>{result.address_name}</StAddress>
               </StResultContent>
-              <AddPlaceBtn onClick={() => plusBtnClickHandler(result)}>+</AddPlaceBtn>
+              <AddPlaceBtn onClick={() => plusBtnClickHandler(result.y, result.x)}>+</AddPlaceBtn>
             </StResultitem>
           ))}
         </StSearchResultsContainer>
@@ -71,11 +42,11 @@ const StSidePageContainer = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  width: 400px;
+  width: 450px;
   height: 100%;
   border-right: 1px solid #b6856a;
   background-color: #e0c3ae;
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
