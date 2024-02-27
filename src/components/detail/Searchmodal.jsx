@@ -54,7 +54,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <img src={item.snippet.thumbnails.default.url} style={{ borderRadius: '12%' }} />
+                    <img src={item.snippet.thumbnails.default.url} style={{ borderRadius: '12%' }} alt="" />
                   </a>
                 </Thumbnail>
                 <Title>{item.snippet.title}</Title>

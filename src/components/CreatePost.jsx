@@ -1,25 +1,33 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCurrentUser } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
+  const { data } = useQuery('user', getCurrentUser);
   const { userId, nickname } = data;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
   const queryClient = useQueryClient();
 
+  const handleOnInput = (e, maxlength) => {
+    const {
+      target: { value }
+    } = e;
+    if (value.length > maxlength) e.target.value = value.substr(0, maxlength);
+  };
+
   const addHashtag = (e) => {
-    if (hashtag.length >= 4) {
-      // 4개까지만 고를 수 있도록 배열 길이 조절
-      hashtag.length = 4;
+    if (hashtag.length >= 3) {
+      // 3개까지만 고를 수 있도록 배열 길이 조절
+      hashtag.length = 3;
     } else {
       setHashtag((prev) => {
         // 중복 해시태그 방지
@@ -34,6 +42,19 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
 
   const addPost = async (e) => {
     e.preventDefault();
+
+    if (!title) {
+      toast.warning('타이틀을 입력해 주세요.');
+      return;
+    }
+    if (!content) {
+      toast.warning('소개 한마디를 입력해 주세요.');
+      return;
+    }
+    if (hashtag.length === 0) {
+      toast.warning('태그를 1개 이상 골라주세요.');
+      return;
+    }
 
     const newPost = {
       userId,
@@ -66,6 +87,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
         <PostInput
           type="text"
           value={title}
+          onInput={(e) => handleOnInput(e, 18)}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="ex) 공부하기 좋은 잠실 카페"
         />
@@ -73,12 +95,13 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
         <PostInput
           type="text"
           value={content}
+          onInput={(e) => handleOnInput(e, 20)}
           onChange={(e) => setContent(e.target.value)}
           placeholder="ex) 작업하러 가기 좋았던 곳들이에요."
         />
         <PostSelect defaultValue="default" onChange={addHashtag}>
           <option value="default" disabled>
-            # 태그를 골라주세요. (1개~4개)
+            # 태그를 골라주세요. (1개~3개)
           </option>
           {hashtageData.map((item) => (
             <option key={item} value={item}>
