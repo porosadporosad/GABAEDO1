@@ -39,18 +39,23 @@ export default function Login() {
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
-    const emailCheck = realEmail.includes('@');
+    const regex = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const emailCheck = fullEmail.includes('@');
 
-    if (!nicknameIncludes) {
-      toast.warning('닉네임이 이미 존재합니다.');
+    if (!option && !regex.test(realEmail)) {
+      toast.warning('이메일 형식으로 작성해 주세요');
+      return;
+    }
+    if (option && emailCheck) {
+      toast.warning('이메일 형식 안하셔도 됩니다');
       return;
     }
     if (password !== confirmPwd) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
-    if (!option && !emailCheck) {
-      toast.warning('이메일 형식으로 작성해 주세요');
+    if (!nicknameIncludes) {
+      toast.warning('닉네임이 이미 존재합니다.');
       return;
     }
     try {
