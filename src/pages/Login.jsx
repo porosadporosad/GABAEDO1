@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ export default function Login() {
   const [loginChange, setLoginChange] = useState(false);
   const [option, setOption] = useState('');
   const [emailType, setEmailType] = useState('email');
-  const [realEmail, setRealEmail] = useState(fullEmail);
+  // const [realEmail, setRealEmail] = useState(fullEmail);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);

@@ -1,10 +1,11 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
+import { useQueryClient } from 'react-query';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
@@ -13,12 +14,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
-  const [postId, setPostId] = useState('');
-
-  // 모달이 켜지면 포스트 id 가 만들어집니다.
-  useEffect(() => {
-    setPostId(crypto.randomUUID());
-  }, []);
+  const queryClient = useQueryClient();
 
   const addHashtag = (e) => {
     if (hashtag.length >= 4) {
@@ -40,7 +36,6 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
 
     const newPost = {
-      postId,
       userId: fullEmail,
       nickname,
       createdAt: new Date().toISOString(),
@@ -48,12 +43,14 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
       content,
       hashtag
     };
-
     try {
-      await addDoc(collection(db, 'posts'), newPost);
+      const docRef = await addDoc(collection(db, 'posts'), newPost);
+      const postId = docRef.id;
+      console.log('postId', postId);
 
       // 모달 끄기
       setModalIsOpen(!modalIsOpen);
+      await queryClient.invalidateQueries('posts');
       navigate(`detail/${postId}`);
     } catch (error) {
       console.error('게시글 추가하기 에러', error);

@@ -9,7 +9,6 @@ import { useCurrentUser } from 'shared/database';
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
   const navigate = useNavigate();
   const { data } = useCurrentUser();
 
@@ -29,6 +28,7 @@ export default function Header() {
 
   const logoutClick = () => {
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
+
     if (logoutConfirm) {
       //로그아웃
       signOut(auth)
