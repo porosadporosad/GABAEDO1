@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import SearchSidePage from '../components/search/SearchSidePage';
 import AddModal from 'components/search/Addmodal';
 
-function Search() {
+export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(5);
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
@@ -72,8 +72,6 @@ function Search() {
     </StFullScreenContainer>
   );
 }
-
-export default Search;
 
 const StFullScreenContainer = styled.div`
   width: 100vw;
