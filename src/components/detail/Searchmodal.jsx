@@ -78,6 +78,7 @@ const ModalContainer = styled.div`
   position: absolute;
   text-align: center;
   background-color: #fff9f3;
+  overflow-y: auto;
 
   & h2 {
     font-family: 'SunBatang-Bold';
