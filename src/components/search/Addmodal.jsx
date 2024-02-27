@@ -1,19 +1,53 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from 'shared/firebase';
+import { useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 
-function AddModal({ isOpen, onCancel, onAdd, placeName }) {
-  const [placeComment, setPlaceComment] = useState(''); 
+function AddModal({ isOpen, onCancel, selectedPlace, id }) {
+  const [placeComment, setPlaceComment] = useState('');
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   if (!isOpen) return null;
 
-  const handleAdd = () => {
-    onAdd(placeComment); 
-    setPlaceComment(''); 
+  console.log('선택한 장소', selectedPlace);
+  console.log('현재 게시글', id);
+
+  const handleAdd = async () => {
+    const newPlace = {
+      address: selectedPlace.address_name,
+      lat: selectedPlace.y,
+      lng: selectedPlace.x,
+      name: selectedPlace.place_name,
+      placeComment: placeComment,
+      postId: id
+    };
+    try {
+      const querySnapshot = await getDocs(query(collection(db, 'places'), where('address', '==', newPlace.address)));
+
+      if (!querySnapshot.empty) {
+        toast.error(`이미 등록되어 있는 장소입니다.`);
+        return;
+      }
+
+      const docRef = await addDoc(collection(db, 'places'), newPlace);
+      await queryClient.invalidateQueries('places');
+      toast.success(`가배도에 카페 추가 완료!`);
+      onCancel();
+      navigate(`/detail/${id}`);
+      console.log('카페 추가 완료', docRef);
+    } catch (error) {
+      console.error('카페 추가하기 에러', error);
+      throw error;
+    }
   };
 
   return (
     <Overlay>
       <ModalContainer>
-        <PlaceName>{placeName}</PlaceName> 
+        <PlaceName>{selectedPlace.place_name}</PlaceName>
         <ModalText>해당 카페를 추가하시겠어요?</ModalText>
         <Input
           type="text"
@@ -86,13 +120,13 @@ const PlaceName = styled.p`
   font-size: 1.3rem;
   font-family: 'SunBatang-Bold';
   color: #784b31;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 `;
 
 const Input = styled.input`
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 80%
+  width: 80%;
 `;

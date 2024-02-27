@@ -23,6 +23,8 @@ export default function SidePage({ postData, placeData }) {
     return <div>로딩중</div>;
   }
 
+  const BookmarkClickHandler = () => {};
+
   return (
     <>
       <SidePageContainer>
@@ -44,10 +46,15 @@ export default function SidePage({ postData, placeData }) {
             })}
           </HashtagBox>
           <BrownLine />
-          <WriterBox>
-            <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
-            <WriterNickname>{postData.nickname}</WriterNickname>
-          </WriterBox>
+          <BookmarkAndWriter>
+            <Bookmark>
+              <img src="/bookmark_default.png" width="20" alt="북마크" />
+            </Bookmark>
+            <Writer>
+              <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
+              <WriterNickname>{postData.nickname}</WriterNickname>
+            </Writer>
+          </BookmarkAndWriter>
         </PostInfo>
         {!isLoading && data.userId == writerInfo ? (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
@@ -114,17 +121,28 @@ const PostInfo = styled.div`
   margin-bottom: 20px;
 `;
 
-const WriterBox = styled.div`
+const BookmarkAndWriter = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   font-size: 12pt;
   gap: 5px;
 `;
 
+const Bookmark = styled.div`
+  margin-left: 5px;
+  cursor: pointer;
+`;
+
 const WriterNickname = styled.span`
   font-family: 'SunBatang-Bold';
   color: #784b31;
+`;
+
+const Writer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
 `;
 
 const PostBox = styled.div`

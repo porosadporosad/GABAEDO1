@@ -3,6 +3,7 @@ import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sd
 import styled from 'styled-components';
 import SearchSidePage from '../components/search/SearchSidePage';
 import AddModal from 'components/search/Addmodal';
+import { useParams } from 'react-router';
 
 export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
@@ -10,7 +11,8 @@ export default function Search() {
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [isOpen, setIsOpen] = useState(null)
+  const [isOpen, setIsOpen] = useState(null);
+  const { id } = useParams();
 
   const moveToLocation = (lat, lng) => {
     setMapCenter({ lat, lng });
@@ -34,15 +36,11 @@ export default function Search() {
   };
 
   const handleMarkerClick = (result) => {
-    setSelectedPlace(result); 
-    setIsModalOpen(true); 
+    setSelectedPlace(result);
+    setIsModalOpen(true);
   };
 
   const handleModalCancel = () => {
-    setIsModalOpen(false); 
-  };
-
-  const handleModalAdd = () => {
     setIsModalOpen(false);
   };
 
@@ -62,24 +60,22 @@ export default function Search() {
         <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
           <MapMarker
-          key={index}
-          position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }}
-          onClick={() => handleMarkerClick(result)}
-          clickable={true}
-          onMouseOver={() => setIsOpen(index)}
-          onMouseOut={() => setIsOpen(null)}
-        >
-          {isOpen === index && ( 
-              <Tooltip>추가하려면 <br/>클릭 해주세요</Tooltip> 
+            key={index}
+            position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }}
+            onClick={() => handleMarkerClick(result)}
+            clickable={true}
+            onMouseOver={() => setIsOpen(index)}
+            onMouseOut={() => setIsOpen(null)}
+          >
+            {isOpen === index && (
+              <Tooltip>
+                추가하려면 <br />
+                클릭 해주세요
+              </Tooltip>
             )}
-        </MapMarker>
-      ))}
-        <AddModal
-          isOpen={isModalOpen}
-          onCancel={handleModalCancel}
-          onAdd={handleModalAdd}
-          placeName={selectedPlace ? selectedPlace.place_name : ''}
-        />
+          </MapMarker>
+        ))}
+        <AddModal isOpen={isModalOpen} onCancel={handleModalCancel} selectedPlace={selectedPlace} id={id} />
       </Map>
     </StFullScreenContainer>
   );
