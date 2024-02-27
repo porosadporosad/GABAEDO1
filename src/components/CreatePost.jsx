@@ -10,7 +10,7 @@ import { useQueryClient } from 'react-query';
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
   const { data } = useCurrentUser();
-  const { fullEmail, nickname } = data;
+  const { userId, nickname } = data;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
@@ -36,7 +36,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
 
     const newPost = {
-      userId: fullEmail,
+      userId,
       nickname,
       createdAt: new Date().toISOString(),
       title,
