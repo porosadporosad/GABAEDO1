@@ -6,6 +6,7 @@ import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getCurrentUser } from 'shared/database';
 import { useQuery } from 'react-query';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
@@ -62,7 +63,7 @@ export default function Header() {
   return (
     <MenuHeader>
       <StLink to="/">
-        <h3>가배도</h3>
+        <Logo src={logo} alt="logo" />
       </StLink>
       <nav>
         <MenuUl>
@@ -96,6 +97,10 @@ export default function Header() {
     </MenuHeader>
   );
 }
+
+const Logo = styled.img`
+  width: 4rem;
+`;
 
 const MenuHeader = styled.header`
   height: 50px;
