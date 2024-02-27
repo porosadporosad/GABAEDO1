@@ -107,7 +107,7 @@ export default function Login() {
     try {
       const loginUser = await signInWithEmailAndPassword(auth, userId, password);
       const loginData = loginUser.user;
-      localStorage.setItem('userId', JSON.stringify(loginData.email));
+      localStorage.setItem('userId', loginData.email);
 
       toast.success(`로그인 되었습니다`);
       navigate('/');

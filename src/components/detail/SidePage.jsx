@@ -2,8 +2,13 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import userImg from 'assets/defaultImg.jpg';
 import { useParams } from 'react-router-dom';
+import { getCurrentUser } from 'shared/database';
+import { useQuery } from 'react-query';
 
 export default function SidePage({ postData, placeData }) {
+  const { isLoading, data } = useQuery('user', getCurrentUser);
+  const writerInfo = postData.userId;
+
   const navigate = useNavigate();
   const { id } = useParams();
   const GoBackClickHandler = () => {
@@ -13,6 +18,10 @@ export default function SidePage({ postData, placeData }) {
   const AddPlaceBtnHandler = () => {
     navigate(`/search/${id}`);
   };
+
+  if (isLoading) {
+    return <div>로딩중</div>;
+  }
 
   return (
     <>
@@ -40,7 +49,9 @@ export default function SidePage({ postData, placeData }) {
             <WriterNickname>{postData.nickname}</WriterNickname>
           </WriterBox>
         </PostInfo>
-        <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
+        {!isLoading && data.userId == writerInfo ? (
+          <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
+        ) : null}
         <PlacesBox>
           {placeData.length === 0 ? (
             <Place style={{ textAlign: 'center' }}>아직 등록된 카페가 없습니다.</Place>
