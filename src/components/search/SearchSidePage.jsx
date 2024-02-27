@@ -3,12 +3,14 @@ import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 
-export default function SearchSidePage({ onSearch, searchResults  }) {
+export default function SearchSidePage({ onSearch, searchResults, onMoveToLocation }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const GoBackClickHandler = () => {
     navigate(`/detail/${id}`);
   };
+
+  
 
   return (
     <>
@@ -25,7 +27,7 @@ export default function SearchSidePage({ onSearch, searchResults  }) {
                 <StName>{result.place_name}</StName>
                 <StAddress>{result.address_name}</StAddress>
                 </StResultContent>
-                <AddPlaceBtn>+</AddPlaceBtn>
+                <AddPlaceBtn onClick={() => onMoveToLocation(parseFloat(result.y), parseFloat(result.x))}>+</AddPlaceBtn>
             </StResultitem>
             ))}
         </StSearchResultsContainer>
