@@ -49,10 +49,8 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
         <div>
           {searchResults.map((item, index) => (
             <>
-              {' '}
               <VideoBox key={index}>
                 <Thumbnail>
-                  {' '}
                   <a
                     href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
                     target="_blank"
