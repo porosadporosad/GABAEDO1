@@ -1,5 +1,5 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
@@ -13,12 +13,6 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
-  const [postId, setPostId] = useState('');
-
-  // 모달이 켜지면 포스트 id 가 만들어집니다.
-  useEffect(() => {
-    setPostId(crypto.randomUUID());
-  }, []);
 
   const addHashtag = (e) => {
     if (hashtag.length >= 4) {
@@ -40,7 +34,6 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
 
     const newPost = {
-      postId,
       userId: fullEmail,
       nickname,
       createdAt: new Date().toISOString(),
@@ -50,7 +43,8 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     };
 
     try {
-      await addDoc(collection(db, 'posts'), newPost);
+      const docRef = await addDoc(collection(db, 'posts'), newPost);
+      const postId = docRef.id;
 
       // 모달 끄기
       setModalIsOpen(!modalIsOpen);

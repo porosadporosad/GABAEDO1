@@ -19,7 +19,7 @@ function Detail() {
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
-  const postData = postsData && postsData.find((post) => post.postId === id);
+  const postData = postsData && postsData.find((post) => post.id === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
 
   if (isLoadingPosts || isLoadingPlaces) {
@@ -35,7 +35,7 @@ function Detail() {
 
   const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
-  /** 클릭한 마커의 인덱스를 저장 */
+  // /** 클릭한 마커의 인덱스를 저장 */
   const handleMarkerClick = (index) => {
     setIsOpenIndex(index);
     setSelectedPlace(placeData[index]);
@@ -77,6 +77,7 @@ function Detail() {
         ))}
       </Map>
     </StFullScreenContainer>
+    // <h1>hi</h1>
   );
 }
 export default Detail;

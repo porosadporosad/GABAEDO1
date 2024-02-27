@@ -7,6 +7,7 @@ import userImg from 'assets/defaultImg.jpg';
 export default function SidePage({ postData, placeData, onSearch }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  console.log(postData);
 
   const AddPlaceBtnHandler = () => {
     setIsEditing(true);
