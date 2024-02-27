@@ -14,9 +14,9 @@ export default function Profile() {
 
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
 
-  console.log('11111게시글데이터', postsData);
-  console.log('222222현재 유저 데이터', userData);
-  console.log('3333333내가 쓴 글 데이터', myPosts);
+  // console.log('11111게시글데이터', postsData);
+  // console.log('222222현재 유저 데이터', userData);
+  // console.log('3333333내가 쓴 글 데이터', myPosts);
 
   return (
     <Container>

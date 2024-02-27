@@ -7,12 +7,12 @@ import { getAuth } from 'firebase/auth';
 //파이어베이스 초기 설정과 로그인 관련 코드가 있는 문서
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FB_API_KEY,
-  authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FB_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FB_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FB_APP_ID
+  apiKey: 'AIzaSyAU2tKuqjD6p7SmA5IzBKN7Gvxn5ddWA4w',
+  authDomain: 'test-app-772b8.firebaseapp.com',
+  projectId: 'test-app-772b8',
+  storageBucket: 'test-app-772b8.appspot.com',
+  messagingSenderId: '996959188329',
+  appId: '1:996959188329:web:a1d40cef8f21d16937b9f8'
 };
 
 // 파이어베이스 초기화

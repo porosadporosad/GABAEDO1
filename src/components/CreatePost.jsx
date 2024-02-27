@@ -1,15 +1,15 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCurrentUser } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
+  const { data } = useQuery('user', getCurrentUser);
   const { userId, nickname } = data;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
