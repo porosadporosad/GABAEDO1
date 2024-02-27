@@ -2,15 +2,46 @@ import styled from 'styled-components';
 import { SearchBar } from 'components/Mapsearch';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import { addDoc, collection } from '@firebase/firestore';
+import { db } from 'shared/firebase';
 
 export default function SearchSidePage({ onSearch, searchResults, onMoveToLocation }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const GoBackClickHandler = () => {
     navigate(`/detail/${id}`);
   };
 
-  
+  const addPlace = async (result) => {
+    if (!window.confirm('해당 카페를 추가하시겠습니까?')) {
+      return;
+    } else {
+      const newPlace = {
+        address: result.address_name,
+        lat: result.y,
+        lng: result.x,
+        name: result.place_name,
+        placeComment: '존맛집입니다',
+        postId: id
+      };
+      try {
+        const docRef = await addDoc(collection(db, 'places'), newPlace);
+        await queryClient.invalidateQueries('places');
+        navigate(`/detail/${id}`);
+        console.log('카페 추가 완료', docRef);
+      } catch (error) {
+        console.error('카페 추가하기 에러', error);
+        throw error;
+      }
+    }
+  };
+
+  const plusBtnClickHandler = (result) => {
+    onMoveToLocation(parseFloat(result.y), parseFloat(result.x));
+    addPlace(result);
+  };
 
   return (
     <>
@@ -18,18 +49,18 @@ export default function SearchSidePage({ onSearch, searchResults, onMoveToLocati
         <StGoBackButton onClick={GoBackClickHandler} title="돌아가기">
           ◀
         </StGoBackButton>
-          <SearchBar onSearch={onSearch} />
-          <BrownLine />
-          <StSearchResultsContainer>
+        <SearchBar onSearch={onSearch} />
+        <BrownLine />
+        <StSearchResultsContainer>
           {searchResults.map((result, index) => (
             <StResultitem key={index}>
-                <StResultContent>
+              <StResultContent>
                 <StName>{result.place_name}</StName>
                 <StAddress>{result.address_name}</StAddress>
-                </StResultContent>
-                <AddPlaceBtn onClick={() => onMoveToLocation(parseFloat(result.y), parseFloat(result.x))}>+</AddPlaceBtn>
+              </StResultContent>
+              <AddPlaceBtn onClick={() => plusBtnClickHandler(result)}>+</AddPlaceBtn>
             </StResultitem>
-            ))}
+          ))}
         </StSearchResultsContainer>
       </StSidePageContainer>
     </>
@@ -66,15 +97,15 @@ const StSearchResultsContainer = styled.div`
 `;
 
 const StName = styled.p`
-   font-family: 'SunBatang-Bold';
-    font-size: 18px;
-    color: #784b31;
+  font-family: 'SunBatang-Bold';
+  font-size: 18px;
+  color: #784b31;
 `;
 
 const StAddress = styled.p`
   font-family: 'SunBatang-Medium';
-    font-size: 15px;
-    line-height: 180%;
+  font-size: 15px;
+  line-height: 180%;
 `;
 
 const BrownLine = styled.div`
@@ -86,8 +117,8 @@ const BrownLine = styled.div`
 
 const StResultitem = styled.div`
   display: flex;
-  align-items: center; 
-  justify-content: space-between; 
+  align-items: center;
+  justify-content: space-between;
   background-color: #fff9f3;
   border: 1px solid #b6856a;
   border-radius: 12px;
@@ -97,7 +128,7 @@ const StResultitem = styled.div`
 
 const StResultContent = styled.div`
   flex-grow: 1;
-  margin-right: 20px; 
+  margin-right: 20px;
 `;
 
 const AddPlaceBtn = styled.button`
