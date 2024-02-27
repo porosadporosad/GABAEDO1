@@ -40,7 +40,7 @@ export default function SidePage({ postData, placeData }) {
             <WriterNickname>{postData.nickname}</WriterNickname>
           </WriterBox>
         </PostInfo>
-          <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
+        <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
         <PlacesBox>
           {placeData.length === 0 ? (
             <Place style={{ textAlign: 'center' }}>아직 등록된 카페가 없습니다.</Place>

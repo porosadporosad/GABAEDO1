@@ -11,7 +11,6 @@ function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소를 관리합니다.
 
-
   const closeModal = () => {
     setSelectedPlace(null);
   };
@@ -20,8 +19,7 @@ function Detail() {
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
-  const postData = postsData && postsData.find((post) => post.id === id);
-  const placeData = placesData && placesData.filter((item) => item.postId === id);
+  console.log(id);
 
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
@@ -30,13 +28,16 @@ function Detail() {
   if (isErrorPosts || isErrorPlaces) {
     return <h1>Error</h1>;
   }
+  console.log(postsData);
+  const postData = postsData && postsData.find((post) => post.id === id);
+  const placeData = placesData && placesData.filter((item) => item.postId === id);
 
   console.log('불러온 게시글', postData);
   console.log('해당 게시글에 등록된 장소', placeData);
 
   const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
-  /** 클릭한 마커의 인덱스를 저장 */
+  // /** 클릭한 마커의 인덱스를 저장 */
   const handleMarkerClick = (index) => {
     setIsOpenIndex(index);
     setSelectedPlace(placeData[index]);
@@ -78,6 +79,7 @@ function Detail() {
         ))}
       </Map>
     </StFullScreenContainer>
+    // <h1>hi</h1>
   );
 }
 export default Detail;

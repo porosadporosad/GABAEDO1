@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
@@ -10,7 +10,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth';
-import { collection, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
+import { collection, setDoc, doc } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { getUsers } from 'shared/database';
 
@@ -23,18 +23,19 @@ export default function Login() {
   const [option, setOption] = useState('');
   const [emailType, setEmailType] = useState('email');
   const [realEmail, setRealEmail] = useState(fullEmail);
+  // const [realEmail, setRealEmail] = useState(fullEmail);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
 
   // 이메일 설정 확인
-  useEffect(() => {
-    if (option) {
-      setRealEmail(fullEmail + option);
-    } else {
-      setRealEmail(fullEmail);
-    }
-  }, [option, fullEmail]);
+  // useEffect(() => {
+  //   if (option) {
+  //     setRealEmail(fullEmail + option);
+  //   } else {
+  //     setRealEmail(fullEmail);
+  //   }
+  // }, [option, fullEmail]);
 
   // 회원가입
   const signupSubmit = async (e) => {
@@ -50,7 +51,7 @@ export default function Login() {
       return;
     }
     try {
-      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
+      const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
       const user = register.user;
       // 유저닉네임 업데이트
       await updateProfile(user, {
