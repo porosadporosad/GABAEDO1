@@ -13,7 +13,8 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
-  const [postId, setPostId] = useState('');
+
+  const queryClient = useQueryClient();
 
   // 모달이 켜지면 포스트 id 가 만들어집니다.
   useEffect(() => {
@@ -40,7 +41,6 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
 
     const newPost = {
-      postId,
       userId: fullEmail,
       nickname,
       createdAt: new Date().toISOString(),
@@ -50,8 +50,8 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
     };
 
     try {
-      await addDoc(collection(db, 'posts'), newPost);
-
+      const docRef = await addDoc(collection(db, 'posts'), newPost);
+      const postId = docRef.id;
       // 모달 끄기
       setModalIsOpen(!modalIsOpen);
       navigate(`detail/${postId}`);
