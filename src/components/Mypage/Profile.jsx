@@ -95,17 +95,6 @@ const ProfileWrapper = styled.section`
   background-color: #fff9f3;
 `;
 
-const Button = styled.button`
-  width: 100px;
-  height: 30px;
-  cursor: pointer;
-`;
-const EditBtn = styled.button`
-  width: 200px;
-  height: 30px;
-  cursor: pointer;
-`;
-
 const UserInputList = styled.ul``;
 const ListTitle = styled.h1`
   font-size: 21px;
