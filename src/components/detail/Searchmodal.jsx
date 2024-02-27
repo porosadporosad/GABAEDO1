@@ -64,7 +64,9 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
           ))}
         </div>
       </VideoContainer>
-      <CheckBtn onClick={closeModalHandler}>확인</CheckBtn>
+      <Btn>
+        <StyledBtn onClick={closeModalHandler}>확인</StyledBtn>
+      </Btn>
     </ModalContainer>
   );
 }
@@ -121,12 +123,18 @@ const Title = styled.div`
   width: 60%;
 `;
 
-const CheckBtn = styled.button`
+const Btn = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const StyledBtn = styled.button`
   background-color: #b6856a;
+  width: 80px;
+  height: 35px;
   border: none;
   border-radius: 12px;
-  font-family: 'SunBatang-Medium';
   font-size: 12pt;
-  padding: 6px;
+  font-family: SunBatang-Bold;
   cursor: pointer;
 `;
