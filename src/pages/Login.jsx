@@ -16,12 +16,12 @@ import { getUsers } from 'shared/database';
 
 export default function Login() {
   const [nickname, setNickname] = useState('');
-  const [fullEmail, setFullEmail] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
   const [option, setOption] = useState('');
-  const [realEmail, setRealEmail] = useState(fullEmail);
+  const [realEmail, setRealEmail] = useState(userId);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
@@ -29,18 +29,18 @@ export default function Login() {
   // 이메일 설정 확인
   useEffect(() => {
     if (option) {
-      setRealEmail(fullEmail + option);
+      setRealEmail(userId + option);
     } else {
-      setRealEmail(fullEmail);
+      setRealEmail(userId);
     }
-  }, [option, fullEmail]);
+  }, [option, userId]);
 
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
     const regex = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const emailCheck = fullEmail.includes('@');
+    const emailCheck = userId.includes('@');
 
     if (!option && !regex.test(realEmail)) {
       toast.warning('이메일 형식으로 작성해 주세요');
@@ -67,13 +67,12 @@ export default function Login() {
         // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
         photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
       });
-      localStorage.setItem('userId', JSON.stringify(user.uid));
-      localStorage.setItem('fullEmail', JSON.stringify(user.email));
+      localStorage.setItem('userId', JSON.stringify(user.email));
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           const newData = {
-            fullEmail: user.email,
+            userId: user.email,
             nickname: user.displayName,
             avatar: user.photoURL
           };
@@ -100,16 +99,15 @@ export default function Login() {
   // 로그인
   const loginSubmit = async (e) => {
     e.preventDefault();
-    const emailIncludes = data.some((prev) => prev.fullEmail === fullEmail);
+    const emailIncludes = data.some((prev) => prev.userId === userId);
     if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
       return;
     }
     try {
-      const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
+      const loginUser = await signInWithEmailAndPassword(auth, userId, password);
       const loginData = loginUser.user;
-      localStorage.setItem('userId', JSON.stringify(loginData.uid));
-      localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+      localStorage.setItem('userId', JSON.stringify(loginData.email));
 
       toast.success(`로그인 되었습니다`);
       navigate('/');
@@ -124,7 +122,7 @@ export default function Login() {
 
   // 전환시 초기화
   const dataClear = () => {
-    setFullEmail('');
+    setUserId('');
     setPassword('');
     setNickname('');
     setOption('');
@@ -156,9 +154,9 @@ export default function Login() {
                 type="text"
                 placeholder="아이디"
                 required
-                value={fullEmail}
+                value={userId}
                 onChange={(e) => {
-                  setFullEmail(e.target.value);
+                  setUserId(e.target.value);
                 }}
               />
               <LoginSelect value={option} onChange={emailOptionNow}>
@@ -209,9 +207,9 @@ export default function Login() {
                 type="emailId"
                 placeholder="아이디"
                 required
-                value={fullEmail}
+                value={userId}
                 onChange={(e) => {
-                  setFullEmail(e.target.value);
+                  setUserId(e.target.value);
                 }}
               />
               <LoginInput
