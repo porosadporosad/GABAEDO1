@@ -18,6 +18,7 @@ export default function UserIntroPage() {
   // const [selectedImg, setSelectedImg] = useState(defaultImg);
   const [avatarUrl, setAvatarUrl] = useState('');
 
+  //혹시 몰라 남겨놓음
   const imgChangeHandler = (e) => {
     const imgFile = e.target.files[0];
 

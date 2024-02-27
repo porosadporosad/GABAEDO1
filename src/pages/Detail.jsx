@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
@@ -19,7 +19,7 @@ function Detail() {
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
-  const postData = postsData && postsData.find((post) => post.id === id);
+  const postData = postsData && postsData.find((post) => post.postId === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
 
   if (isLoadingPosts || isLoadingPlaces) {
@@ -40,7 +40,6 @@ function Detail() {
     setIsOpenIndex(index);
     setSelectedPlace(placeData[index]);
   };
-
 
   return (
     <StFullScreenContainer>

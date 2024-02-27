@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
@@ -20,62 +20,71 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
-  const [docId, setDocId] = useState('');
+  const [option, setOption] = useState('');
+  const [emailType, setEmailType] = useState('email');
+  const [realEmail, setRealEmail] = useState(fullEmail);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
 
+  // 이메일 설정 확인
+  useEffect(() => {
+    if (option) {
+      setRealEmail(fullEmail + option);
+    } else {
+      setRealEmail(fullEmail);
+    }
+  }, [option, fullEmail]);
+
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
-    const nicknameIncludes = data.some((prev) => prev.nickname === nickname);
-    if (nicknameIncludes) {
+    const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
+
+    if (!nicknameIncludes) {
       toast.warning('닉네임이 이미 존재합니다.');
-      return false;
-    } else {
-      if (password === confirmPwd) {
-        try {
-          const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
-          const user = register.user;
-          // 유저닉네임 업데이트
-          await updateProfile(user, {
-            displayName: nickname,
-            // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
-            photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
-          });
-          localStorage.setItem('userId', JSON.stringify(user.uid));
-          localStorage.setItem('fullEmail', JSON.stringify(user.email));
+      return;
+    }
+    if (password !== confirmPwd) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    try {
+      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
+      const user = register.user;
+      // 유저닉네임 업데이트
+      await updateProfile(user, {
+        displayName: nickname,
+        // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
+        photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
+      });
+      localStorage.setItem('userId', JSON.stringify(user.uid));
+      localStorage.setItem('fullEmail', JSON.stringify(user.email));
 
-          onAuthStateChanged(auth, async (user) => {
-            if (user) {
-              const newData = {
-                fullEmail: user.email,
-                nickname: user.displayName,
-                avatar: user.photoURL
-                // isloggedin: true
-              };
-
-              try {
-                const collectionRef = collection(db, 'users');
-                const docRef = doc(collectionRef, user.uid);
-                await setDoc(docRef, newData);
-              } catch (error) {
-                console.error(error);
-              }
-            }
-          });
-          toast.success('회원가입 완료');
-          navigate('/');
-        } catch (error) {
-          const errorCode = error.code;
-          if (errorCode === 'auth/email-already-in-use') {
-            toast.error('이미 가입된 이메일 입니다.');
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const newData = {
+            fullEmail: user.email,
+            nickname: user.displayName,
+            avatar: user.photoURL
+          };
+          try {
+            const collectionRef = collection(db, 'users');
+            const docRef = doc(collectionRef, user.uid);
+            await setDoc(docRef, newData);
+          } catch (error) {
+            console.error(error);
           }
-          toast.error(error);
         }
-      } else {
-        toast.error('비밀번호를 확인해주세요');
+      });
+      toast.success('회원가입 완료');
+      navigate('/');
+    } catch (error) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/email-already-in-use') {
+        toast.error('이미 가입된 이메일 입니다.');
       }
+      toast.error(error);
     }
   };
 
@@ -85,47 +94,53 @@ export default function Login() {
     const emailIncludes = data.some((prev) => prev.fullEmail === fullEmail);
     if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
-      return false;
-    } else {
-      try {
-        const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
-        const loginData = loginUser.user;
-        localStorage.setItem('userId', JSON.stringify(loginData.uid));
-        localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
+      return;
+    }
+    try {
+      const loginUser = await signInWithEmailAndPassword(auth, fullEmail, password);
+      const loginData = loginUser.user;
+      localStorage.setItem('userId', JSON.stringify(loginData.uid));
+      localStorage.setItem('fullEmail', JSON.stringify(loginData.email));
 
-        // const querySnapshot = await getDocs(collection(db, 'users'));
-        // querySnapshot.forEach((doc) => {
-        //   const data = doc.data();
-        //   if (data.email === fullEmail) setDocId(doc.id);
-        // });
-        // const infoRef = doc(db, 'users', docId);
-        // await updateDoc(infoRef, { isloggedin: true });
-
-        toast.success(`로그인 되었습니다`);
-        navigate('/');
-      } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/invalid-credential') {
-          toast.error('비밀번호를 확인해주세요.');
-        }
-        console.log(error);
+      toast.success(`로그인 되었습니다`);
+      navigate('/');
+    } catch (error) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/invalid-credential') {
+        toast.error('비밀번호를 확인해주세요.');
       }
+      console.log(error);
     }
   };
 
+  // 전환시 초기화
   const dataClear = () => {
     setFullEmail('');
     setPassword('');
     setNickname('');
+    setOption('');
+    setConfirmPwd('');
+    setEmailType('email');
     setLoginChange(!loginChange);
   };
 
+  // 이메일 메뉴
   const emailOption = [
     { value: '', content: '선택해주세요' },
-    { value: 'naver.com', content: 'naver.com' },
-    { value: 'hanmail.com', content: 'hanmail.com' },
-    { value: 'gmail.com', content: 'gmail.com' }
+    { value: '@naver.com', content: 'naver.com' },
+    { value: '@hanmail.com', content: 'hanmail.com' },
+    { value: '@gmail.com', content: 'gmail.com' }
   ];
+
+  // 이메일 선택시 아이디창 타입 변경
+  const emailOptionNow = (e) => {
+    setOption(e.target.value);
+    if (e.target.value) {
+      setEmailType('text');
+    } else {
+      setEmailType('email');
+    }
+  };
 
   return (
     <LoginBody>
@@ -135,7 +150,7 @@ export default function Login() {
           <>
             <LoginForm onSubmit={signupSubmit}>
               <LoginInput
-                type="email"
+                type={emailType}
                 placeholder="아이디"
                 required
                 value={fullEmail}
@@ -143,11 +158,15 @@ export default function Login() {
                   setFullEmail(e.target.value);
                 }}
               />
-              {/* <select>
+              <LoginSelect value={option} onChange={emailOptionNow}>
                 {emailOption.map((prev) => {
-                  return <option value={prev.value}>{prev.content}</option>;
+                  return (
+                    <option key={prev.content} value={prev.value}>
+                      {prev.content}
+                    </option>
+                  );
                 })}
-              </select> */}
+              </LoginSelect>
               <LoginInput
                 type="password"
                 placeholder="비밀번호"
@@ -244,7 +263,6 @@ const LoginH1 = styled.h1`
 
 const LoginInput = styled.input`
   border-radius: 0.8rem;
-  margin-bottom: 1rem;
   padding: 1rem 0;
   border: none;
   padding-left: 0.6rem;
@@ -271,5 +289,11 @@ const LoginSpan = styled.span`
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 1rem;
+`;
+
+const LoginSelect = styled.select`
+  border: none;
+  border-radius: 0.8rem;
+  padding: 0.3rem 0.3rem;
 `;
