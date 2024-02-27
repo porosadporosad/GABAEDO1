@@ -22,7 +22,7 @@ export const getCurrentUser = () => {
     return false;
   }
   const getUser = {
-    fullEmail: user.email,
+    userId: user.email,
     nickname: user.displayName,
     avatar: user.photoURL
   };

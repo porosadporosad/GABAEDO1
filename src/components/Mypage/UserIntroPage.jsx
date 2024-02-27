@@ -104,7 +104,7 @@ export default function UserIntroPage() {
       ) : (
         <>
           <Nickname>{data.nickname}</Nickname>
-          <p>{data.fullEmail}</p>
+          <p>{data.userId}</p>
         </>
       )}
 
