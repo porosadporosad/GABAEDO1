@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Banner from '../components/Banner';
-import PostList from '../components/PostList';
+import MainFeed from '../components/MainFeed';
 
 export default function Home() {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div>
       <Banner onSearch={setSearchKeyword} />
-      <PostList keyword={searchKeyword} />
+      <MainFeed keyword={searchKeyword} />
     </div>
   );
 }

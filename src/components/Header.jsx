@@ -76,7 +76,7 @@ export default function Header() {
                 <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
+                {/* <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn> */}
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>
@@ -99,12 +99,12 @@ export default function Header() {
 }
 
 const Logo = styled.img`
-  width: 4rem;
+  width: 6rem;
 `;
 
 const MenuHeader = styled.header`
   height: 50px;
-  padding: 0 20px;
+  padding: 0 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
