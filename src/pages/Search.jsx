@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import SearchSidePage from '../components/search/SearchSidePage';
+import AddModal from 'components/search/Addmodal';
 
 function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(5);
   const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const moveToLocation = (lat, lng) => {
     setMapCenter({ lat, lng });
@@ -29,6 +32,21 @@ function Search() {
     ps.keywordSearch(searchQuery, placesSearchCB);
   };
 
+  const handleMarkerClick = (result) => {
+    setSelectedPlace(result); // 클릭한 장소의 정보를 설정
+    setIsModalOpen(true); // 모달을 엽니다.
+  };
+
+  // 모달의 '취소하기' 버튼 핸들러
+  const handleModalCancel = () => {
+    setIsModalOpen(false); // 모달을 닫습니다.
+  };
+
+  // 모달의 '추가하기' 버튼 핸들러
+  const handleModalAdd = () => {
+    setIsModalOpen(false); // 모달을 닫습니다.
+  };
+
   return (
     <StFullScreenContainer>
       <SearchSidePage onSearch={handleSearch} searchResults={searchResults} onMoveToLocation={moveToLocation} />
@@ -44,8 +62,12 @@ function Search() {
         <MapTypeControl position={'TOPRIGHT'} />
         <ZoomControl position={'RIGHT'} />
         {searchResults.map((result, index) => (
-          <MapMarker key={index} position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }} />
+          <MapMarker key={index}
+          position={{ lat: parseFloat(result.y), lng: parseFloat(result.x) }}
+          onClick={() => handleMarkerClick(result)}
+        />
         ))}
+        <AddModal isOpen={isModalOpen} onCancel={handleModalCancel} onAdd={handleModalAdd} placeName={selectedPlace ? selectedPlace.place_name : ''} />
       </Map>
     </StFullScreenContainer>
   );
