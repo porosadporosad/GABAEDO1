@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getPosts } from 'shared/database';
+import { getPosts, useCurrentUser } from 'shared/database';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import CreatePost from './CreatePost';
 import { hashtageData } from 'shared/hashtageData';
 
 export default function PostList({ keyword }) {
+  const { data: loginUserData } = useCurrentUser();
   const { isLoading, data } = useQuery('posts', getPosts);
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function PostList({ keyword }) {
         <PostListHeader>
           <ListTitle>가배도 모아보기</ListTitle>
           <CreatePostBtn
+            isLoggenIn={loginUserData}
             onClick={() => {
               setModalIsOpen(!modalIsOpen);
             }}
@@ -50,7 +52,7 @@ export default function PostList({ keyword }) {
               <h3>{post.content}</h3>
               <HashtagList>
                 {post.hashtag.map((item) => (
-                  <p>{item}</p>
+                  <p key={item}>{item}</p>
                 ))}
               </HashtagList>
             </PostListBox>
@@ -94,6 +96,7 @@ const ListTitle = styled.h1`
 `;
 
 const CreatePostBtn = styled.button`
+  display: ${(props) => (props.isLoggenIn ? 'block' : 'none')};
   width: 40px;
   height: 40px;
   margin: 10px 10px 0 0;
