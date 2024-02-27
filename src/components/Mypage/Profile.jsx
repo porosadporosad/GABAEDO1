@@ -12,7 +12,7 @@ export default function Profile() {
     return <h1>데이터 로드중...</h1>;
   }
 
-  const myPosts = postsData.filter((post) => post.userId === userData.fullEmail);
+  const myPosts = postsData.filter((post) => post.userId === userData.userId);
 
   console.log('11111게시글데이터', postsData);
   console.log('222222현재 유저 데이터', userData);

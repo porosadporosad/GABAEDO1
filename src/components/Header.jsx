@@ -73,7 +73,7 @@ export default function Header() {
                 <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                <UserBtn onClick={userIsActiveBtn}>⬇️</UserBtn>
+                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>

@@ -102,7 +102,10 @@ export default function UserIntroPage() {
           <ImgFileSelect type="file" onChange={uploadProfile} accept="image/*" />
         </div>
       ) : (
-        <Nickname>{data.nickname}</Nickname>
+        <>
+          <Nickname>{data.nickname}</Nickname>
+          <p>{data.userId}</p>
+        </>
       )}
 
       <Introduce placeholder="회원님의 한마디를 작성해보세요"></Introduce>
