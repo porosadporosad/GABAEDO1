@@ -170,6 +170,7 @@ const Place = styled.div`
   border: 1px solid #b6856a;
   border-radius: 12px;
   padding: 20px;
+  cursor: pointer;
 
   & h2 {
     font-family: 'SunBatang-Bold';
