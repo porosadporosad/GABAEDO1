@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { auth, db } from 'shared/firebase';
 
@@ -16,7 +16,7 @@ export const getUsers = async () => {
 };
 
 // 현재유저 정보 가져오기
-const getCurrentUser = () => {
+export const getCurrentUser = () => {
   const user = auth.currentUser;
   if (!user) {
     return false;
@@ -59,28 +59,5 @@ export const getPlaces = async () => {
     return places;
   } catch (error) {
     console.error('카페 리스트 불러오기 에러', error);
-  }
-};
-
-//회원가입, 로그인은 따로
-
-// 파이어베이스에 장소 리스트 추가하기
-export const addPlace = async () => {
-  const newPlace = {
-    postId: crypto.randomUUID(),
-    placeId: '',
-    lat: '',
-    lng: '',
-    placeComment: ''
-  };
-  try {
-    const docRef = await addDoc(collection(db, 'places'), newPlace);
-
-    console.log('add Place: ', docRef.id);
-
-    return docRef.id;
-  } catch (error) {
-    console.error('게시글 추가하기 에러', error);
-    throw error;
   }
 };

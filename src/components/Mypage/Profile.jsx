@@ -1,63 +1,22 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getUsers } from '../../shared/database';
-import { auth, db } from 'shared/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { getCurrentUser } from '../../shared/database';
 import UserIntroPage from './UserIntroPage';
+import { getPosts } from '../../shared/database';
 
 export default function Profile() {
-  const { isLoading, isError, data } = useQuery('users', getUsers);
+  const { isLoading: PostsIsLoading, data: postsData } = useQuery('posts', getPosts); //모든 게시글
+  const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
 
-  const postUser = auth.currentUser;
-
-  const [currentUser, setCurrentUser] = useState(null);
-  const [myPosts, setMyPosts] = useState([]);
-
-  useEffect(() => {
-    let isMounted = true; // 컴포넌트의 마운트 상태를 추적
-    if (!isLoading && !isError && data) {
-      const userEmailFromLocalStorage = JSON.parse(localStorage.getItem('fullEmail'));
-
-      const targetUser = data.find((user) => user.fullEmail === userEmailFromLocalStorage);
-      // console.log(targetUser.fullEmail);
-      setCurrentUser(targetUser);
-
-      if (targetUser) {
-        const fetchUserFeed = async () => {
-          const q = query(collection(db, 'posts'), where('fullEmail', '==', targetUser.fullEmail));
-          const querySnapshot = await getDocs(q);
-          const userPostData = [];
-          // map 대신 forEach
-          querySnapshot.forEach((doc) => {
-            userPostData.push({ id: doc.id, ...doc.data() });
-          });
-          if (isMounted) {
-            setMyPosts(userPostData);
-          }
-        };
-
-        const fetchAndSetPosts = async () => {
-          try {
-            await fetchUserFeed();
-          } catch (error) {
-            console.error('글 fetch 에러네..', error);
-            throw error;
-          }
-        };
-
-        fetchAndSetPosts();
-      }
-    }
-  }, [isLoading, isError, data]);
-
-  if (isLoading) {
-    return <h1>로딩중...</h1>;
+  if (PostsIsLoading || UserIsLoading) {
+    return <h1>데이터 로드중...</h1>;
   }
 
-  if (isError) {
-    return <h1>Error</h1>;
-  }
+  const myPosts = postsData.filter((post) => post.userId === userData.userId);
+
+  console.log('11111게시글데이터', postsData);
+  console.log('222222현재 유저 데이터', userData);
+  console.log('3333333내가 쓴 글 데이터', myPosts);
 
   return (
     <Container>
