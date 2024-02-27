@@ -76,7 +76,6 @@ export default function Header() {
                 <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                {/* <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn> */}
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>
@@ -140,8 +139,6 @@ const MenuUl = styled.ul`
   }
 `;
 
-//dd
-
 const ImgDiv = styled.div`
   width: 2.5rem;
   height: 2.5rem;
@@ -157,12 +154,6 @@ const ImgStyle = styled.img`
 
 const UserMenuDiv = styled.div`
   position: relative;
-`;
-
-const UserBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
 `;
 
 const UserUl = styled.ul`
