@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import loginImg from '../assets/loginImg.png';
 import { toast } from 'react-toastify';
@@ -21,25 +21,25 @@ export default function Login() {
   const [confirmPwd, setConfirmPwd] = useState('');
   const [loginChange, setLoginChange] = useState(false);
   const [option, setOption] = useState('');
-  const [emailType, setEmailType] = useState('email');
-  // const [realEmail, setRealEmail] = useState(fullEmail);
+  const [realEmail, setRealEmail] = useState(fullEmail);
 
   const navigate = useNavigate();
   const { data } = useQuery('users', getUsers);
 
   // 이메일 설정 확인
-  // useEffect(() => {
-  //   if (option) {
-  //     setRealEmail(fullEmail + option);
-  //   } else {
-  //     setRealEmail(fullEmail);
-  //   }
-  // }, [option, fullEmail]);
+  useEffect(() => {
+    if (option) {
+      setRealEmail(fullEmail + option);
+    } else {
+      setRealEmail(fullEmail);
+    }
+  }, [option, fullEmail]);
 
   // 회원가입
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
+    const emailCheck = realEmail.includes('@');
 
     if (!nicknameIncludes) {
       toast.warning('닉네임이 이미 존재합니다.');
@@ -49,8 +49,12 @@ export default function Login() {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
+    if (!option && !emailCheck) {
+      toast.warning('이메일 형식으로 작성해 주세요');
+      return;
+    }
     try {
-      const register = await createUserWithEmailAndPassword(auth, fullEmail, password);
+      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
       const user = register.user;
       // 유저닉네임 업데이트
       await updateProfile(user, {
@@ -120,7 +124,6 @@ export default function Login() {
     setNickname('');
     setOption('');
     setConfirmPwd('');
-    setEmailType('email');
     setLoginChange(!loginChange);
   };
 
@@ -135,11 +138,6 @@ export default function Login() {
   // 이메일 선택시 아이디창 타입 변경
   const emailOptionNow = (e) => {
     setOption(e.target.value);
-    if (e.target.value) {
-      setEmailType('text');
-    } else {
-      setEmailType('email');
-    }
   };
 
   return (
@@ -150,7 +148,7 @@ export default function Login() {
           <>
             <LoginForm onSubmit={signupSubmit}>
               <LoginInput
-                type={emailType}
+                type="text"
                 placeholder="아이디"
                 required
                 value={fullEmail}
