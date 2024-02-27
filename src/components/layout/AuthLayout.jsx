@@ -5,7 +5,6 @@ import Header from 'components/Header';
 
 export default function AuthLayout() {
   const { data } = useCurrentUser();
-  // const userId = JSON.parse(localStorage.getItem('userId'));
   const isLoggedin = data;
 
   if (!isLoggedin) {

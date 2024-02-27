@@ -5,6 +5,7 @@ import { useCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
 import { hashtageData } from 'shared/hashtageData';
+import { useQueryClient } from 'react-query';
 
 export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
+  const queryClient = useQueryClient();
 
   const addHashtag = (e) => {
     if (hashtag.length >= 4) {
@@ -41,13 +43,14 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
       content,
       hashtag
     };
-
     try {
       const docRef = await addDoc(collection(db, 'posts'), newPost);
       const postId = docRef.id;
+      console.log('postId', postId);
 
       // 모달 끄기
       setModalIsOpen(!modalIsOpen);
+      await queryClient.invalidateQueries('posts');
       navigate(`detail/${postId}`);
     } catch (error) {
       console.error('게시글 추가하기 에러', error);

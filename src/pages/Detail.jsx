@@ -19,8 +19,7 @@ function Detail() {
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
-  const postData = postsData && postsData.find((post) => post.id === id);
-  const placeData = placesData && placesData.filter((item) => item.postId === id);
+  console.log(id);
 
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
@@ -29,6 +28,9 @@ function Detail() {
   if (isErrorPosts || isErrorPlaces) {
     return <h1>Error</h1>;
   }
+  console.log(postsData);
+  const postData = postsData && postsData.find((post) => post.id === id);
+  const placeData = placesData && placesData.filter((item) => item.postId === id);
 
   console.log('불러온 게시글', postData);
   console.log('해당 게시글에 등록된 장소', placeData);
