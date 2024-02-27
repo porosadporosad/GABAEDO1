@@ -8,6 +8,7 @@ export default function AuthLayout() {
   const isLoggedin = userId;
   // const { data } = useCurrentUser();
   // const isLoggedin = data;
+
   if (!isLoggedin) {
     alert(`로그인이 필요한 페이지입니다.`);
     console.log(`로그인 필요`);

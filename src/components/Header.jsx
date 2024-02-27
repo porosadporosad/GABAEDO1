@@ -25,159 +25,177 @@ export default function Header() {
     };
     loginCheck();
   }, []);
-  const logoutClick = () => {
-    const logoutClick = () => {
-      const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
 
-      if (logoutConfirm) {
-        //로그아웃
-        signOut(auth)
-          .then(() => {
-            window.localStorage.clear();
-            toast.success('로그아웃되었습니다.');
-            navigate('/');
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        return false;
-      }
-    };
-    // 다른곳 클릭 시 메뉴 끄기
-    const userMenuOnBlur = () => {
-      setTimeout(() => {
-        setIsActive(false);
-      }, 200);
-    };
-    // 유저메뉴 열기 닫기
-    const userIsActiveBtn = () => {
-      setIsActive(!isActive);
-    };
-    return (
-      <MenuHeader>
-        <StLink to="/">
-          <h3>가배도</h3>
-        </StLink>
-        <nav>
-          <MenuUl>
-            <StLink to="/about">
-              <li>사이트 소개</li>
-            </StLink>
-            {isLogin ? (
-              <ProfileBtnDiv>
-                <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                  <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
-                </ImgDiv>
-                <UserMenuDiv onBlur={userMenuOnBlur}>
-                  <UserBtn onClick={userIsActiveBtn}>:작은_아래쪽_화살표:</UserBtn>
-                  <UserBtn onClick={userIsActiveBtn}>⬇️</UserBtn>
-                  <UserUl $isActive={isActive}>
-                    <UserLi>
-                      <StyledLink to="/mypage">마이 페이지</StyledLink>
-                    </UserLi>
-                    <UserLi>
-                      <Logout onClick={logoutClick}>로그아웃</Logout>
-                    </UserLi>
-                  </UserUl>
-                </UserMenuDiv>
-              </ProfileBtnDiv>
-            ) : (
-              <StLink to="/login">
-                <li>로그인 / 회원가입</li>
-              </StLink>
-            )}
-          </MenuUl>
-        </nav>
-      </MenuHeader>
-    );
+  const logoutClick = () => {
+    const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
+
+    if (logoutConfirm) {
+      //로그아웃
+      signOut(auth)
+        .then(() => {
+          window.localStorage.clear();
+          toast.success('로그아웃되었습니다.');
+          navigate('/');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      return false;
+    }
   };
-  const MenuHeader = styled.header`
-    height: 50px;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 1000;
-    background-color: white;
-    border-bottom: 1px solid #001d84;
-    position: relative;
-    z-index: 1000;
-    background-color: white;
-    & h2 {
-    }
-  `;
-  const StLink = styled(Link)`
-    text-decoration: none;
-    & h3 {
-      font-family: 'SunBatang-Medium';
-      color: #784b31;
-    }
-  `;
-  const MenuUl = styled.ul`
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    & li {
-      color: #b6856a;
-    }
-  `;
-  //dd
-  const ImgDiv = styled.div`
-    width: 2.5rem;
-    height: 2.5rem;
-    cursor: pointer;
-    overflow: hidden;
-    border-radius: 50%;
-  `;
-  const ImgStyle = styled.img`
-    height: 100%;
-    object-fit: cover;
-  `;
-  const UserMenuDiv = styled.div`
-    position: relative;
-  `;
-  const UserBtn = styled.button`
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  `;
-  const UserUl = styled.ul`
-    display: ${({ $isActive }) => ($isActive ? 'block' : 'none')};
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    min-width: 7rem;
-    box-shadow: 0 0.5rem 2rem #f5f5f5;
-    z-index: 1;
-    color: #b6856a;
-  `;
-  const UserLi = styled.li`
-    list-style: none;
-  `;
-  const StyledLink = styled(Link)`
-    display: block;
-    padding: 0.6rem;
-    text-decoration: none;
-    color: #b6856a;
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  `;
-  const Logout = styled.span`
-    display: block;
-    padding: 0.6rem;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  `;
-  const ProfileBtnDiv = styled.div`
-    display: flex;
-    align-items: center;
-  `;
+
+  // 다른곳 클릭 시 메뉴 끄기
+  const userMenuOnBlur = () => {
+    setTimeout(() => {
+      setIsActive(false);
+    }, 200);
+  };
+
+  // 유저메뉴 열기 닫기
+  const userIsActiveBtn = () => {
+    setIsActive(!isActive);
+  };
+
+  return (
+    <MenuHeader>
+      <StLink to="/">
+        <h3>가배도</h3>
+      </StLink>
+      <nav>
+        <MenuUl>
+          <StLink to="/about">
+            <li>사이트 소개</li>
+          </StLink>
+          {isLogin ? (
+            <ProfileBtnDiv>
+              <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
+                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
+              </ImgDiv>
+              <UserMenuDiv onBlur={userMenuOnBlur}>
+                <UserBtn onClick={userIsActiveBtn}>⬇️</UserBtn>
+                <UserUl $isActive={isActive}>
+                  <UserLi>
+                    <StyledLink to="/mypage">마이 페이지</StyledLink>
+                  </UserLi>
+                  <UserLi>
+                    <Logout onClick={logoutClick}>로그아웃</Logout>
+                  </UserLi>
+                </UserUl>
+              </UserMenuDiv>
+            </ProfileBtnDiv>
+          ) : (
+            <StLink to="/login">
+              <li>로그인 / 회원가입</li>
+            </StLink>
+          )}
+        </MenuUl>
+      </nav>
+    </MenuHeader>
+  );
 }
+
+const MenuHeader = styled.header`
+  height: 50px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+
+  background-color: white;
+  border-bottom: 1px solid #001d84;
+  position: relative;
+  z-index: 1000;
+  background-color: white;
+
+  & h2 {
+  }
+`;
+
+const StLink = styled(Link)`
+  text-decoration: none;
+
+  & h3 {
+    font-family: 'SunBatang-Medium';
+    color: #784b31;
+  }
+`;
+
+const MenuUl = styled.ul`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  & li {
+    color: #b6856a;
+  }
+`;
+
+//dd
+
+const ImgDiv = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 50%;
+`;
+
+const ImgStyle = styled.img`
+  height: 100%;
+  object-fit: cover;
+`;
+
+const UserMenuDiv = styled.div`
+  position: relative;
+`;
+
+const UserBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const UserUl = styled.ul`
+  display: ${({ $isActive }) => ($isActive ? 'block' : 'none')};
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 7rem;
+  box-shadow: 0 0.5rem 2rem #f5f5f5;
+  z-index: 1;
+  color: #b6856a;
+`;
+
+const UserLi = styled.li`
+  list-style: none;
+`;
+
+const StyledLink = styled(Link)`
+  display: block;
+  padding: 0.6rem;
+  text-decoration: none;
+  color: #b6856a;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const Logout = styled.span`
+  display: block;
+  padding: 0.6rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const ProfileBtnDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
