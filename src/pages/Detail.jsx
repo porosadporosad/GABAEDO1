@@ -9,7 +9,7 @@ import Searchmodal from 'components/detail/Searchmodal';
 
 function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
-  const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소를 관리합니다.
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const closeModal = () => {
     setSelectedPlace(null);
@@ -46,7 +46,7 @@ function Detail() {
   return (
     <StFullScreenContainer>
       <SidePage postData={postData} placeData={placeData} />
-      {selectedPlace && ( // 선택된 장소가 있을 때만 모달을 렌더링합니다.
+      {selectedPlace && (
         <ModalContainer>
           <Searchmodal closeModal={closeModal} placeData={placeData} selectedPlace={selectedPlace} />
         </ModalContainer>
@@ -54,9 +54,9 @@ function Detail() {
       <Map
         center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
         style={{
-          width: 'calc(100% - 400px)',
+          width: 'calc(100% - 450px)',
           height: '100%',
-          marginLeft: '400px'
+          marginLeft: '450px'
         }}
       >
         <MapTypeControl position={'TOPRIGHT'} />
@@ -79,7 +79,6 @@ function Detail() {
         ))}
       </Map>
     </StFullScreenContainer>
-    // <h1>hi</h1>
   );
 }
 export default Detail;
@@ -94,7 +93,7 @@ const ModalContainer = styled.div`
   position: absolute;
   border-right: 1px solid #001d84;
   top: 0;
-  left: 400px;
+  left: 450px;
   width: 350px;
   height: 100%;
   background-color: white;

@@ -9,7 +9,7 @@ import { updateProfile } from 'firebase/auth';
 
 export default function UserIntroPage() {
   const { data } = useCurrentUser();
-
+  console.log('현재현재유저데이터', data);
   const postUser = auth.currentUser;
 
   const [isEditing, setIsEditing] = useState(false);
