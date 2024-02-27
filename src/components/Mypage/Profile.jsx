@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { getUsers } from '../../shared/database';
 import { auth, db } from 'shared/firebase';
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import UserIntroPage from './UserIntroPage';
 
 export default function Profile() {
