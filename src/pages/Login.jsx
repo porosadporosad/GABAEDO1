@@ -40,53 +40,51 @@ export default function Login() {
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
+
     if (!nicknameIncludes) {
       toast.warning('닉네임이 이미 존재합니다.');
       return;
-    } else {
-      if (password !== confirmPwd) {
-        toast.error('비밀번호가 일치하지 않습니다.');
-        return;
-      }
+    }
+    if (password !== confirmPwd) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    try {
+      const register = await createUserWithEmailAndPassword(auth, realEmail, password);
+      const user = register.user;
+      // 유저닉네임 업데이트
+      await updateProfile(user, {
+        displayName: nickname,
+        // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
+        photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
+      });
+      localStorage.setItem('userId', JSON.stringify(user.uid));
+      localStorage.setItem('fullEmail', JSON.stringify(user.email));
 
-      try {
-        const register = await createUserWithEmailAndPassword(auth, realEmail, password);
-        const user = register.user;
-        // 유저닉네임 업데이트
-        await updateProfile(user, {
-          displayName: nickname,
-          // import 해서 가져오면 안뜨는 오류 때문에 github에서 이미지링크로 가져왔습니다
-          photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
-        });
-        localStorage.setItem('userId', JSON.stringify(user.uid));
-        localStorage.setItem('fullEmail', JSON.stringify(user.email));
-
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const newData = {
-              fullEmail: user.email,
-              nickname: user.displayName,
-              avatar: user.photoURL
-            };
-
-            try {
-              const collectionRef = collection(db, 'users');
-              const docRef = doc(collectionRef, user.uid);
-              await setDoc(docRef, newData);
-            } catch (error) {
-              console.error(error);
-            }
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const newData = {
+            fullEmail: user.email,
+            nickname: user.displayName,
+            avatar: user.photoURL
+          };
+          try {
+            const collectionRef = collection(db, 'users');
+            const docRef = doc(collectionRef, user.uid);
+            await setDoc(docRef, newData);
+          } catch (error) {
+            console.error(error);
           }
-        });
-        toast.success('회원가입 완료');
-        navigate('/');
-      } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/email-already-in-use') {
-          toast.error('이미 가입된 이메일 입니다.');
         }
-        toast.error(error);
+      });
+      toast.success('회원가입 완료');
+      navigate('/');
+    } catch (error) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/email-already-in-use') {
+        toast.error('이미 가입된 이메일 입니다.');
       }
+      toast.error(error);
     }
   };
 
