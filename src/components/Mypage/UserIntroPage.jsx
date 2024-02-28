@@ -60,6 +60,10 @@ export default function UserIntroPage() {
         await updateDoc(userDocRef, { ...userData, nickname: editingText });
         setUserData((prevUserData) => ({ ...prevUserData, nickname: editingText })); // 업데이트된 닉네임을 로컬 상태에 반영
 
+        await updateProfile(postUser, {
+          displayName: editingText
+        });
+
         toast.success('닉네임이 업데이트되었습니다.');
       } else {
         throw new Error('사용자 문서가 존재하지 않습니다.');
