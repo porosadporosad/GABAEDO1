@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -13,6 +13,7 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   if (!isOpen) return null;
 
   console.log('선택한 장소', selectedPlace);
+  console.log('현재 게시글', id);
 
   const handleAdd = async () => {
     const newPlace = {
@@ -24,6 +25,13 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
       postId: id
     };
     try {
+      const querySnapshot = await getDocs(query(collection(db, 'places'), where('address', '==', newPlace.address)));
+
+      if (!querySnapshot.empty) {
+        toast.error(`이미 등록되어 있는 장소입니다.`);
+        return;
+      }
+
       const docRef = await addDoc(collection(db, 'places'), newPlace);
       await queryClient.invalidateQueries('places');
       toast.success(`가배도에 카페 추가 완료!`);

@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useCurrentUser } from '../../shared/database';
+import { getCurrentUser } from '../../shared/database';
 import { auth, db } from 'shared/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { toast } from 'react-toastify';
+import { useQuery } from 'react-query';
 
 export default function UserIntroPage() {
-  const { data } = useCurrentUser();
-  console.log('현재현재유저데이터', data);
+  const { data } = useQuery('user', getCurrentUser);
+  console.log('현재유저데이터', data);
   const postUser = auth.currentUser;
 
   const [editingText, setEditingText] = useState('');
@@ -20,12 +21,12 @@ export default function UserIntroPage() {
   };
 
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
+    const postUser = auth.currentUser;
+    if (postUser) {
       setUserData({
-        userId: currentUser.email,
-        nickname: currentUser.displayName,
-        avatar: currentUser.photoURL
+        userId: postUser.email,
+        nickname: postUser.displayName,
+        avatar: postUser.photoURL
       });
     }
     // 포토 URL이 바뀔때마다
@@ -33,10 +34,10 @@ export default function UserIntroPage() {
 
   const uploadProfile = async () => {
     try {
-      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      const userDocRef = doc(db, 'users', postUser.uid);
       await updateDoc(userDocRef, { avatar: newPhotoURL });
 
-      await updateProfile(auth.currentUser, {
+      await updateProfile(postUser, {
         photoURL: newPhotoURL
       });
 
@@ -48,7 +49,7 @@ export default function UserIntroPage() {
 
   const updateNickname = async () => {
     try {
-      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      const userDocRef = doc(db, 'users', postUser.uid);
       const docSnap = await getDoc(userDocRef);
 
       if (docSnap.exists()) {
@@ -72,12 +73,10 @@ export default function UserIntroPage() {
       {userData && (
         <div>
           <img src={newPhotoURL || userData?.avatar} alt="프로필 사진" />
-          {/* 프로필 사진 업데이트 입력 */}
           <input type="file" onChange={(e) => setNewPhotoURL(URL.createObjectURL(e.target.files[0]))} />
           <button onClick={uploadProfile}>사진 업데이트하기</button>
 
           <p>닉네임: {userData?.nickname}</p>
-          {/* 닉네임 수정 입력 */}
           <input type="text" value={editingText} onChange={onEditNameHandler} />
           <button onClick={updateNickname}>닉네임 업데이트하기</button>
           <p>이메일: {userData.userId}</p>

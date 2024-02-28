@@ -54,7 +54,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <img src={item.snippet.thumbnails.default.url} style={{ borderRadius: '12%' }} />
+                    <img src={item.snippet.thumbnails.default.url} style={{ borderRadius: '12%' }} alt="" />
                   </a>
                 </Thumbnail>
                 <Title>{item.snippet.title}</Title>
@@ -64,7 +64,9 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
           ))}
         </div>
       </VideoContainer>
-      <button onClick={closeModalHandler}>확인</button>
+      <Btn>
+        <StyledBtn onClick={closeModalHandler}>확인</StyledBtn>
+      </Btn>
     </ModalContainer>
   );
 }
@@ -76,6 +78,7 @@ const ModalContainer = styled.div`
   position: absolute;
   text-align: center;
   background-color: #fff9f3;
+  overflow-y: auto;
 
   & h2 {
     font-family: 'SunBatang-Bold';
@@ -118,4 +121,20 @@ const Thumbnail = styled.div`
 
 const Title = styled.div`
   width: 60%;
+`;
+
+const Btn = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const StyledBtn = styled.button`
+  background-color: #b6856a;
+  width: 80px;
+  height: 35px;
+  border: none;
+  border-radius: 12px;
+  font-size: 12pt;
+  font-family: SunBatang-Bold;
+  cursor: pointer;
 `;

@@ -4,13 +4,16 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { auth } from '../shared/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useCurrentUser } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
+import { useQuery } from 'react-query';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
+
   const navigate = useNavigate();
-  const { data } = useCurrentUser();
+  const { data } = useQuery('user', getCurrentUser);
 
   useEffect(() => {
     const loginCheck = () => {
@@ -60,7 +63,7 @@ export default function Header() {
   return (
     <MenuHeader>
       <StLink to="/">
-        <h3>가배도</h3>
+        <Logo src={logo} alt="logo" />
       </StLink>
       <nav>
         <MenuUl>
@@ -73,7 +76,6 @@ export default function Header() {
                 <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
-                <UserBtn onClick={userIsActiveBtn}>🔽</UserBtn>
                 <UserUl $isActive={isActive}>
                   <UserLi>
                     <StyledLink to="/mypage">마이 페이지</StyledLink>
@@ -95,9 +97,13 @@ export default function Header() {
   );
 }
 
+const Logo = styled.img`
+  width: 6rem;
+`;
+
 const MenuHeader = styled.header`
   height: 50px;
-  padding: 0 20px;
+  padding: 0 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,8 +139,6 @@ const MenuUl = styled.ul`
   }
 `;
 
-//dd
-
 const ImgDiv = styled.div`
   width: 2.5rem;
   height: 2.5rem;
@@ -150,12 +154,6 @@ const ImgStyle = styled.img`
 
 const UserMenuDiv = styled.div`
   position: relative;
-`;
-
-const UserBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
 `;
 
 const UserUl = styled.ul`
