@@ -9,6 +9,7 @@ import AuthLayout from 'components/layout/AuthLayout';
 import Layout from 'components/layout/Layout';
 import Search from '../pages/Search';
 import Gabaedos from 'pages/Gabaedos';
+import PostSearch from 'pages/PostSearch';
 
 export default function Router() {
   return (
@@ -19,6 +20,7 @@ export default function Router() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/gabaedos" element={<Gabaedos />} />
+          <Route path="/posts-search" element={<PostSearch />} />
         </Route>
 
         {/*상단바가 없는 지도페이지*/}
