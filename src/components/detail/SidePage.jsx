@@ -56,17 +56,21 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   }, [uid, id]);
 
   useEffect(() => {
-    if (!usersIsLoading && usersData) {
+    if (!usersIsLoading && Array.isArray(usersData)) {
       const fetchData = async () => {
         const writerInfo = postData.userId;
         console.log('유저스데이터', usersData);
         const writer = usersData.find((user) => user.userId === writerInfo);
-        setWriterIcon(writer.avatar);
+        if(writer) {
+          setWriterIcon(writer.avatar);
+        } else {
+          console.error('글쓴이를 찾을 수 없습니다!');
+        }
       };
       fetchData();
     }
   }, [usersData, postData]);
-
+  
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
