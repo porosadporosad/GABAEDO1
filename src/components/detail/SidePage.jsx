@@ -23,7 +23,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoading, data } = useQuery('user', getCurrentUser);
+  const { isLoading: currUserIsLoading, data: currUserData } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
@@ -77,7 +77,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     navigate(`/search/${id}`);
   };
 
-  if (isLoading || usersIsLoading) {
+  if (currUserIsLoading || usersIsLoading) {
     return <div>로딩중</div>;
   }
 
@@ -146,7 +146,9 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           ◀
         </GoBackButton>
         <PostInfo>
-          {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
+          {!currUserIsLoading && currUserData.userId === writerInfo ? (
+            <Edit onClick={() => setIsModalOpen(true)}>수정</Edit>
+          ) : null}
           <PostBox>
             <h2>
               ✧☕✧
@@ -178,7 +180,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
-        {!isLoading && data.userId === writerInfo ? (
+        {!currUserIsLoading && currUserData.userId === writerInfo ? (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
@@ -194,7 +196,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
                   </PlaceInfo>
                   <h3>{place.placeComment}</h3>
                   <DeleteBtnArea>
-                    {!isLoading && data.userId === writerInfo ? (
+                    {!currUserIsLoading && currUserData.userId === writerInfo ? (
                       <Edit onClick={() => deleteHandler(place.id)}>삭제</Edit>
                     ) : null}
                   </DeleteBtnArea>
