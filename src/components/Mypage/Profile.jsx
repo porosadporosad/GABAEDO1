@@ -88,15 +88,18 @@ const ProfileWrapper = styled.section`
 `;
 
 const UserInputList = styled.ul`
-  display: block;
-  align-items: center;
-  justify-content: center;
-  list-style-type: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  place-content: center;
+  gap: 20px;
 `;
 
 const ListTitle = styled.h2`
+  margin: 20px auto;
   color: #c70000;
+  display: flex;
+  align-items: center;
 `;
 
 const Button = styled.button`
@@ -107,6 +110,13 @@ const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+
+  &:hover {
+    transition: 0.5s;
+    background-color: #c70000;
+  }
 `;
 
-const BookmarkWrapper = styled.section``;
+const BookmarkWrapper = styled.section`
+  margin-top: 20px;
+`;

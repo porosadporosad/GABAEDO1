@@ -76,6 +76,7 @@ export default function UserIntroPage() {
 
   return (
     <ProfileContainer>
+      <ProfileTitle>프로필☕</ProfileTitle>
       {userData && (
         <Container>
           <ProfileSection>
@@ -120,7 +121,12 @@ const ProfileContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  /* flex-wrap: nowrap; */
+`;
+
+const ProfileTitle = styled.h1`
+  text-align: center;
+  color: #b6856a;
+  margin-bottom: 30px;
 `;
 
 const Container = styled.div`
@@ -136,11 +142,6 @@ const MyPostsSection = styled.section`
   display: flex;
   flex-direction: column;
   margin-left: 50px;
-`;
-
-const ProfileTitle = styled.h1`
-  text-align: center;
-  color: #b6856a;
 `;
 
 const ProfileImage = styled.img`
@@ -166,12 +167,14 @@ const Button = styled.button`
   cursor: pointer;
   margin: 10px auto;
   &:hover {
+    transition: 0.5s;
     background-color: #c70000;
   }
 `;
 
 const EmailName = styled.div`
   margin-bottom: 20px;
+  background-color: #fff;
 `;
 
 const TextInput = styled.input`
