@@ -127,14 +127,12 @@ const ProfileTitle = styled.h1`
 `;
 
 const ProfileImage = styled.img`
-  /* max-width: 100%;
-  border-radius: 50%; */
+  display: block;
   width: 200px;
   height: 200px;
   position: relative;
   border-radius: 50%;
   margin: 0 auto;
-  display: block;
   box-shadow: 0 0 0 8px #ffffff;
 `;
 
