@@ -8,7 +8,6 @@ export default function NonAuthLayout() {
 
   if (isLoggedin) {
     alert(`이미 로그인된 상태입니다.`);
-    console.log(`이미 로그인됨`);
     return <Navigate to="/" replace />;
   }
   return (

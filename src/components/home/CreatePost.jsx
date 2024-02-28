@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from 'shared/database';
 import { db } from 'shared/firebase';
 import styled from 'styled-components';
-import { hashtageData } from 'shared/hashtageData';
+import { hashtageData } from 'constant/hashtageData';
 import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
@@ -67,7 +67,6 @@ export default function CreatePost({ setModalIsOpen }) {
     try {
       const docRef = await addDoc(collection(db, 'posts'), newPost);
       const postId = docRef.id;
-      console.log('postId', postId);
 
       // 모달 끄기
       setModalIsOpen(false);

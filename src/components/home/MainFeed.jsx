@@ -3,16 +3,15 @@ import { getPosts, getCurrentUser, getPlaces } from 'shared/database';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
 import CreatePost from './CreatePost';
-import { hashtageData } from 'shared/hashtageData';
+import { hashtageData } from 'constant/hashtageData';
 import PostsList from './PostsList';
 import RankList from './RankList';
 // import { getUsers } from 'shared/database';
 import PlacesData from './PlacesList';
 
-export default function MainFeed({ keyword }) {
+export default function MainFeed() {
   const { isLoading, data } = useQuery('posts', getPosts);
   const { isLoading: userIsLoading, data: loginUserData } = useQuery('user', getCurrentUser);
-  // const { data: allUserData } = useQuery('users', getUsers);
   const { isLoading: palcesIsLoading, data: placesData } = useQuery('places', getPlaces);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [menu, setMenu] = useState('');
@@ -32,11 +31,6 @@ export default function MainFeed({ keyword }) {
   let UserRank = [];
 
   for (let userNickname in writerUsers) {
-    // 순위에 프로필 이미지 넣기....
-    // console.log(allUserData);
-    // const getUser = allUserData.find((user) => user.nickname === userNickname);
-    // console.log(getUser);
-
     UserRank.push({ nickname: userNickname, number: writerUsers[userNickname] });
   }
   UserRank.sort((a, b) => b.number - a.number);
@@ -44,8 +38,6 @@ export default function MainFeed({ keyword }) {
   if (UserRank.length >= 5) UserRank.length = 5;
 
   placesData.sort((a, b) => b.createdAt - a.createdAt);
-
-  // const searchedData = data.filter((post) => post.title.includes(keyword) || post.content.includes(keyword));
 
   const filteredData = menu ? data.filter((post) => post.hashtag.includes(menu)) : data;
 
@@ -110,7 +102,7 @@ export default function MainFeed({ keyword }) {
 }
 
 const Article = styled.article`
-  width: 1220px;
+  width: 1260px;
   margin: 0 auto;
 `;
 

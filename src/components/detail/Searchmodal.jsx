@@ -19,7 +19,6 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
             maxResults: 5
           }
         });
-        console.log('검색결과', response.data.items);
         setSearchResults(response.data.items);
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -33,9 +32,6 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
     closeModal();
   };
 
-  console.log('선택된카페', selectedPlace);
-  console.log('카페 리스트', placeData);
-
   return (
     <ModalContainer>
       <SearchBarBox>
@@ -43,7 +39,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
       </SearchBarBox>
       <h3>영상으로 카페 미리보기</h3>
       <BrownLine />
-      <VideoContainer>
+      <div>
         <div>
           {searchResults.map((item, index) => (
             <>
@@ -63,7 +59,7 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
             </>
           ))}
         </div>
-      </VideoContainer>
+      </div>
       <Btn>
         <StyledBtn onClick={closeModalHandler}>확인</StyledBtn>
       </Btn>
@@ -76,14 +72,15 @@ const ModalContainer = styled.div`
   height: 100%;
   padding: 25px;
   position: absolute;
-  text-align: center;
-  background-color: #fff9f3;
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+
+  background-color: #fff9f3;
 
   & h2 {
-    font-family: 'SunBatang-Bold';
     font-size: 25px;
+    font-family: 'SunBatang-Bold';
     color: #784b31;
   }
 
@@ -94,19 +91,18 @@ const ModalContainer = styled.div`
 `;
 
 const SearchBarBox = styled.div`
-  background-size: 100%;
   padding: 20px;
   padding-top: 10px;
+  background-size: 100%;
 `;
 
 const BrownLine = styled.div`
   width: 100%;
-  height: 1px;
-  background-color: #e0c3ae;
   margin: 10px;
-`;
+  height: 1px;
 
-const VideoContainer = styled.div``;
+  background-color: #e0c3ae;
+`;
 
 const VideoBox = styled.div`
   display: flex;
@@ -130,12 +126,13 @@ const Btn = styled.div`
 `;
 
 const StyledBtn = styled.button`
-  background-color: #b6856a;
   width: 80px;
   height: 35px;
-  border: none;
-  border-radius: 12px;
+
   font-size: 12pt;
-  font-family: SunBatang-Bold;
+  font-family: 'SunBatang-Bold';
+  background-color: #b6856a;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
 `;

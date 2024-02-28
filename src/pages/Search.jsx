@@ -26,7 +26,6 @@ export default function Search() {
       if (status === window.kakao.maps.services.Status.OK) {
         setMapCenter({ lat: parseFloat(data[0].y), lng: parseFloat(data[0].x) });
         setSearchResults(data);
-        console.log('검색 결과:', data);
       } else {
         alert('검색 결과를 찾을 수 없습니다.');
       }
