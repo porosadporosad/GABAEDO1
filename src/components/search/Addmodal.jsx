@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -32,6 +32,7 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
         return;
       }
 
+      await addDoc(collection(db, 'places'), newPlace);
       await queryClient.invalidateQueries('places');
       toast.success(`가배도에 카페 추가 완료!`);
       onCancel();
@@ -85,7 +86,7 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   background-color: #e0c3ae;
   border: 2px solid #784b31;
   border-radius: 15px;
