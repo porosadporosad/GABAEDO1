@@ -31,19 +31,6 @@ const ListSection = styled.section`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #e0c3ae;
-    border-radius: 5px;
-    /* box-shadow: inset 0px 0px 5px #fff; */
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #fff9f3;
-    border-radius: 5px;
-  }
 `;
 
 const PostListBox = styled.div`
