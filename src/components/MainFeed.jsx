@@ -9,7 +9,7 @@ import RankList from './RankList';
 // import { getUsers } from 'shared/database';
 import PlacesData from './PlacesList';
 
-export default function MainFeed({ keyword }) {
+export default function MainFeed() {
   const { isLoading, data } = useQuery('posts', getPosts);
   const { isLoading: userIsLoading, data: loginUserData } = useQuery('user', getCurrentUser);
   // const { data: allUserData } = useQuery('users', getUsers);
@@ -110,7 +110,7 @@ export default function MainFeed({ keyword }) {
 }
 
 const Article = styled.article`
-  width: 1220px;
+  width: 1260px;
   margin: 0 auto;
 `;
 
