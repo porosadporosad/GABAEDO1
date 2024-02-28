@@ -19,7 +19,7 @@ export default function About() {
         이제 <Title>가배도</Title>에서 나에게 딱 맞는 카페를 찾아보자.
       </Comment>
       <BrownLine />
-      <Title>가배도 프로젝트에 함께한 사람들</Title>
+      <Title>☕가배도 프로젝트에 함께한 사람들🧋</Title>
       {aboutTeam.map((item) => (
         <Teammates key={item.id}>
           <Icon>
@@ -32,6 +32,7 @@ export default function About() {
         </Teammates>
       ))}
       <BrownLine />
+      Gabaedo Project Copyright 2024. Newbie9 all rights reserved.
     </AboutContainer>
   );
 }
