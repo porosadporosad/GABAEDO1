@@ -172,5 +172,11 @@ const HashtagMenu = styled.nav`
     background-color: transparent;
     border: none;
     cursor: pointer;
+    text-decoration: none; /* 기본 밑줄 제거 */
+    transition: text-decoration 0.3s; /* 호버 시 애니메이션 효과를 주기 위한 transition 추가 */
+  }
+
+  & button:hover {
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
   }
 `;

@@ -206,5 +206,9 @@ const BtnSection = styled.section`
     border: none;
     border-radius: 15px;
     cursor: pointer;
+    
+    &:hover {
+    background-color: #b10000;
+  }
   }
 `;
