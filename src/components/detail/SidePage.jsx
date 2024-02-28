@@ -18,14 +18,14 @@ import Loading from 'components/Loading';
 export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [writerIcon, setWriterIcon] = useState(userImg);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoading, data } = useQuery('user', getCurrentUser);
+  const { isLoading: currUserIsLoading, data: currUserData } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
-
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
       onPlaceClick(place.lat, place.lng);
@@ -56,6 +56,21 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     fetchUserBookmark();
   }, [uid, id]);
 
+  useEffect(() => {
+    if (!usersIsLoading && Array.isArray(usersData)) {
+      const fetchData = async () => {
+        const writerInfo = postData.userId;
+        const writer = usersData.find((user) => user.userId === writerInfo);
+        if (writer) {
+          setWriterIcon(writer.avatar);
+        } else {
+          console.error('글쓴이를 찾을 수 없습니다!');
+        }
+      };
+      fetchData();
+    }
+  }, [usersData, postData]);
+
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
@@ -66,13 +81,9 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     navigate(`/search/${id}`);
   };
 
-  if (isLoading || usersIsLoading) {
+  if (currUserIsLoading || usersIsLoading) {
     return <Loading text="Loading" />;
   }
-
-  const writerInfo = postData.userId;
-  console.log('글쓴이정보', writerInfo);
-  // const findWriter = doc(db, 'users', writerInfo);
 
   /** 북마크 버튼 클릭 핸들러 */
   const BookmarkClickHandler = async () => {
@@ -107,7 +118,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
         }
         const newData = { ...userData, bookmark: updatedBookmark };
         await updateDoc(userDocRef, newData);
-        await queryClient.invalidateQueries('posts');
+        await queryClient.invalidateQueries('users');
       } else {
         console.log('해당 사용자의 데이터가 없다');
       }
@@ -130,6 +141,8 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     }
   };
 
+  const writerInfo = postData.userId;
+
   return (
     <>
       <SidePageContainer>
@@ -137,7 +150,9 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           ◀
         </GoBackButton>
         <PostInfo>
-          {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
+          {!currUserIsLoading && currUserData.userId === writerInfo ? (
+            <Edit onClick={() => setIsModalOpen(true)}>수정</Edit>
+          ) : null}
           <PostBox>
             <h2>
               ✧ ☕ ✧
@@ -164,12 +179,12 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
               />
             </Bookmark>
             <Writer>
-              <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
+              <img src={writerIcon} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
               <WriterNickname>{postData.nickname}</WriterNickname>
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
-        {!isLoading && data.userId === writerInfo ? (
+        {!currUserIsLoading && currUserData.userId === writerInfo ? (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
@@ -185,7 +200,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
                   </PlaceInfo>
                   <h3>{place.placeComment}</h3>
                   <DeleteBtnArea>
-                    {!isLoading && data.userId === writerInfo ? (
+                    {!currUserIsLoading && currUserData.userId === writerInfo ? (
                       <Edit onClick={() => deleteHandler(place.id)}>삭제</Edit>
                     ) : null}
                   </DeleteBtnArea>

@@ -8,7 +8,7 @@ import { useParams } from 'react-router';
 import Searchmodal from 'components/detail/Searchmodal';
 import Loading from 'components/Loading';
 
-const mapCenterDefault = { lat: 37.575489, lng: 126.976733 };
+const mapCenterDefault = { lat: 37.578611, lng: 126.977222 };
 
 function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
@@ -30,7 +30,7 @@ function Detail() {
 
   useEffect(() => {
     // 초기화를 이곳으로 이동
-    const firstPlace = placesData && placesData.length > 0 ? placesData[0] : { lat: 37.575489, lng: 126.976733 };
+    const firstPlace = placesData && placesData.length > 0 ? placesData[0] : mapCenterDefault;
     setMapCenter(firstPlace);
   }, [placesData]);
 
