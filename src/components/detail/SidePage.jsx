@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { getCurrentUser } from 'shared/database';
 import { useQuery, useQueryClient } from 'react-query';
-import { useState } from 'react';
-import { auth, db } from 'shared/firebase';
+import { useEffect, useState } from 'react';
+import { db } from 'shared/firebase';
 import { doc, getDoc, updateDoc } from '@firebase/firestore';
 
 import userImg from 'assets/defaultImg.jpg';
@@ -14,12 +14,36 @@ import { toast } from 'react-toastify';
 
 export default function SidePage({ postData, placeData }) {
   const [isAdding, setIsAdding] = useState(false);
+  const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
-  const { isLoading, data } = useQuery('user', getCurrentUser);
-
   const navigate = useNavigate();
   const { id } = useParams();
+  const { isLoading, data } = useQuery('user', getCurrentUser);
+
+  /** 북마크 여부에 따라 아이콘 변경 */
+  useEffect(() => {
+    const fetchUserBookmark = async () => {
+      if (uid) {
+        const userDocRef = doc(db, 'users', uid);
+        try {
+          const userDocSnapshot = await getDoc(userDocRef);
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            if (userData.bookmark.includes(id)) {
+              setBookmarkImg(bookmarkSelected);
+            } else {
+              setBookmarkImg(bookmarkDefault);
+            }
+          }
+        } catch (error) {
+          console.error('사용자 정보 가져오기 에러', error.message);
+        }
+      }
+    };
+
+    fetchUserBookmark();
+  }, [uid, id]);
 
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
@@ -36,7 +60,6 @@ export default function SidePage({ postData, placeData }) {
   }
 
   const writerInfo = postData.userId;
-  const user = auth.currentUser;
 
   /** 북마크 버튼 클릭 핸들러 */
   const BookmarkClickHandler = async () => {
@@ -60,16 +83,18 @@ export default function SidePage({ postData, placeData }) {
         let updatedBookmark;
         //이미 북마크 되어 있는 게시글이라면
         if (userData.bookmark.includes(id)) {
-          alert(`해당 가배도를 북마크 해제합니다`);
+          alert(`해당 가배도를 북마크 해제합니다.`);
           updatedBookmark = userData.bookmark.filter((item) => item !== id);
+          setBookmarkImg(bookmarkDefault);
           //아직 북마크 되어 있지 않은 게시글이라면
         } else {
+          toast.success(`북마크 성공! 마이페이지에서 확인하세요.`);
           updatedBookmark = [...userData.bookmark, id];
+          setBookmarkImg(bookmarkSelected);
         }
         const newData = { ...userData, bookmark: updatedBookmark };
         await updateDoc(userDocRef, newData);
         await queryClient.invalidateQueries('posts');
-        toast.success(`북마크 성공! 마이페이지에서 확인하세요`);
       } else {
         console.log('해당 사용자의 데이터가 없다');
       }
@@ -105,7 +130,7 @@ export default function SidePage({ postData, placeData }) {
           <BookmarkAndWriter>
             <Bookmark>
               <img
-                src={bookmarkDefault}
+                src={bookmarkImg}
                 onClick={BookmarkClickHandler}
                 disabled={isAdding}
                 title="해당 가배도 북마크하기"
