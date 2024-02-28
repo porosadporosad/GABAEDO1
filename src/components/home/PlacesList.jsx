@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import youtubeIcon from 'assets/youtube-icon.png';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -39,8 +39,11 @@ export default function PlacesData({ placesData }) {
             <h3>{place.address}</h3>
             <BtnSection>
               <MoveToDetailBtn onClick={() => navigate(`detail/${place.postId}`)}>가배도 보러가기</MoveToDetailBtn>
-              <YoutubeBtn onClick={() => setCafeName(place.name)}>
-                <img src={youtubeIcon} alt="유튜브 아이콘" />
+              <YoutubeBtn
+                onMouseEnter={() => setCafeName(place.name)}
+                onMouseLeave={() => setCafeName('')}
+              >
+                <YoutubeIcon src={youtubeIcon} alt="유튜브 아이콘" />
               </YoutubeBtn>
             </BtnSection>
           </PlaceBox>
@@ -61,6 +64,18 @@ export default function PlacesData({ placesData }) {
     </ListSection>
   );
 }
+
+const bounceAnimation = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
 
 const ListSection = styled.section`
   height: 395px;
@@ -117,12 +132,21 @@ const BtnSection = styled.section`
 const MoveToDetailBtn = styled.button`
   padding: 0 10px;
   color: #c70000;
+  text-decoration: none; 
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const YoutubeBtn = styled.button`
-  & img {
-    height: 100%;
+  &:hover img {
+    animation: ${bounceAnimation} 1s infinite;
   }
+`;
+
+const YoutubeIcon = styled.img`
+  height: 100%;
 `;
 
 const YoutubeSection = styled.section`

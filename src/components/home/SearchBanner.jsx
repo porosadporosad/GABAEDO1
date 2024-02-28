@@ -63,5 +63,10 @@ const SearchForm = styled.form`
     cursor: pointer;
     font-size: 16px;
     color: #fff9f3;
+    transition: text-decoration 0.5s;
+  }
+
+  & button:hover {
+    background-color: #B6856A;
   }
 `;
