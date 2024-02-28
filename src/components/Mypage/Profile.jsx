@@ -6,6 +6,7 @@ import { getPosts, deletePost } from '../../shared/database';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getPostsForBookmarks } from '../../shared/database';
+import { deletePostFromCollection } from '../../shared/database';
 
 export default function Profile() {
   const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
@@ -82,7 +83,6 @@ export default function Profile() {
                   </WriterAndTitle>
                   <BtnArea>
                     <Button onClick={() => navigate(`/detail/${item.id}`)}>보기</Button>
-                    <Button onClick={() => handleDeletePost(item.id)}>삭제</Button>
                   </BtnArea>
                 </PostList>
               ))
