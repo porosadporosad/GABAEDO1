@@ -14,7 +14,7 @@ export default function PlacesData({ placesData }) {
       try {
         const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
           params: {
-            key: process.env.REACT_APP_YOUTUBE_API_KEY,
+            key: process.env.REACT_APP_YOUTUBE,
             part: 'snippet',
             q: `카페 ${cafeName}`, // 기본 검색어 설정
             type: 'video',
