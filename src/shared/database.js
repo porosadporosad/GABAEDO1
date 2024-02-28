@@ -38,7 +38,6 @@ export const useCurrentUser = () => {
 export const deletePost = async (postId) => {
   try {
     await deleteDoc(doc(db, 'posts', postId));
-    console.log('포스트 삭제 완료:', postId);
   } catch (error) {
     console.error('포스트 삭제 중 오류 발생:', error);
     throw error;

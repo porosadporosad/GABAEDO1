@@ -4,7 +4,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
-import { hashtageData } from 'shared/hashtageData';
+import { hashtageData } from 'constant/hashtageData';
 
 export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
   const [title, setTitle] = useState(postData.title);
@@ -58,7 +58,6 @@ export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
       await queryClient.invalidateQueries('posts');
       toast.success(`게시글이 수정되었습니다.`);
     } catch (error) {
-      console.error('게시글 수정하기 에러', error);
       toast.error(`게시글 수정중 오류가 발생했습니다.`);
       throw error;
     }

@@ -34,7 +34,7 @@ const ListSection = styled.section`
 `;
 
 const PostListBox = styled.div`
-  width: 380px;
+  width: 400px;
   height: 120px;
   padding: 10px;
   margin: 10px 0;
