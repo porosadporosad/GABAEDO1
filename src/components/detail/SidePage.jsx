@@ -17,6 +17,7 @@ import EditModal from './EditModal';
 export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [writerIcon, setWriterIcon] = useState(userImg);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
@@ -24,7 +25,6 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   const { id } = useParams();
   const { isLoading, data } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
-
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
       onPlaceClick(place.lat, place.lng);
@@ -55,6 +55,18 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     fetchUserBookmark();
   }, [uid, id]);
 
+  useEffect(() => {
+    if (!usersIsLoading && usersData) {
+      const fetchData = async () => {
+        const writerInfo = postData.userId;
+        console.log('유저스데이터', usersData);
+        const writer = usersData.find((user) => user.userId === writerInfo);
+        setWriterIcon(writer.avatar);
+      };
+      fetchData();
+    }
+  }, [usersData, postData]);
+
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
@@ -68,10 +80,6 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   if (isLoading || usersIsLoading) {
     return <div>로딩중</div>;
   }
-
-  const writerInfo = postData.userId;
-  console.log('글쓴이정보', writerInfo);
-  // const findWriter = doc(db, 'users', writerInfo);
 
   /** 북마크 버튼 클릭 핸들러 */
   const BookmarkClickHandler = async () => {
@@ -129,6 +137,8 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     }
   };
 
+  const writerInfo = postData.userId;
+
   return (
     <>
       <SidePageContainer>
@@ -163,7 +173,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
               />
             </Bookmark>
             <Writer>
-              <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
+              <img src={writerIcon} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
               <WriterNickname>{postData.nickname}</WriterNickname>
             </Writer>
           </BookmarkAndWriter>
