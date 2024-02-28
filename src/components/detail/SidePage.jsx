@@ -5,7 +5,7 @@ import { getCurrentUser } from 'shared/database';
 import { useQuery, useQueryClient } from 'react-query';
 import { useEffect, useState } from 'react';
 import { db } from 'shared/firebase';
-import { doc, getDoc, updateDoc } from '@firebase/firestore';
+import { deleteDoc, doc, getDoc, updateDoc } from '@firebase/firestore';
 import { getUsers } from 'shared/database';
 
 import userImg from 'assets/defaultImg.jpg';
@@ -107,11 +107,25 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
         const newData = { ...userData, bookmark: updatedBookmark };
         await updateDoc(userDocRef, newData);
         await queryClient.invalidateQueries('posts');
+      } else {
+        console.log('해당 사용자의 데이터가 없다');
       }
     } catch (error) {
       console.error('북마크 추가 에러 발생', error.message);
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const deleteHandler = async (id) => {
+    try {
+      if (!window.confirm(`이 카페를 해당 가배도에서 삭제할까요?`)) return;
+      const docRef = doc(db, 'places', id);
+      await deleteDoc(docRef);
+      await queryClient.invalidateQueries('posts');
+    } catch (error) {
+      toast.error(`오류 발생! 다시 시도해보세요.`);
+      console.error('문서 삭제 에러', error);
     }
   };
 
@@ -169,6 +183,11 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
                     <h4>{place.address}</h4>
                   </PlaceInfo>
                   <h3>{place.placeComment}</h3>
+                  <DeleteBtnArea>
+                    {!isLoading && data.userId === writerInfo ? (
+                      <Edit onClick={() => deleteHandler(place.id)}>삭제</Edit>
+                    ) : null}
+                  </DeleteBtnArea>
                 </Place>
               );
             })
@@ -181,56 +200,51 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
 }
 
 const SidePageContainer = styled.div`
-  width: 450px;
-  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
+  width: 450px;
+  height: 100%;
+  border-right: 1px solid #c70000;
+  background-color: #e0c3ae;
   padding: 30px;
   box-sizing: border-box;
   overflow-y: auto;
-
-  background-color: #e0c3ae;
-  border-right: 1px solid #c70000;
 `;
 
 const GoBackButton = styled.div`
-  padding: 10px;
   display: inline-block;
-  margin-bottom: 10px;
-
-  color: white;
   background-color: #784b31;
+  color: white;
+  padding: 10px;
   border-radius: 12px;
+  margin-bottom: 10px;
   cursor: pointer;
 `;
 
 const BrownLine = styled.div`
   width: 100%;
   height: 1px;
-
   background-color: #e0c3ae;
 `;
 
 const PostInfo = styled.div`
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 20px;
+  background-color: white;
   display: flex;
   flex-direction: column;
-
-  background-color: white;
+  gap: 10px;
+  padding: 20px;
   box-shadow: 2px 2px 5px 2px #e0c3aea2;
   border-radius: 12px;
+  margin-bottom: 20px;
 `;
 
 const BookmarkAndWriter = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 5px;
   align-items: center;
-
   font-size: 12pt;
+  gap: 5px;
 `;
 
 const Bookmark = styled.div`
@@ -239,10 +253,9 @@ const Bookmark = styled.div`
 `;
 
 const WriterNickname = styled.span`
-  margin-right: 5px;
-
   font-family: 'SunBatang-Bold';
   color: #784b31;
+  margin-right: 5px;
 `;
 
 const Writer = styled.div`
@@ -256,11 +269,10 @@ const PostBox = styled.div`
   gap: 5px;
 
   & h2 {
-    padding: 10px;
-
-    color: #784b31;
     font-family: 'SunBatang-Bold';
+    padding: 10px;
     font-size: 25px;
+    color: #784b31;
   }
 
   & h3 {
@@ -270,46 +282,44 @@ const PostBox = styled.div`
 `;
 
 const HashtagBox = styled.div`
-  display: flex;
   justify-content: center;
+  display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 10px;
 `;
 
 const Hashtag = styled.span`
-  font-size: 10pt;
   background-color: #fff9f3;
   border-radius: 12px;
+  font-size: 10pt;
 `;
 
 const AddPlaceBtn = styled.button`
-  width: 100%;
-  height: 40px;
-
-  font-size: 14pt;
-  font-family: 'SunBatang-Bold';
   background-color: #b6856a;
   border: none;
   border-radius: 12px;
+  width: 100%;
+  height: 40px;
+  font-family: 'SunBatang-Bold';
+  font-size: 14pt;
   cursor: pointer;
 `;
 
 const PlacesBox = styled.div`
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
   gap: 10px;
 `;
 
 const Place = styled.div`
-  padding: 20px;
-  transition: box-shadow 0.3s;
-
   background-color: #fff9f3;
   border: 1px solid #b6856a;
   border-radius: 12px;
+  padding: 20px;
   cursor: pointer;
+  transition: box-shadow 0.3s;
 
   &:hover {
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
@@ -344,12 +354,16 @@ const PlaceInfo = styled.div`
 const Edit = styled.div`
   width: 50px;
   height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   background-color: #b6856a;
   color: white;
   border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+`;
+
+const DeleteBtnArea = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
