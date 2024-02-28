@@ -34,21 +34,21 @@ export default function Profile() {
       <ProfileWrapper>
         <UserIntroPage />
         <UserInputList>
-          <ListTitle>내가 작성한 글</ListTitle>
+          <ListTitle>내가 작성한 가배도</ListTitle>
           {myPosts ? (
             myPosts.map((post) => (
-              <li key={post.id}>
+              <PostList key={post.id}>
                 <div>{post.title || '제목 없음'}</div>
                 <Button onClick={() => handleDeletePost(post.id)}>삭제</Button>
-              </li>
+              </PostList>
             ))
           ) : (
             <p>작성한 게시물이 없습니다.</p>
           )}
         </UserInputList>
-        <BookmarkWrapper>
-          <p>북마크한 가배도</p>
-        </BookmarkWrapper>
+        <UserInputList>
+          <ListTitle>북마크한 가배도</ListTitle>
+        </UserInputList>
       </ProfileWrapper>
     </Container>
   );
@@ -90,9 +90,9 @@ const ProfileWrapper = styled.section`
 const UserInputList = styled.ul`
   display: flex;
   flex-direction: column;
-
   place-content: center;
   gap: 20px;
+  margin: 20px;
 `;
 
 const ListTitle = styled.h2`
@@ -119,6 +119,13 @@ const Button = styled.button`
   }
 `;
 
-const BookmarkWrapper = styled.section`
-  margin-top: 20px;
+const PostList = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 4px;
+  padding-left: 15px;
+  padding-right: 15px;
 `;
