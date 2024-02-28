@@ -92,8 +92,10 @@ export default function UserIntroPage() {
           </ProfileSection>
 
           <MyPostsSection>
-            <EmailName>{userData.userId}</EmailName>
-            <EmailName>{userData.nickname}</EmailName>
+            <Inform>
+              <UserId>{userData.userId}</UserId>
+              <NickName>{userData.nickname}</NickName>
+            </Inform>
             {isEditing ? ( // 닉네임 수정 중일 때
               <div>
                 <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
@@ -162,19 +164,36 @@ const Button = styled.button`
   background-color: #784b31;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 13px 20px;
   border-radius: 5px;
   cursor: pointer;
   margin: 10px auto;
+  width: 230px;
   &:hover {
     transition: 0.5s;
     background-color: #c70000;
   }
 `;
 
-const EmailName = styled.div`
+const Inform = styled.div`
+  margin: 30px 0 20px 0;
+  width: 300px;
+`;
+
+const UserId = styled.div`
   margin-bottom: 20px;
+  padding: 15px;
   background-color: #fff;
+  font-size: 20px;
+  border-radius: 20px;
+`;
+
+const NickName = styled.div`
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  font-size: 20px;
+  border-radius: 20px;
 `;
 
 const TextInput = styled.input`

@@ -97,6 +97,8 @@ const UserInputList = styled.ul`
 
 const ListTitle = styled.h2`
   margin: 20px auto;
+  font-size: 20px;
+  font-weight: bold;
   color: #c70000;
   display: flex;
   align-items: center;
