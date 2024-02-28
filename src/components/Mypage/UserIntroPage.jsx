@@ -118,7 +118,9 @@ const ProfileContainer = styled.div``;
 
 const Container = styled.div``;
 
-const ProfileSection = styled.section``;
+const ProfileSection = styled.section`
+  width: 300px;
+`;
 const MyPostsSection = styled.section``;
 
 const ProfileTitle = styled.h1`
@@ -128,11 +130,11 @@ const ProfileTitle = styled.h1`
 
 const ProfileImage = styled.img`
   display: block;
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   position: relative;
   border-radius: 50%;
-  margin: 0 auto;
+  margin: -20px 0 0 -130px;
   box-shadow: 0 0 0 5px #c28f7f;
 `;
 
