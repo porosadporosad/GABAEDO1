@@ -109,9 +109,9 @@ const ModalContainer = styled.div`
   left: 450px;
   width: 350px;
   height: 100%;
-
-  border-right: 1px solid #001d84;
-  background-color: white;
   z-index: 9999;
+
+  background-color: white;
+  border-right: 1px solid #001d84;
   transition: right 0.3s ease;
 `;
