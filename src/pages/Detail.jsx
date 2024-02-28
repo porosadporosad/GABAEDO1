@@ -7,7 +7,7 @@ import SidePage from 'components/detail/SidePage';
 import { useParams } from 'react-router';
 import Searchmodal from 'components/detail/Searchmodal';
 
-const mapCenterDefault = { lat: 37.575489, lng: 126.976733 };
+const mapCenterDefault = { lat: 37.578611, lng: 126.977222 };
 
 function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
@@ -29,7 +29,7 @@ function Detail() {
 
   useEffect(() => {
     // 초기화를 이곳으로 이동
-    const firstPlace = placesData && placesData.length > 0 ? placesData[0] : { lat: 37.575489, lng: 126.976733 };
+    const firstPlace = placesData && placesData.length > 0 ? placesData[0] : mapCenterDefault;
     setMapCenter(firstPlace);
   }, [placesData]);
 
@@ -54,9 +54,6 @@ function Detail() {
 
   console.log('불러온 게시글', postData);
   console.log('해당 게시글에 등록된 장소', placeData);
-
-  // 첫 번째 장소를 기본으로 설정
-  const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
   // 클릭한 마커의 인덱스를 저장
   const handleMarkerClick = (index) => {
