@@ -8,6 +8,7 @@ import PostsList from './PostsList';
 import RankList from './RankList';
 // import { getUsers } from 'shared/database';
 import PlacesData from './PlacesList';
+import Loading from 'components/Loading';
 
 export default function MainFeed() {
   const { isLoading, data } = useQuery('posts', getPosts);
@@ -17,7 +18,7 @@ export default function MainFeed() {
   const [menu, setMenu] = useState('');
 
   if (isLoading || userIsLoading || palcesIsLoading) {
-    return <h1>Loading</h1>;
+    return <Loading />;
   }
 
   // 포스트에서 유저를 가져와 글을 쓴 만큼 카운트를 올려 객체에 넣어줍니다.

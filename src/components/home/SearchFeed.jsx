@@ -2,12 +2,13 @@ import { useQuery } from 'react-query';
 import { getPosts } from 'shared/database';
 import styled from 'styled-components';
 import PostsList from './PostsList';
+import Loading from 'components/Loading';
 
 export default function SearchFeed({ searchKeyword }) {
   const { isLoading, data } = useQuery('posts', getPosts);
 
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <Loading />;
   }
 
   const searchedData = data.filter(
