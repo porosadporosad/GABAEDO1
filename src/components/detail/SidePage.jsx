@@ -13,7 +13,7 @@ import bookmarkSelected from 'assets/bookmark_selected.png';
 import { toast } from 'react-toastify';
 import EditModal from './EditModal';
 
-export default function SidePage({ postData, placeData }) {
+export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +22,12 @@ export default function SidePage({ postData, placeData }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const { isLoading, data } = useQuery('user', getCurrentUser);
+
+  const handlePlaceClick = (place) => {
+    if (onPlaceClick) {
+      onPlaceClick(place.lat, place.lng);
+    }
+  };
 
   /** 북마크 여부에 따라 아이콘 변경 */
   useEffect(() => {
@@ -155,7 +161,7 @@ export default function SidePage({ postData, placeData }) {
           ) : (
             placeData.map((place) => {
               return (
-                <Place key={place.id}>
+                <Place key={place.id} onClick={() => handlePlaceClick(place)}>
                   <PlaceInfo>
                     <h2>{place.name}</h2>
                     <h4>{place.address}</h4>

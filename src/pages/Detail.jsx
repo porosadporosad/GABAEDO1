@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
@@ -7,9 +7,12 @@ import SidePage from 'components/detail/SidePage';
 import { useParams } from 'react-router';
 import Searchmodal from 'components/detail/Searchmodal';
 
+const mapCenterDefault = { lat: 37.575489, lng: 126.976733 };
+
 function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [mapCenter, setMapCenter] = useState(mapCenterDefault); 
 
   const closeModal = () => {
     setSelectedPlace(null);
@@ -20,6 +23,23 @@ function Detail() {
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
 
+  const handlePlaceClick = (lat, lng) => {
+    setMapCenter({ lat, lng });
+  };
+
+  useEffect(() => {
+    // 초기화를 이곳으로 이동
+    const firstPlace = placesData && placesData.length > 0 ? placesData[0] : { lat: 37.575489, lng: 126.976733 };
+    setMapCenter(firstPlace);
+  }, [placesData]);
+
+  useEffect(() => {
+    const placeData = placesData && placesData.filter((item) => item.postId === id);
+    if (placeData && placeData.length > 0) {
+      setMapCenter({ lat: placeData[0].lat, lng: placeData[0].lng });
+    }
+  }, [placesData, id]);
+
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
   }
@@ -27,6 +47,7 @@ function Detail() {
   if (isErrorPosts || isErrorPlaces) {
     return <h1>Error</h1>;
   }
+
   console.log(postsData);
   const postData = postsData && postsData.find((post) => post.id === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
@@ -34,9 +55,10 @@ function Detail() {
   console.log('불러온 게시글', postData);
   console.log('해당 게시글에 등록된 장소', placeData);
 
+  // 첫 번째 장소를 기본으로 설정
   const firstPlace = placeData && placeData.length > 0 ? placeData[0] : { lat: 37.575489, lng: 126.976733 };
 
-  // /** 클릭한 마커의 인덱스를 저장 */
+  // 클릭한 마커의 인덱스를 저장
   const handleMarkerClick = (index) => {
     setIsOpenIndex(index);
     setSelectedPlace(placeData[index]);
@@ -44,14 +66,14 @@ function Detail() {
 
   return (
     <StFullScreenContainer>
-      <SidePage postData={postData} placeData={placeData} />
+      <SidePage postData={postData} placeData={placeData} onPlaceClick={handlePlaceClick} />
       {selectedPlace && (
         <ModalContainer>
           <Searchmodal closeModal={closeModal} placeData={placeData} selectedPlace={selectedPlace} />
         </ModalContainer>
       )}
       <Map
-        center={{ lat: firstPlace.lat, lng: firstPlace.lng }}
+        center={mapCenter}
         style={{
           width: 'calc(100% - 450px)',
           height: '100%',
