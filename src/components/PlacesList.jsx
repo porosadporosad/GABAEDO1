@@ -15,7 +15,7 @@ export default function PlacesData({ placesData }) {
         {placesData.map((place) => (
           <PlaceBox key={place.postId}>
             <h2>{place.name}</h2>
-            <h3>{place.placeComment}</h3>
+            <h3>{place.address}</h3>
             <BtnSection>
               <button onClick={() => boxClickHandler(place.postId)}>가배도 보러가기</button>
               <button>
@@ -41,19 +41,6 @@ const ListSection = styled.section`
 
 const PlacesSection = styled.section`
   overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #e0c3ae;
-    border-radius: 5px;
-    /* box-shadow: inset 0px 0px 5px #fff; */
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #fff9f3;
-    border-radius: 5px;
-  }
 `;
 
 const PlaceBox = styled.div`

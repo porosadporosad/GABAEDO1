@@ -1,166 +1,202 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getCurrentUser } from '../../shared/database';
 import { auth, db, storage } from 'shared/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import defaultImg from '../../assets/defaultImg.jpg';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
+import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 export default function UserIntroPage() {
   const { data } = useQuery('user', getCurrentUser);
-  console.log('현재현재유저데이터', data);
+  console.log('현재유저데이터', data);
   const postUser = auth.currentUser;
 
+  const [editingText, setEditingText] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [newPhotoURL, setNewPhotoURL] = useState('');
+  const [newAvatar, setNewAvatar] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [editingText, setIsEditingText] = useState('');
-  const [defaultImage, setDefaultImage] = useState(defaultImg);
-  // const [selectedImg, setSelectedImg] = useState(defaultImg);
-  const [avatarUrl, setAvatarUrl] = useState('');
-
-  //혹시 몰라 남겨놓음
-  const imgChangeHandler = (e) => {
-    const imgFile = e.target.files[0];
-
-    if (!imgFile) {
-      return;
-    }
-
-    if (imgFile.size > 1024 * 1024) {
-      alert('최대 1MB까지 업로드 가능합니다.');
-    }
-    const imgURL = URL.createObjectURL(imgFile);
-    setDefaultImage(imgURL);
-  };
 
   const onEditNameHandler = (e) => {
-    setIsEditingText(e.target.value);
+    setEditingText(e.target.value);
   };
 
-  const updateUserProfileImg = async (userId, newNickname) => {
-    // const userDocRef = doc(db, 'users', userId);
-
-    try {
-      await updateDoc(doc(db, 'users', userId), {
-        nickname: newNickname
+  useEffect(() => {
+    const postUser = auth.currentUser;
+    if (postUser) {
+      setUserData({
+        userId: postUser.email,
+        nickname: postUser.displayName,
+        avatar: postUser.photoURL
       });
-
-      alert('프로필 변경이 완료되었습니다.');
-    } catch (error) {
-      console.error('프로필 업데이트 중 오류 발생', error);
-      alert('프로필 변경에 실패했습니다.');
     }
+    // 포토 URL이 바뀔때마다
+  }, [newPhotoURL]);
 
-    setIsEditing(false);
+  const uploadProfile = async () => {
+    try {
+      const imageRef = ref(storage, `${postUser.uid}/${newPhotoURL.name}`);
+      await uploadBytes(imageRef, newPhotoURL);
+      const downloadURL = await getDownloadURL(imageRef);
+      setNewAvatar(downloadURL);
+      const userDocRef = doc(db, 'users', postUser.uid);
+      await updateDoc(userDocRef, { avatar: downloadURL });
+
+      await updateProfile(postUser, {
+        photoURL: downloadURL
+      });
+      console.log('imageRef', imageRef);
+      toast.success('프로필 사진이 업데이트되었습니다.');
+    } catch (error) {
+      toast.error('프로필 사진 업데이트에 실패했습니다.');
+    }
   };
 
-  const uploadProfile = async (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    const storageRef = ref(storage, `profile_images/${postUser.uid}`); // storage생김
-    // storage 주소값 가져와서 쓰기
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  const updateNickname = async () => {
+    try {
+      const userDocRef = doc(db, 'users', postUser.uid);
+      const docSnap = await getDoc(userDocRef);
 
-    uploadTask.on(
-      'state_changed',
-      () => {},
-      (error) => {
-        console.error(error);
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
 
-        setAvatarUrl(downloadURL);
-        // setDefaultImage(downloadURL);
-        try {
-          await updateDoc(doc(db, 'users', postUser.uid), {
-            avatar: downloadURL
-          });
-          updateProfile(auth.currentUser, {
-            photoURL: downloadURL
-          });
-          alert('프로필 이미지가 업데이트되었습니다.');
-        } catch (error) {
-          console.error('프로필 이미지 업데이트 중 오류 발생', error);
-          alert('프로필 이미지 업데이트에 실패했습니다.');
-        }
+        await updateDoc(userDocRef, { ...userData, nickname: editingText });
+        setUserData((prevUserData) => ({ ...prevUserData, nickname: editingText })); // 업데이트된 닉네임을 로컬 상태에 반영
+
+        toast.success('닉네임이 업데이트되었습니다.');
+      } else {
+        throw new Error('사용자 문서가 존재하지 않습니다.');
       }
-    );
+    } catch (error) {
+      toast.error('닉네임 업데이트에 실패했습니다.');
+    }
   };
 
   return (
-    <>
+    <ProfileContainer>
       <ProfileTitle>프로필☕</ProfileTitle>
-      <label>
-        <Avatar src={data.avatar} />
-      </label>
+      {userData && (
+        <Container>
+          <ProfileSection>
+            <ProfileImage src={newAvatar || userData?.avatar} alt="프로필 사진" />
+            <FileInput
+              type="file"
+              onChange={(e) => {
+                setNewPhotoURL(e.target.files[0]);
+                setNewAvatar(URL.createObjectURL(e.target.files[0]));
+              }}
+            />
+            <Button onClick={uploadProfile}>프로필사진 변경</Button>
+          </ProfileSection>
 
-      <UserId>{data ? data.id : ''}</UserId>
-      {isEditing ? (
-        <div>
-          <input autoFocus defaultValue={data.nickname} onChange={onEditNameHandler} />
-          <ImgFileSelect type="file" onChange={uploadProfile} accept="image/*" />
-        </div>
-      ) : (
-        <>
-          <Nickname>{data.nickname}</Nickname>
-          <p>{data.userId}</p>
-        </>
+          <MyPostsSection>
+            <Inform>
+              <UserId>{userData.userId}</UserId>
+              <NickName>{userData.nickname}</NickName>
+            </Inform>
+            {isEditing ? ( // 닉네임 수정 중일 때
+              <div>
+                <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
+                <Button
+                  onClick={() => {
+                    updateNickname();
+                    setIsEditing(false);
+                  }}
+                >
+                  완료
+                </Button>
+              </div>
+            ) : (
+              // 닉네임 수정 중이 아닐 때
+              <Button onClick={() => setIsEditing(true)}>닉네임 수정하기</Button>
+            )}
+          </MyPostsSection>
+        </Container>
       )}
-
-      <Introduce>내 취미는 카페투어!</Introduce>
-
-      {isEditing ? (
-        <div>
-          <Button onClick={() => setIsEditing(false)}>취소</Button>
-          <Button
-            onClick={() => updateUserProfileImg(data ? data.userId : '', editingText)}
-            disabled={!editingText && defaultImage === defaultImg}
-          >
-            수정완료
-          </Button>
-        </div>
-      ) : (
-        <EditBtn onClick={() => setIsEditing(true)}>수정하기</EditBtn>
-      )}
-    </>
+    </ProfileContainer>
   );
 }
-
-const ProfileWrapper = styled.section`
-  padding: 20rem;
-  width: 900px;
-  border-radius: 20px;
-  background-color: #fff9f3;
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
 `;
 
 const ProfileTitle = styled.h1`
   text-align: center;
-  font-size: 2rem;
-
-  margin-bottom: 2rem;
+  color: #b6856a;
+  margin-bottom: 30px;
 `;
 
-const Avatar = styled.img`
+const Container = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+`;
+
+const ProfileSection = styled.section`
+  align-items: center;
   width: 300px;
-  height: 300px;
-  src: ${(props) => `${props.src}?${new Date().getTime()}`}; // 변경된 이미지 URL에 랜덤한 쿼리 매개변수 추가
+`;
+const MyPostsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
 `;
 
-const ImgFileSelect = styled.input`
-  cursor: pointer;
+const ProfileImage = styled.img`
+  position: relative;
+  border-radius: 50%;
+  display: block;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #c28f7f;
 `;
-const UserId = styled.p``;
+
+const FileInput = styled.input`
+  margin-top: 10px;
+`;
+
 const Button = styled.button`
-  width: 100px;
-  height: 30px;
+  background-color: #784b31;
+  color: white;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 5px;
   cursor: pointer;
+  margin: 10px auto;
+  width: 230px;
+  &:hover {
+    transition: 0.5s;
+    background-color: #c70000;
+  }
 `;
-const EditBtn = styled.button`
-  width: 200px;
-  height: 30px;
-  cursor: pointer;
+
+const Inform = styled.div`
+  margin: 30px 0 20px 0;
+  width: 300px;
 `;
-const Introduce = styled.div``;
-const Nickname = styled.p``;
+
+const UserId = styled.div`
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  font-size: 20px;
+  border-radius: 20px;
+`;
+
+const NickName = styled.div`
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  font-size: 20px;
+  border-radius: 20px;
+`;
+
+const TextInput = styled.input`
+  margin-top: 10px;
+  padding: 5px;
+`;
