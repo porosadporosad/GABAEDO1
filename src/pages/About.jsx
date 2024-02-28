@@ -52,7 +52,7 @@ const aboutTeam = [
   { id: 3, name: 'KIM HYEONGMIN', comment: '퀄리티 높은 프로젝트 재밌었습니다! 우리팀 폼 대단하다아!', avatar: img03 },
   {
     id: 4,
-    name: 'JIYEONG PARK',
+    name: 'PARK JIYEONG',
     comment: '이 구역의 얼죽아 수장. 카페를 너무 좋아해서 가배도 프로젝트 너무 재미있었습니다.',
     avatar: img04
   },
@@ -84,8 +84,8 @@ const Comment = styled.div`
 const BrownLine = styled.div`
   width: 700px;
   height: 1px;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 70px;
+  margin-bottom: 70px;
   background-color: #e0c3ae;
 `;
 
