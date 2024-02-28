@@ -8,6 +8,7 @@ import PostsList from './PostsList';
 import RankList from './RankList';
 // import { getUsers } from 'shared/database';
 import PlacesData from './PlacesList';
+import Loading from 'components/Loading';
 
 export default function MainFeed() {
   const { isLoading, data } = useQuery('posts', getPosts);
@@ -17,7 +18,7 @@ export default function MainFeed() {
   const [menu, setMenu] = useState('');
 
   if (isLoading || userIsLoading || palcesIsLoading) {
-    return <h1>Loading</h1>;
+    return <Loading text="Loading" />;
   }
 
   // 포스트에서 유저를 가져와 글을 쓴 만큼 카운트를 올려 객체에 넣어줍니다.
@@ -33,17 +34,16 @@ export default function MainFeed() {
   for (let userNickname in writerUsers) {
     UserRank.push({ nickname: userNickname, number: writerUsers[userNickname] });
   }
+
   UserRank.sort((a, b) => b.number - a.number);
-
   if (UserRank.length >= 5) UserRank.length = 5;
-
   placesData.sort((a, b) => b.createdAt - a.createdAt);
 
   const filteredData = menu ? data.filter((post) => post.hashtag.includes(menu)) : data;
 
   return (
     <>
-      <AddPostModal modalIsOpen={modalIsOpen}>
+      <AddPostModal $modalIsOpen={modalIsOpen}>
         <CreatePost setModalIsOpen={setModalIsOpen} />
       </AddPostModal>
       <Article>
@@ -53,7 +53,7 @@ export default function MainFeed() {
             <TitleInfo>원하는 태그별로 지도를 모아보세요.</TitleInfo>
           </TitleBox>
           <CreatePostBtn
-            isLoggenIn={loginUserData}
+            $isLoggedIn={loginUserData}
             onClick={() => {
               setModalIsOpen(!modalIsOpen);
             }}
@@ -142,7 +142,7 @@ const TitleInfo = styled.h2`
 `;
 
 const CreatePostBtn = styled.button`
-  display: ${(props) => (props.isLoggenIn ? 'block' : 'none')};
+  display: ${(props) => (props.isLoggedIn ? 'block' : 'none')};
   width: 40px;
   height: 40px;
   margin: 10px 10px 0 0;

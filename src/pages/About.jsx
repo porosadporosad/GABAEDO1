@@ -31,8 +31,6 @@ export default function About() {
           </TeammateComment>
         </Teammates>
       ))}
-      <BrownLine />
-      Gabaedo Project Copyright 2024. Newbie9 all rights reserved.
     </AboutContainer>
   );
 }
@@ -120,13 +118,13 @@ const TeammateComment = styled.div`
 `;
 
 const Title2 = styled.span`
-  font-family: 'SunBatang-Bold';
   font-size: 17px;
+  font-family: 'SunBatang-Bold';
   color: #784b31;
 `;
 
 const Comment2 = styled.div`
+  font-size: 12pt;
   font-family: 'SunBatang-Medium';
   line-height: 190%;
-  font-size: 12pt;
 `;

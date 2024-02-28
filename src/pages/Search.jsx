@@ -87,9 +87,10 @@ const StFullScreenContainer = styled.div`
 `;
 
 const Tooltip = styled.div`
-  text-align: center;
-  padding: 10px 20px;
   min-width: 150px;
-  color: #784b31;
+  padding: 10px 20px;
+  text-align: center;
+
   font-size: 16px;
+  color: #784b31;
 `;

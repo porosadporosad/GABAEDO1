@@ -6,6 +6,7 @@ import { getPosts, getPlaces } from 'shared/database';
 import SidePage from 'components/detail/SidePage';
 import { useParams } from 'react-router';
 import Searchmodal from 'components/detail/Searchmodal';
+import Loading from 'components/Loading';
 
 const mapCenterDefault = { lat: 37.578611, lng: 126.977222 };
 
@@ -41,11 +42,11 @@ function Detail() {
   }, [placesData, id]);
 
   if (isLoadingPosts || isLoadingPlaces) {
-    return <h1>Loading</h1>;
+    return <Loading text="Loading" />;
   }
 
   if (isErrorPosts || isErrorPlaces) {
-    return <h1>Error</h1>;
+    return <Loading text="Error" />;
   }
 
   const postData = postsData && postsData.find((post) => post.id === id);
@@ -109,9 +110,9 @@ const ModalContainer = styled.div`
   left: 450px;
   width: 350px;
   height: 100%;
-
-  border-right: 1px solid #001d84;
-  background-color: white;
   z-index: 9999;
+
+  background-color: white;
+  border-right: 1px solid #001d84;
   transition: right 0.3s ease;
 `;
