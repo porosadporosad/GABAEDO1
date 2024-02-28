@@ -46,7 +46,7 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   return (
     <Overlay>
       <ModalContainer>
-        <PlaceName>{selectedPlace.place_name}</PlaceName>
+        <PlaceName>{selectedPlace.place_name} ☕️</PlaceName>
         <ModalText>해당 카페를 추가하시겠어요?</ModalText>
         <Input
           type="text"
@@ -89,7 +89,7 @@ const ModalContainer = styled.div`
 
   background-color: #e0c3ae;
   border: 2px solid #784b31;
-  border-radius: 15px;
+  border-radius: 25px;
   box-shadow: 5px 5px 20px 3px #e0c3ae;
 `;
 
@@ -100,12 +100,31 @@ const ModalText = styled.p`
   color: #784b31;
 `;
 
+const PlaceName = styled.p`
+  margin-bottom: 10px;
+
+  font-size: 1.3rem;
+  font-family: 'SunBatang-Bold';
+  color: #784b31;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+
+  border: none;
+  border-radius: 10px;
+`;
+
 const ButtonContainer = styled.div`
+  width: 100%;
   display: flex;
   gap: 10px;
 `;
 
 const Button = styled.button`
+  width: 50%;
   padding: 10px 20px;
 
   font-size: 17px;
@@ -118,21 +137,4 @@ const Button = styled.button`
   &:hover {
     background-color: #b10000;
   }
-`;
-
-const PlaceName = styled.p`
-  margin-bottom: 10px;
-
-  font-size: 1.3rem;
-  font-family: 'SunBatang-Bold';
-  color: #784b31;
-`;
-
-const Input = styled.input`
-  width: 80%;
-  margin-bottom: 20px;
-  padding: 10px;
-
-  border: 1px solid #ccc;
-  border-radius: 4px;
 `;

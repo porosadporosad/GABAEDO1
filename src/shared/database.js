@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { auth, db } from 'shared/firebase';
 
@@ -69,5 +69,29 @@ export const getPlaces = async () => {
     return places;
   } catch (error) {
     console.error('카페 리스트 불러오기 에러', error);
+  }
+};
+
+//파이어베이스에서 북마크된 게시글 리스트 불러오기
+export const getPostsForBookmarks = async (myBookmark) => {
+  try {
+    // myBookmark 배열을 사용하여 posts 컬렉션에서 필요한 문서를 쿼리합니다.
+    const querySnapshot = await Promise.all(
+      myBookmark.map(async (bookmarkId) => {
+        const docRef = doc(db, 'posts', bookmarkId);
+        const docSnapshot = await getDoc(docRef);
+        return docSnapshot;
+      })
+    );
+
+    // 쿼리된 문서들을 가공하여 반환합니다.
+    const posts = querySnapshot.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return posts;
+  } catch (error) {
+    console.error('게시글 리스트 불러오기 에러', error);
+    return []; // 에러가 발생한 경우 빈 배열을 반환합니다.
   }
 };

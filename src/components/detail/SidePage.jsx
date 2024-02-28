@@ -18,14 +18,14 @@ import Loading from 'components/Loading';
 export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [writerIcon, setWriterIcon] = useState(userImg);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoading, data } = useQuery('user', getCurrentUser);
+  const { isLoading: currUserIsLoading, data: currUserData } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
-
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
       onPlaceClick(place.lat, place.lng);
@@ -56,6 +56,21 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     fetchUserBookmark();
   }, [uid, id]);
 
+  useEffect(() => {
+    if (!usersIsLoading && Array.isArray(usersData)) {
+      const fetchData = async () => {
+        const writerInfo = postData.userId;
+        const writer = usersData.find((user) => user.userId === writerInfo);
+        if (writer) {
+          setWriterIcon(writer.avatar);
+        } else {
+          console.error('글쓴이를 찾을 수 없습니다!');
+        }
+      };
+      fetchData();
+    }
+  }, [usersData, postData]);
+
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
@@ -66,13 +81,9 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     navigate(`/search/${id}`);
   };
 
-  if (isLoading || usersIsLoading) {
+  if (currUserIsLoading || usersIsLoading) {
     return <Loading text="Loading" />;
   }
-
-  const writerInfo = postData.userId;
-  console.log('글쓴이정보', writerInfo);
-  // const findWriter = doc(db, 'users', writerInfo);
 
   /** 북마크 버튼 클릭 핸들러 */
   const BookmarkClickHandler = async () => {
@@ -107,7 +118,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
         }
         const newData = { ...userData, bookmark: updatedBookmark };
         await updateDoc(userDocRef, newData);
-        await queryClient.invalidateQueries('posts');
+        await queryClient.invalidateQueries('users');
       } else {
         console.log('해당 사용자의 데이터가 없다');
       }
@@ -130,6 +141,8 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     }
   };
 
+  const writerInfo = postData.userId;
+
   return (
     <>
       <SidePageContainer>
@@ -137,10 +150,12 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           ◀
         </GoBackButton>
         <PostInfo>
-          {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
+          {!currUserIsLoading && currUserData.userId === writerInfo ? (
+            <Edit onClick={() => setIsModalOpen(true)}>수정</Edit>
+          ) : null}
           <PostBox>
             <h2>
-              ✧☕✧
+              ✧ ☕ ✧
               <br />
               {postData.title}
             </h2>
@@ -164,12 +179,12 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
               />
             </Bookmark>
             <Writer>
-              <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
+              <img src={writerIcon} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
               <WriterNickname>{postData.nickname}</WriterNickname>
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
-        {!isLoading && data.userId === writerInfo ? (
+        {!currUserIsLoading && currUserData.userId === writerInfo ? (
           <AddPlaceBtn onClick={AddPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
@@ -185,7 +200,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
                   </PlaceInfo>
                   <h3>{place.placeComment}</h3>
                   <DeleteBtnArea>
-                    {!isLoading && data.userId === writerInfo ? (
+                    {!currUserIsLoading && currUserData.userId === writerInfo ? (
                       <Edit onClick={() => deleteHandler(place.id)}>삭제</Edit>
                     ) : null}
                   </DeleteBtnArea>
@@ -201,25 +216,26 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
 }
 
 const SidePageContainer = styled.div`
+  width: 450px;
+  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
-  width: 450px;
-  height: 100%;
+  padding: 30px;
+  overflow-y: auto;
+
   border-right: 1px solid #c70000;
   background-color: #e0c3ae;
-  padding: 30px;
-  box-sizing: border-box;
-  overflow-y: auto;
 `;
 
 const GoBackButton = styled.div`
-  display: inline-block;
-  background-color: #784b31;
-  color: white;
-  padding: 10px;
-  border-radius: 12px;
   margin-bottom: 10px;
+  padding: 10px;
+  display: inline-block;
+
+  color: white;
+  background-color: #784b31;
+  border-radius: 12px;
   cursor: pointer;
 `;
 
@@ -230,22 +246,24 @@ const BrownLine = styled.div`
 `;
 
 const PostInfo = styled.div`
-  background-color: white;
+  margin-bottom: 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+
+  background-color: white;
   box-shadow: 2px 2px 5px 2px #e0c3aea2;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  border-radius: 25px;
 `;
 
 const BookmarkAndWriter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12pt;
   gap: 5px;
+
+  font-size: 12pt;
 `;
 
 const Bookmark = styled.div`
@@ -254,9 +272,9 @@ const Bookmark = styled.div`
 `;
 
 const WriterNickname = styled.span`
+  margin-right: 5px;
   font-family: 'SunBatang-Bold';
   color: #784b31;
-  margin-right: 5px;
 `;
 
 const Writer = styled.div`
@@ -270,8 +288,8 @@ const PostBox = styled.div`
   gap: 5px;
 
   & h2 {
-    font-family: 'SunBatang-Bold';
     padding: 10px;
+    font-family: 'SunBatang-Bold';
     font-size: 25px;
     color: #784b31;
   }
@@ -283,11 +301,11 @@ const PostBox = styled.div`
 `;
 
 const HashtagBox = styled.div`
-  justify-content: center;
+  margin-bottom: 10px;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px;
 `;
 
 const Hashtag = styled.span`
@@ -297,33 +315,40 @@ const Hashtag = styled.span`
 `;
 
 const AddPlaceBtn = styled.button`
-  background-color: #b6856a;
-  border: none;
-  border-radius: 12px;
   width: 100%;
-  height: 40px;
-  font-family: 'SunBatang-Bold';
+  height: 50px;
+
   font-size: 14pt;
+  font-family: 'SunBatang-Medium';
+  color: #fff;
+  background-color: #c70000;
+  border: none;
+  border-radius: 15px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #b10000;
+  }
 `;
 
 const PlacesBox = styled.div`
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
   gap: 10px;
 `;
 
 const Place = styled.div`
+  padding: 20px;
+
   background-color: #fff9f3;
   border: 1px solid #b6856a;
-  border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
+  border-radius: 25px;
   transition: box-shadow 0.3s;
+  cursor: pointer;
 
   &:hover {
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+    box-shadow: 2px 2px 10px rgba(255, 105, 180, 0.6);
   }
 
   & h2 {
@@ -352,19 +377,20 @@ const PlaceInfo = styled.div`
   align-items: flex-start;
 `;
 
-const Edit = styled.div`
-  width: 50px;
-  height: 20px;
-  background-color: #b6856a;
-  color: white;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
-
 const DeleteBtnArea = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+const Edit = styled.div`
+  width: 80px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  background-color: #b6856a;
+  border-radius: 12px;
+  cursor: pointer;
 `;

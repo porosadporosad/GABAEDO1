@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SearchBar } from 'components/search/Mapsearch';
+import { SearchBar } from 'components/search/MapSearchPage';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import LocationIcon from '../../assets/location.png';
@@ -115,8 +115,8 @@ const AddPlaceBtn = styled.button`
   background-color: #e0c3ae;
   border: none;
   border-radius: 50%;
-  cursor: pointer;
   transition: box-shadow 0.3s;
+  cursor: pointer;
 
   &:hover {
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
