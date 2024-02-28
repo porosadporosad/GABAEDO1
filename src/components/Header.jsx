@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { auth } from '../shared/firebase';
@@ -13,6 +13,7 @@ export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { data } = useQuery('user', getCurrentUser);
 
   useEffect(() => {
@@ -62,7 +63,12 @@ export default function Header() {
 
   return (
     <MenuHeader>
-      <StLink to="/" onClick={() => window.location.reload()}>
+      <StLink
+        to="/"
+        onClick={() => {
+          if (pathname === '/') window.location.reload();
+        }}
+      >
         <Logo src={logo} alt="logo" />
       </StLink>
       <nav>
