@@ -4,6 +4,7 @@ import { getCurrentUser } from '../../shared/database';
 import UserIntroPage from './UserIntroPage';
 import { getPosts, deletePost } from '../../shared/database';
 import { useState } from 'react';
+import Loading from 'components/Loading';
 
 export default function Profile() {
   const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
@@ -11,7 +12,7 @@ export default function Profile() {
   const [deletedPostId, setDeletedPostId] = useState(null);
 
   if (PostsIsLoading || UserIsLoading) {
-    return <h1>데이터 로드중...</h1>;
+    return <Loading text="Loading" />;
   }
 
   const myPosts = postsData.filter((post) => post.userId === userData.userId);

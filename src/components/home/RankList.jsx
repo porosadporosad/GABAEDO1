@@ -38,10 +38,10 @@ const UserNickname = styled.h4`
   padding: 10px 0;
 
   font-family: 'SunBatang-Medium';
-  color: #fff;
+  color: #784b31;
 `;
 
 const PostsNumber = styled.p`
   font-size: 14px;
-  color: #b6856a;
+  color: #fff;
 `;

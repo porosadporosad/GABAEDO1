@@ -31,8 +31,6 @@ export default function About() {
           </TeammateComment>
         </Teammates>
       ))}
-      <BrownLine />
-      Gabaedo Project Copyright 2024. Newbie9 all rights reserved.
     </AboutContainer>
   );
 }

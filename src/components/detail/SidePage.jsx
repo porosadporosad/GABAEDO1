@@ -13,6 +13,7 @@ import bookmarkDefault from 'assets/bookmark_default.png';
 import bookmarkSelected from 'assets/bookmark_selected.png';
 import { toast } from 'react-toastify';
 import EditModal from './EditModal';
+import Loading from 'components/Loading';
 
 export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
@@ -66,7 +67,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   };
 
   if (isLoading || usersIsLoading) {
-    return <div>로딩중</div>;
+    return <Loading text="Loading" />;
   }
 
   const writerInfo = postData.userId;
