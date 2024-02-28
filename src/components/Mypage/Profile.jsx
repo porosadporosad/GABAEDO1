@@ -52,16 +52,14 @@ export default function Profile() {
 }
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  width: 700px;
-  margin: 100px auto;
-  padding: 10rem;
-
   background-color: #fff9f3;
   border: 2px solid #e0c3ae;
   border-radius: 50px;
   box-shadow: 5px 5px 20px 3px #e0c3ae;
+  width: 800px;
+  padding: 7rem;
+  margin: 100px auto;
+  align-items: center;
 
   & h1 {
     height: 50px;
@@ -73,10 +71,9 @@ const Container = styled.div`
 `;
 
 const ProfileWrapper = styled.section`
-  display: flex;
-  justify-content: center;
+  display: block;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 
   & p {
     padding: 10px 20px;
@@ -88,8 +85,10 @@ const ProfileWrapper = styled.section`
 `;
 
 const UserInputList = styled.ul`
-  list-style-type: none;
-  padding: 0;
+  display: block;
+
+  /* list-style-type: none;
+  padding: 0; */
 `;
 
 const ListTitle = styled.h2`

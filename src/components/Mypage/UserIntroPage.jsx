@@ -87,11 +87,12 @@ export default function UserIntroPage() {
                 setNewAvatar(URL.createObjectURL(e.target.files[0]));
               }}
             />
-            <Button onClick={uploadProfile}>사진 변경</Button>
+            <Button onClick={uploadProfile}>프로필사진 변경</Button>
           </ProfileSection>
 
           <MyPostsSection>
-            <p>닉네임: {userData.nickname}</p>
+            <EmailName>{userData.userId}</EmailName>
+            <EmailName>{userData.nickname}</EmailName>
             {isEditing ? ( // 닉네임 수정 중일 때
               <div>
                 <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
@@ -114,14 +115,28 @@ export default function UserIntroPage() {
     </ProfileContainer>
   );
 }
-const ProfileContainer = styled.div``;
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  /* flex-wrap: nowrap; */
+`;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+`;
 
 const ProfileSection = styled.section`
+  align-items: center;
   width: 300px;
 `;
-const MyPostsSection = styled.section``;
+const MyPostsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+`;
 
 const ProfileTitle = styled.h1`
   text-align: center;
@@ -129,13 +144,17 @@ const ProfileTitle = styled.h1`
 `;
 
 const ProfileImage = styled.img`
+  position: relative;
+  border-radius: 50%;
   display: block;
   width: 210px;
   height: 210px;
-  position: relative;
   border-radius: 50%;
-  margin: -20px 0 0 -130px;
-  box-shadow: 0 0 0 5px #c28f7f;
+  box-shadow: 0 0 0 3px #c28f7f;
+`;
+
+const FileInput = styled.input`
+  margin-top: 10px;
 `;
 
 const Button = styled.button`
@@ -145,11 +164,14 @@ const Button = styled.button`
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px auto;
+  &:hover {
+    background-color: #c70000;
+  }
 `;
 
-const FileInput = styled.input`
-  margin-top: 10px;
+const EmailName = styled.div`
+  margin-bottom: 20px;
 `;
 
 const TextInput = styled.input`
