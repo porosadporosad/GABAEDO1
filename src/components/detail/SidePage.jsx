@@ -57,12 +57,6 @@ export default function SidePage({ postData, placeData }) {
     navigate(`/search/${id}`);
   };
 
-  /** 수정하기 모달 닫기 */
-  const onCancel = () => {
-    if (!window.confirm(`가배도 수정을 취소하시겠습니까?`)) return;
-    setIsModalOpen(false);
-  };
-
   if (isLoading) {
     return <div>로딩중</div>;
   }
@@ -173,7 +167,7 @@ export default function SidePage({ postData, placeData }) {
           )}
         </PlacesBox>
       </SidePageContainer>
-      <EditModal isOpen={isModalOpen} onCancel={onCancel} postData={postData} id={id} />
+      <EditModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} postData={postData} id={id} />
     </>
   );
 }

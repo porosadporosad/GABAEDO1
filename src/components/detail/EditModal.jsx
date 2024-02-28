@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { hashtageData } from 'shared/hashtageData';
 
-export default function EditModal({ isOpen, postData, onCancel, id }) {
+export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
   const [hashtag, setHashtag] = useState(postData.hashtag);
@@ -54,7 +54,7 @@ export default function EditModal({ isOpen, postData, onCancel, id }) {
     const postRef = doc(db, 'posts', id);
     try {
       await updateDoc(postRef, { title, content, hashtag });
-      onCancel();
+      setIsModalOpen(false);
       await queryClient.invalidateQueries('posts');
       toast.success(`게시글이 수정되었습니다.`);
     } catch (error) {
@@ -68,7 +68,7 @@ export default function EditModal({ isOpen, postData, onCancel, id }) {
     <Overlay>
       <ModalContainer>
         <ModalText>가배도 수정하기</ModalText>
-        <PostForm>
+        <PostForm onSubmit={updatePost}>
           <h2>타이틀</h2>
           <PostInput
             type="text"
@@ -101,12 +101,10 @@ export default function EditModal({ isOpen, postData, onCancel, id }) {
             ))}
           </HashtagSection>
           <BtnSection>
-            <button type="button" onClick={onCancel}>
+            <button type="button" onClick={() => setIsModalOpen(false)}>
               취소하기
             </button>
-            <button type="submit" onClick={updatePost}>
-              등록하기
-            </button>
+            <button type="submit">등록하기</button>
           </BtnSection>
         </PostForm>
       </ModalContainer>

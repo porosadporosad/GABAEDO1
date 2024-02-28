@@ -53,7 +53,7 @@ export default function MainFeed({ keyword }) {
   return (
     <>
       <AddPostModal modalIsOpen={modalIsOpen}>
-        <CreatePost modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
+        <CreatePost setModalIsOpen={setModalIsOpen} />
       </AddPostModal>
       <Article>
         <PostListHeader>
