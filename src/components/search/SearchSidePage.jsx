@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SearchBar } from 'components/Mapsearch';
+import { SearchBar } from 'components/search/Mapsearch';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import LocationIcon from '../../assets/location.png';
@@ -17,18 +17,18 @@ export default function SearchSidePage({ onSearch, searchResults, onMoveToLocati
         <StGoBackButton onClick={GoBackClickHandler} title="돌아가기">
           ◀
         </StGoBackButton>
-          <SearchBar onSearch={onSearch} />
-          <BrownLine />
-          <StSearchResultsContainer>
+        <SearchBar onSearch={onSearch} />
+        <BrownLine />
+        <StSearchResultsContainer>
           {searchResults.map((result, index) => (
             <StResultitem key={index}>
-                <StResultContent>
+              <StResultContent>
                 <StName>{result.place_name}</StName>
                 <StAddress>{result.address_name}</StAddress>
-                </StResultContent>
-                <AddPlaceBtn onClick={() => onMoveToLocation(parseFloat(result.y), parseFloat(result.x))}></AddPlaceBtn>
+              </StResultContent>
+              <AddPlaceBtn onClick={() => onMoveToLocation(parseFloat(result.y), parseFloat(result.x))}></AddPlaceBtn>
             </StResultitem>
-            ))}
+          ))}
         </StSearchResultsContainer>
       </StSidePageContainer>
     </>
@@ -36,26 +36,28 @@ export default function SearchSidePage({ onSearch, searchResults, onMoveToLocati
 }
 
 const StSidePageContainer = styled.div`
+  width: 400px;
+  height: 100%;
+  padding: 20px;
   position: absolute;
   left: 0;
   top: 0;
-  width: 400px;
-  height: 100%;
-  border-right: 1px solid #b6856a;
-  background-color: #e0c3ae;
-  padding: 20px;
-  box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  box-sizing: border-box;
+
+  background-color: #e0c3ae;
+  border-right: 1px solid #b6856a;
 `;
 
 const StGoBackButton = styled.div`
   display: inline-block;
-  background-color: #784b31;
-  color: white;
-  padding: 10px;
-  border-radius: 12px;
   margin-bottom: 10px;
+  padding: 10px;
+
+  color: white;
+  background-color: #784b31;
+  border-radius: 12px;
   cursor: pointer;
 `;
 
@@ -65,51 +67,54 @@ const StSearchResultsContainer = styled.div`
 `;
 
 const StName = styled.p`
-   font-family: 'SunBatang-Bold';
-    font-size: 18px;
-    color: #784b31;
+  font-family: 'SunBatang-Bold';
+  font-size: 18px;
+  color: #784b31;
 `;
 
 const StAddress = styled.p`
   font-family: 'SunBatang-Medium';
-    font-size: 15px;
-    line-height: 180%;
+  font-size: 15px;
+  line-height: 180%;
 `;
 
 const BrownLine = styled.div`
-  margin-top: 15px;
   width: 100%;
   height: 2px;
+  margin-top: 15px;
+
   background-color: #784b31;
 `;
 
 const StResultitem = styled.div`
+  margin-bottom: 20px;
+  padding: 20px;
   display: flex;
-  align-items: center; 
-  justify-content: space-between; 
+  align-items: center;
+  justify-content: space-between;
+
   background-color: #fff9f3;
   border: 1px solid #b6856a;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
 `;
 
 const StResultContent = styled.div`
   flex-grow: 1;
-  margin-right: 20px; 
+  margin-right: 20px;
 `;
 
 const AddPlaceBtn = styled.button`
-  background-image: url(${LocationIcon}); 
-  background-size: cover; 
-  background-position: center;
-  min-width: 40px;
   height: 40px;
-  background-color: #E0C3AE;
+  min-width: 40px;
+
+  font-size: 30px;
+  color: #fff;
+  background-image: url(${LocationIcon});
+  background-size: cover;
+  background-position: center;
+  background-color: #e0c3ae;
   border: none;
   border-radius: 50%;
-  color: #fff;
-  font-size: 30px;
   cursor: pointer;
   transition: box-shadow 0.3s;
 

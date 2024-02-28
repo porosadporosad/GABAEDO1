@@ -12,7 +12,7 @@ const mapCenterDefault = { lat: 37.578611, lng: 126.977222 };
 function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [mapCenter, setMapCenter] = useState(mapCenterDefault); 
+  const [mapCenter, setMapCenter] = useState(mapCenterDefault);
 
   const closeModal = () => {
     setSelectedPlace(null);
@@ -48,12 +48,8 @@ function Detail() {
     return <h1>Error</h1>;
   }
 
-  console.log(postsData);
   const postData = postsData && postsData.find((post) => post.id === id);
   const placeData = placesData && placesData.filter((item) => item.postId === id);
-
-  console.log('불러온 게시글', postData);
-  console.log('해당 게시글에 등록된 장소', placeData);
 
   // 클릭한 마커의 인덱스를 저장
   const handleMarkerClick = (index) => {
@@ -109,11 +105,12 @@ const StFullScreenContainer = styled.div`
 
 const ModalContainer = styled.div`
   position: absolute;
-  border-right: 1px solid #001d84;
   top: 0;
   left: 450px;
   width: 350px;
   height: 100%;
+
+  border-right: 1px solid #001d84;
   background-color: white;
   z-index: 9999;
   transition: right 0.3s ease;

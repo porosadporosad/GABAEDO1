@@ -16,10 +16,10 @@ export default function About() {
         휴식에 들게 한다. 카페는 활기찬 아침부터 나른한 오후까지, 어떤 때든지 사람들에게 편안함과 안정감을 주는 곳이다.
         카페는 나 자신과 만나는 시간이기도 하고, 소중한 사람들과 함께하는 소중한 추억이 담긴 공간이기도 하다. 카페는
         단순히 커피를 마시러 가는 곳이 아니라, 마음을 어루만져주는 특별한 장소이다. <br />
-        이제 <Title>가배도</Title>에서 나에게 딱 맞는 카페를 찾아보자.
+        이제 <Title>가배도(嘉俳圖)</Title>에서 나에게 딱 맞는 카페를 찾아보자.
       </Comment>
       <BrownLine />
-      <Title>가배도 프로젝트에 함께한 사람들</Title>
+      <Title>☕가배도 프로젝트에 함께한 사람들🧋</Title>
       {aboutTeam.map((item) => (
         <Teammates key={item.id}>
           <Icon>
@@ -32,6 +32,7 @@ export default function About() {
         </Teammates>
       ))}
       <BrownLine />
+      Gabaedo Project Copyright 2024. Newbie9 all rights reserved.
     </AboutContainer>
   );
 }
@@ -61,11 +62,12 @@ const aboutTeam = [
 
 const AboutContainer = styled.div`
   width: 100%;
-  background-color: #fff9f3;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 40px;
+
+  background-color: #fff9f3;
 `;
 
 const Title = styled.span`
@@ -76,6 +78,7 @@ const Title = styled.span`
 
 const Comment = styled.div`
   width: 800px;
+
   font-family: 'SunBatang-Medium';
   line-height: 190%;
   font-size: 15pt;
@@ -86,13 +89,14 @@ const BrownLine = styled.div`
   height: 1px;
   margin-top: 70px;
   margin-bottom: 70px;
+
   background-color: #e0c3ae;
 `;
 
 const Teammates = styled.div`
-  display: flex;
   width: 800px;
   margin-top: 30px;
+  display: flex;
 `;
 
 const Icon = styled.div`
@@ -104,14 +108,15 @@ const Icon = styled.div`
 
 const TeammateComment = styled.div`
   width: 90%;
-  border: 1px solid #e0c3ae;
   padding: 15px;
   padding-left: 20px;
-  border-radius: 12px;
-  background-color: #ffffff;
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+  background-color: #ffffff;
+  border: 1px solid #e0c3ae;
+  border-radius: 12px;
 `;
 
 const Title2 = styled.span`

@@ -41,7 +41,7 @@ export default function Header() {
           navigate('/');
         })
         .catch((error) => {
-          console.log(error);
+          toast.error('로그아웃 중 오류가 발생했습니다.');
         });
     } else {
       return false;

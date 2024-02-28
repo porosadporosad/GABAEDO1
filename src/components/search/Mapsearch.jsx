@@ -37,6 +37,7 @@ const Stinput = styled.input`
   height: 30px;
   padding: 3px;
   margin: 0 auto;
+
   border: 1px solid #b6856a;
   border-radius: 10px;
 `;
@@ -45,10 +46,11 @@ const StBtn = styled.button`
   width: 80px;
   height: 30px;
   margin-left: 10px;
-  background-color: #784B31;
+
+  font-size: 16px;
+  color: #fff9f3;
+  background-color: #784b31;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
-  color: #fff9f3;
 `;
