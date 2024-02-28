@@ -140,7 +140,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
           <PostBox>
             <h2>
-              ✧☕✧
+              ✧ ☕ ✧
               <br />
               {postData.title}
             </h2>
@@ -201,25 +201,26 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
 }
 
 const SidePageContainer = styled.div`
+  width: 450px;
+  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
-  width: 450px;
-  height: 100%;
+  padding: 30px;
+  overflow-y: auto;
+
   border-right: 1px solid #c70000;
   background-color: #e0c3ae;
-  padding: 30px;
-  box-sizing: border-box;
-  overflow-y: auto;
 `;
 
 const GoBackButton = styled.div`
-  display: inline-block;
-  background-color: #784b31;
-  color: white;
-  padding: 10px;
-  border-radius: 12px;
   margin-bottom: 10px;
+  padding: 10px;
+  display: inline-block;
+
+  color: white;
+  background-color: #784b31;
+  border-radius: 12px;
   cursor: pointer;
 `;
 
@@ -230,22 +231,24 @@ const BrownLine = styled.div`
 `;
 
 const PostInfo = styled.div`
-  background-color: white;
+  margin-bottom: 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+
+  background-color: white;
   box-shadow: 2px 2px 5px 2px #e0c3aea2;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  border-radius: 25px;
 `;
 
 const BookmarkAndWriter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12pt;
   gap: 5px;
+
+  font-size: 12pt;
 `;
 
 const Bookmark = styled.div`
@@ -254,9 +257,9 @@ const Bookmark = styled.div`
 `;
 
 const WriterNickname = styled.span`
+  margin-right: 5px;
   font-family: 'SunBatang-Bold';
   color: #784b31;
-  margin-right: 5px;
 `;
 
 const Writer = styled.div`
@@ -270,8 +273,8 @@ const PostBox = styled.div`
   gap: 5px;
 
   & h2 {
-    font-family: 'SunBatang-Bold';
     padding: 10px;
+    font-family: 'SunBatang-Bold';
     font-size: 25px;
     color: #784b31;
   }
@@ -283,11 +286,11 @@ const PostBox = styled.div`
 `;
 
 const HashtagBox = styled.div`
-  justify-content: center;
+  margin-bottom: 10px;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px;
 `;
 
 const Hashtag = styled.span`
@@ -297,33 +300,40 @@ const Hashtag = styled.span`
 `;
 
 const AddPlaceBtn = styled.button`
-  background-color: #b6856a;
-  border: none;
-  border-radius: 12px;
   width: 100%;
-  height: 40px;
-  font-family: 'SunBatang-Bold';
+  height: 50px;
+
   font-size: 14pt;
+  font-family: 'SunBatang-Medium';
+  color: #fff;
+  background-color: #c70000;
+  border: none;
+  border-radius: 15px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #b10000;
+  }
 `;
 
 const PlacesBox = styled.div`
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
   gap: 10px;
 `;
 
 const Place = styled.div`
+  padding: 20px;
+
   background-color: #fff9f3;
   border: 1px solid #b6856a;
-  border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
+  border-radius: 25px;
   transition: box-shadow 0.3s;
+  cursor: pointer;
 
   &:hover {
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+    box-shadow: 2px 2px 10px rgba(255, 105, 180, 0.6);
   }
 
   & h2 {
@@ -352,19 +362,20 @@ const PlaceInfo = styled.div`
   align-items: flex-start;
 `;
 
-const Edit = styled.div`
-  width: 50px;
-  height: 20px;
-  background-color: #b6856a;
-  color: white;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
-
 const DeleteBtnArea = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+const Edit = styled.div`
+  width: 80px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  background-color: #b6856a;
+  border-radius: 12px;
+  cursor: pointer;
 `;
