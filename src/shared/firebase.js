@@ -17,5 +17,3 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
-
-//요기 밑에 구글 등 firebase 소셜 로그인 코드 넣어주세요..

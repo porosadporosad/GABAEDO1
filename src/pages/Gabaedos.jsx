@@ -5,7 +5,7 @@ export default function Gabaedos() {
 }
 
 const GabaedosContainer = styled.div`
-  display: flex;
   width: 100%;
   height: 100vh;
+  display: flex;
 `;

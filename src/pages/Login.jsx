@@ -62,6 +62,7 @@ export default function Login() {
       const register = await createUserWithEmailAndPassword(auth, realEmail, password);
       const user = register.user;
       const uid = user.uid;
+
       // 유저닉네임 업데이트
       await updateProfile(user, {
         displayName: nickname,
@@ -103,6 +104,7 @@ export default function Login() {
   const loginSubmit = async (e) => {
     e.preventDefault();
     const emailIncludes = data.some((prev) => prev.userId === userId);
+
     if (!emailIncludes) {
       toast.warning('이메일이 존재 하지 않습니다.');
       return;
@@ -237,58 +239,64 @@ export default function Login() {
 }
 
 const LoginBody = styled.div`
-  background-image: url(${loginImg});
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
   color: black;
+  background-image: url(${loginImg});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 const LoginMain = styled.div`
+  width: 23rem;
+  padding: 1rem 1.2rem;
   display: flex;
   flex-direction: column;
-  background-color: #fff9f3;
-  border-radius: 3rem;
-  width: 23rem;
-  border: 0.15rem solid #e0c3ae;
-  padding: 1rem 1.2rem;
   gap: 0.6rem;
+
+  background-color: #fff9f3;
+  border: 0.15rem solid #e0c3ae;
+  border-radius: 3rem;
 `;
 
 const LoginH1 = styled.h1`
-  color: #784b31;
-  font-size: 1.5rem;
-  text-align: center;
   margin: 0.5rem;
+  text-align: center;
+
+  font-size: 1.5rem;
+  color: #784b31;
 `;
 
 const LoginInput = styled.input`
-  border-radius: 0.8rem;
   padding: 1rem 0;
-  border: none;
   padding-left: 0.6rem;
+
+  border: none;
+  border-radius: 0.8rem;
 `;
 
 const LoginBtn = styled.button`
+  width: 100%;
+  padding: 0.6rem 1rem;
+
+  font-size: 20px;
   color: white;
   background-color: #c70000;
-  cursor: pointer;
-  width: 100%;
-  font-size: 20px;
-  padding: 0.6rem 1rem;
-  border-radius: 0.8rem;
   border: none;
+  border-radius: 0.8rem;
+  cursor: pointer;
 `;
 
 const LoginSpan = styled.span`
-  color: #b6856a;
-  text-align: center;
   margin-top: 0.2rem;
+  text-align: center;
+
+  color: #b6856a;
   cursor: pointer;
 `;
 
@@ -299,7 +307,7 @@ const LoginForm = styled.form`
 `;
 
 const LoginSelect = styled.select`
+  padding: 0.3rem 0.3rem;
   border: none;
   border-radius: 0.8rem;
-  padding: 0.3rem 0.3rem;
 `;
