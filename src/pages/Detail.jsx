@@ -42,11 +42,11 @@ function Detail() {
   }, [placesData, id]);
 
   if (isLoadingPosts || isLoadingPlaces) {
-    return <Loading />;
+    return <Loading text="Loading" />;
   }
 
   if (isErrorPosts || isErrorPlaces) {
-    return <h1>Error</h1>;
+    return <Loading text="Error" />;
   }
 
   const postData = postsData && postsData.find((post) => post.id === id);

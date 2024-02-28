@@ -67,7 +67,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   };
 
   if (isLoading || usersIsLoading) {
-    return <Loading />;
+    return <Loading text="Loading" />;
   }
 
   const writerInfo = postData.userId;

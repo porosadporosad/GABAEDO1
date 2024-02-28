@@ -1,11 +1,11 @@
 import bean from 'assets/bean-line.png';
 import styled from 'styled-components';
 
-export default function Loading() {
+export default function Loading({ text }) {
   return (
     <Arcticle>
       <img src={bean} alt="원두 일러스트" />
-      <h1>Loading...</h1>
+      <h1>{text}...</h1>
     </Arcticle>
   );
 }

@@ -8,7 +8,7 @@ export default function SearchFeed({ searchKeyword }) {
   const { isLoading, data } = useQuery('posts', getPosts);
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading text="Loading" />;
   }
 
   const searchedData = data.filter(

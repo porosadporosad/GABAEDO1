@@ -18,7 +18,7 @@ export default function MainFeed() {
   const [menu, setMenu] = useState('');
 
   if (isLoading || userIsLoading || palcesIsLoading) {
-    return <Loading />;
+    return <Loading text="Loading" />;
   }
 
   // 포스트에서 유저를 가져와 글을 쓴 만큼 카운트를 올려 객체에 넣어줍니다.

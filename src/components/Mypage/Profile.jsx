@@ -12,7 +12,7 @@ export default function Profile() {
   const [deletedPostId, setDeletedPostId] = useState(null);
 
   if (PostsIsLoading || UserIsLoading) {
-    return <Loading />;
+    return <Loading text="Loading" />;
   }
 
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
