@@ -55,18 +55,20 @@ export default function Profile() {
 }
 
 const Container = styled.div`
-  background-color: #fff9f3;
-  border: 2px solid #e0c3ae;
-  border-radius: 50px;
-  box-shadow: 5px 5px 20px 3px #e0c3ae;
   width: 800px;
   padding: 7rem;
   margin: 100px auto;
   align-items: center;
 
+  background-color: #fff9f3;
+  border: 2px solid #e0c3ae;
+  border-radius: 50px;
+  box-shadow: 5px 5px 20px 3px #e0c3ae;
+
   & h1 {
     height: 50px;
     line-height: 5px;
+
     font-size: 1.6rem;
     font-family: 'SunBatang-Medium';
     color: #784b31;
@@ -80,6 +82,7 @@ const ProfileWrapper = styled.section`
 
   & p {
     padding: 10px 20px;
+
     font-size: 13px;
     color: #784b31;
     background-color: #fff;
@@ -97,21 +100,23 @@ const UserInputList = styled.ul`
 
 const ListTitle = styled.h2`
   margin: 20px auto;
+  display: flex;
+  align-items: center;
+
   font-size: 20px;
   font-weight: bold;
   color: #c70000;
-  display: flex;
-  align-items: center;
 `;
 
 const Button = styled.button`
-  background-color: #784b31;
-  color: white;
-  border: none;
+  margin-top: 10px;
   padding: 10px 20px;
+
+  color: white;
+  background-color: #784b31;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
 
   &:hover {
     transition: 0.5s;
@@ -123,9 +128,10 @@ const PostList = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  border-radius: 15px;
   padding: 4px;
   padding-left: 15px;
   padding-right: 15px;
+
+  background-color: #fff;
+  border-radius: 15px;
 `;

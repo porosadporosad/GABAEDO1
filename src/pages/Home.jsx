@@ -1,5 +1,5 @@
-import Banner from '../components/Banner';
-import MainFeed from '../components/MainFeed';
+import Banner from '../components/home/Banner';
+import MainFeed from '../components/home/MainFeed';
 
 export default function Home() {
   return (

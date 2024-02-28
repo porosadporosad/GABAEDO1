@@ -21,7 +21,6 @@ export default function PlacesData({ placesData }) {
             maxResults: 6
           }
         });
-        console.log('검색결과', response.data.items);
         setSearchResults(response.data.items);
       } catch (error) {
         console.error('Error fetching data: ', error);

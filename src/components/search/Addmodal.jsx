@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -11,9 +11,6 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   if (!isOpen) return null;
-
-  console.log('선택한 장소', selectedPlace);
-  console.log('현재 게시글', id);
 
   const handleAdd = async () => {
     const newPlace = {
@@ -35,12 +32,10 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
         return;
       }
 
-      const docRef = await addDoc(collection(db, 'places'), newPlace);
       await queryClient.invalidateQueries('places');
       toast.success(`가배도에 카페 추가 완료!`);
       onCancel();
       navigate(`/detail/${id}`);
-      console.log('카페 추가 완료', docRef);
     } catch (error) {
       console.error('카페 추가하기 에러', error);
       throw error;
@@ -71,32 +66,35 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
 export default AddModal;
 
 const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
+  top: 0;
+  left: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  position: fixed;
   z-index: 100;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const ModalContainer = styled.div`
-  background-color: #e0c3ae;
-  border: 2px solid #784b31;
-  box-shadow: 5px 5px 20px 3px #e0c3ae;
+  width: 400px;
   padding: 20px;
-  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  
+  background-color: #e0c3ae;
+  border: 2px solid #784b31;
+  border-radius: 15px;
+  box-shadow: 5px 5px 20px 3px #e0c3ae;
 `;
 
 const ModalText = styled.p`
   margin-bottom: 20px;
+
   font-family: 'SunBatang-Medium';
   color: #784b31;
 `;
@@ -108,28 +106,32 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
+
   font-size: 17px;
-  color: #fff;
   background-color: #c70000;
+  color: #fff;
   border: none;
   border-radius: 15px;
   cursor: pointer;
+
   &:hover {
     background-color: #b10000;
   }
 `;
 
 const PlaceName = styled.p`
+  margin-bottom: 10px;
+
   font-size: 1.3rem;
   font-family: 'SunBatang-Bold';
   color: #784b31;
-  margin-bottom: 10px;
 `;
 
 const Input = styled.input`
+  width: 80%;
   margin-bottom: 20px;
   padding: 10px;
+
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 80%;
 `;

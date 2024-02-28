@@ -61,11 +61,12 @@ const aboutTeam = [
 
 const AboutContainer = styled.div`
   width: 100%;
-  background-color: #fff9f3;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 40px;
+
+  background-color: #fff9f3;
 `;
 
 const Title = styled.span`
@@ -76,6 +77,7 @@ const Title = styled.span`
 
 const Comment = styled.div`
   width: 800px;
+
   font-family: 'SunBatang-Medium';
   line-height: 190%;
   font-size: 15pt;
@@ -86,13 +88,14 @@ const BrownLine = styled.div`
   height: 1px;
   margin-top: 70px;
   margin-bottom: 70px;
+
   background-color: #e0c3ae;
 `;
 
 const Teammates = styled.div`
-  display: flex;
   width: 800px;
   margin-top: 30px;
+  display: flex;
 `;
 
 const Icon = styled.div`
@@ -104,14 +107,15 @@ const Icon = styled.div`
 
 const TeammateComment = styled.div`
   width: 90%;
-  border: 1px solid #e0c3ae;
   padding: 15px;
   padding-left: 20px;
-  border-radius: 12px;
-  background-color: #ffffff;
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+  background-color: #ffffff;
+  border: 1px solid #e0c3ae;
+  border-radius: 12px;
 `;
 
 const Title2 = styled.span`

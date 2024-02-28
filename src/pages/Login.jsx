@@ -39,7 +39,7 @@ export default function Login() {
   const signupSubmit = async (e) => {
     e.preventDefault();
     const nicknameIncludes = !data.some((prev) => prev.nickname === nickname);
-    const regex = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const regex = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     const emailCheck = userId.includes('@');
 
     if (!option && !regex.test(realEmail)) {
@@ -121,7 +121,6 @@ export default function Login() {
       if (errorCode === 'auth/invalid-credential') {
         toast.error('비밀번호를 확인해주세요.');
       }
-      console.log(error);
     }
   };
 
