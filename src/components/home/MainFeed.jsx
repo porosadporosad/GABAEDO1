@@ -33,10 +33,9 @@ export default function MainFeed() {
   for (let userNickname in writerUsers) {
     UserRank.push({ nickname: userNickname, number: writerUsers[userNickname] });
   }
+
   UserRank.sort((a, b) => b.number - a.number);
-
   if (UserRank.length >= 5) UserRank.length = 5;
-
   placesData.sort((a, b) => b.createdAt - a.createdAt);
 
   const filteredData = menu ? data.filter((post) => post.hashtag.includes(menu)) : data;
