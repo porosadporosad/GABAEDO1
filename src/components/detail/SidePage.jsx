@@ -11,10 +11,12 @@ import userImg from 'assets/defaultImg.jpg';
 import bookmarkDefault from 'assets/bookmark_default.png';
 import bookmarkSelected from 'assets/bookmark_selected.png';
 import { toast } from 'react-toastify';
+import EditModal from './EditModal';
 
 export default function SidePage({ postData, placeData }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -53,6 +55,12 @@ export default function SidePage({ postData, placeData }) {
   /** 카페 추가하기 버튼 */
   const AddPlaceBtnHandler = () => {
     navigate(`/search/${id}`);
+  };
+
+  /** 수정하기 모달 닫기 */
+  const onCancel = () => {
+    if (!window.confirm(`가배도 수정을 취소하시겠습니까?`)) return;
+    setIsModalOpen(false);
   };
 
   if (isLoading) {
@@ -112,7 +120,7 @@ export default function SidePage({ postData, placeData }) {
           ◀
         </GoBackButton>
         <PostInfo>
-          {!isLoading && data.userId === writerInfo ? <Edit>수정</Edit> : null}
+          {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
           <PostBox>
             <h2>
               ✧☕✧
@@ -165,6 +173,7 @@ export default function SidePage({ postData, placeData }) {
           )}
         </PlacesBox>
       </SidePageContainer>
+      <EditModal isOpen={isModalOpen} onCancel={onCancel} postData={postData} id={id} />
     </>
   );
 }
