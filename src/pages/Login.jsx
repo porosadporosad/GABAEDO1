@@ -61,6 +61,7 @@ export default function Login() {
     try {
       const register = await createUserWithEmailAndPassword(auth, realEmail, password);
       const user = register.user;
+      const uid = user.uid;
       // 유저닉네임 업데이트
       await updateProfile(user, {
         displayName: nickname,
@@ -68,13 +69,15 @@ export default function Login() {
         photoURL: 'https://github.com/porosadporosad/GABAEDO/blob/dev/src/assets/defaultImg.jpg?raw=true'
       });
       localStorage.setItem('userId', user.email);
+      localStorage.setItem('uid', uid);
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           const newData = {
             userId: user.email,
             nickname: user.displayName,
-            avatar: user.photoURL
+            avatar: user.photoURL,
+            bookmark: []
           };
           try {
             const collectionRef = collection(db, 'users');
@@ -107,7 +110,9 @@ export default function Login() {
     try {
       const loginUser = await signInWithEmailAndPassword(auth, userId, password);
       const loginData = loginUser.user;
+      const loginUserDocId = loginUser.user.uid;
       localStorage.setItem('userId', loginData.email);
+      localStorage.setItem('uid', loginUserDocId);
 
       toast.success(`로그인 되었습니다`);
       navigate('/');

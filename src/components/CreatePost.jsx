@@ -8,7 +8,7 @@ import { hashtageData } from 'shared/hashtageData';
 import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
+export default function CreatePost({ setModalIsOpen }) {
   const navigate = useNavigate();
   const { data } = useQuery('user', getCurrentUser);
   const { userId, nickname } = data;
@@ -70,7 +70,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
       console.log('postId', postId);
 
       // 모달 끄기
-      setModalIsOpen(!modalIsOpen);
+      setModalIsOpen(false);
       await queryClient.invalidateQueries('posts');
       navigate(`detail/${postId}`);
     } catch (error) {
@@ -82,7 +82,7 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
   return (
     <AddPostModalbody>
       <h1>새 가배도 등록 ☕️</h1>
-      <PostForm>
+      <PostForm onSubmit={addPost}>
         <h2>타이틀</h2>
         <PostInput
           type="text"
@@ -116,14 +116,15 @@ export default function CreatePost({ modalIsOpen, setModalIsOpen }) {
         </HashtagSection>
         <BtnSection>
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
-              setModalIsOpen(!modalIsOpen);
+              setModalIsOpen(false);
             }}
           >
             취소하기
           </button>
-          <button onClick={addPost}>등록하기</button>
+          <button>등록하기</button>
         </BtnSection>
       </PostForm>
     </AddPostModalbody>

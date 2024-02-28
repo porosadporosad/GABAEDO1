@@ -22,10 +22,13 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
       lng: selectedPlace.x,
       name: selectedPlace.place_name,
       placeComment: placeComment,
-      postId: id
+      postId: id,
+      createdAt: Date.now()
     };
     try {
-      const querySnapshot = await getDocs(query(collection(db, 'places'), where('address', '==', newPlace.address)));
+      const querySnapshot = await getDocs(
+        query(collection(db, 'places'), where('postId', '==', id), where('address', '==', newPlace.address))
+      );
 
       if (!querySnapshot.empty) {
         toast.error(`이미 등록되어 있는 장소입니다.`);

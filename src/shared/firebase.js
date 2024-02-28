@@ -2,9 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-// import { doc, setDoc, getDoc } from 'firebase/firestore';
-
-//파이어베이스 초기 설정과 로그인 관련 코드가 있는 문서
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FB_API_KEY,

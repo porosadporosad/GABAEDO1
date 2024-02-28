@@ -1,20 +1,58 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
-import userImg from 'assets/defaultImg.jpg';
 import { useParams } from 'react-router-dom';
 import { getCurrentUser } from 'shared/database';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
+import { useEffect, useState } from 'react';
+import { db } from 'shared/firebase';
+import { doc, getDoc, updateDoc } from '@firebase/firestore';
+
+import userImg from 'assets/defaultImg.jpg';
+import bookmarkDefault from 'assets/bookmark_default.png';
+import bookmarkSelected from 'assets/bookmark_selected.png';
+import { toast } from 'react-toastify';
+import EditModal from './EditModal';
 
 export default function SidePage({ postData, placeData }) {
-  const { isLoading, data } = useQuery('user', getCurrentUser);
-  const writerInfo = postData.userId;
-
+  const [isAdding, setIsAdding] = useState(false);
+  const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const uid = localStorage.getItem('uid');
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { isLoading, data } = useQuery('user', getCurrentUser);
+
+  /** 북마크 여부에 따라 아이콘 변경 */
+  useEffect(() => {
+    const fetchUserBookmark = async () => {
+      if (uid) {
+        const userDocRef = doc(db, 'users', uid);
+        try {
+          const userDocSnapshot = await getDoc(userDocRef);
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            if (userData.bookmark.includes(id)) {
+              setBookmarkImg(bookmarkSelected);
+            } else {
+              setBookmarkImg(bookmarkDefault);
+            }
+          }
+        } catch (error) {
+          console.error('사용자 정보 가져오기 에러', error.message);
+        }
+      }
+    };
+
+    fetchUserBookmark();
+  }, [uid, id]);
+
+  /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
   };
 
+  /** 카페 추가하기 버튼 */
   const AddPlaceBtnHandler = () => {
     navigate(`/search/${id}`);
   };
@@ -23,7 +61,51 @@ export default function SidePage({ postData, placeData }) {
     return <div>로딩중</div>;
   }
 
-  const BookmarkClickHandler = () => {};
+  const writerInfo = postData.userId;
+
+  /** 북마크 버튼 클릭 핸들러 */
+  const BookmarkClickHandler = async () => {
+    //로그인을 안 한 경우
+    if (!uid) {
+      if (!window.confirm(`로그인이 필요합니다. 로그인 페이지로 이동할까요?`)) {
+        return;
+      } else {
+        navigate(`/login`);
+        return;
+      }
+    }
+    //로그인이 되어 있는 경우
+    const userDocRef = doc(db, 'users', uid);
+    try {
+      setIsAdding(true);
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        let updatedBookmark;
+        //이미 북마크 되어 있는 게시글이라면
+        if (userData.bookmark.includes(id)) {
+          alert(`해당 가배도를 북마크 해제합니다.`);
+          updatedBookmark = userData.bookmark.filter((item) => item !== id);
+          setBookmarkImg(bookmarkDefault);
+          //아직 북마크 되어 있지 않은 게시글이라면
+        } else {
+          toast.success(`북마크 성공! 마이페이지에서 확인하세요.`);
+          updatedBookmark = [...userData.bookmark, id];
+          setBookmarkImg(bookmarkSelected);
+        }
+        const newData = { ...userData, bookmark: updatedBookmark };
+        await updateDoc(userDocRef, newData);
+        await queryClient.invalidateQueries('posts');
+      } else {
+        console.log('해당 사용자의 데이터가 없다');
+      }
+    } catch (error) {
+      console.error('북마크 추가 에러 발생', error.message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <>
@@ -32,6 +114,7 @@ export default function SidePage({ postData, placeData }) {
           ◀
         </GoBackButton>
         <PostInfo>
+          {!isLoading && data.userId === writerInfo ? <Edit onClick={() => setIsModalOpen(true)}>수정</Edit> : null}
           <PostBox>
             <h2>
               ✧☕✧
@@ -48,7 +131,14 @@ export default function SidePage({ postData, placeData }) {
           <BrownLine />
           <BookmarkAndWriter>
             <Bookmark>
-              <img src="/bookmark_default.png" width="20" alt="북마크" />
+              <img
+                src={bookmarkImg}
+                onClick={BookmarkClickHandler}
+                disabled={isAdding}
+                title="해당 가배도 북마크하기"
+                width="20"
+                alt="북마크"
+              />
             </Bookmark>
             <Writer>
               <img src={userImg} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
@@ -56,8 +146,8 @@ export default function SidePage({ postData, placeData }) {
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
-        {!isLoading && data.userId == writerInfo ? (
-          <AddPlaceBtn onClick={AddPlaceBtnHandler}>장소 추가하기</AddPlaceBtn>
+        {!isLoading && data.userId === writerInfo ? (
+          <AddPlaceBtn onClick={AddPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
           {placeData.length === 0 ? (
@@ -77,6 +167,7 @@ export default function SidePage({ postData, placeData }) {
           )}
         </PlacesBox>
       </SidePageContainer>
+      <EditModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} postData={postData} id={id} />
     </>
   );
 }
@@ -137,6 +228,7 @@ const Bookmark = styled.div`
 const WriterNickname = styled.span`
   font-family: 'SunBatang-Bold';
   color: #784b31;
+  margin-right: 5px;
 `;
 
 const Writer = styled.div`
@@ -225,4 +317,16 @@ const PlaceInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+const Edit = styled.div`
+  width: 50px;
+  height: 20px;
+  background-color: #b6856a;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
