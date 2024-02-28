@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { useQueryClient } from 'react-query';
 
 export default function UserIntroPage() {
   const postUser = auth.currentUser;
@@ -14,6 +15,7 @@ export default function UserIntroPage() {
   const [newPhotoURL, setNewPhotoURL] = useState('');
   const [newAvatar, setNewAvatar] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const queryClient = useQueryClient();
 
   const onEditNameHandler = (e) => {
     setEditingText(e.target.value);
@@ -39,7 +41,7 @@ export default function UserIntroPage() {
       setNewAvatar(downloadURL);
       const userDocRef = doc(db, 'users', postUser.uid);
       await updateDoc(userDocRef, { avatar: downloadURL });
-
+      await queryClient.invalidateQueries('users');
       await updateProfile(postUser, {
         photoURL: downloadURL
       });
