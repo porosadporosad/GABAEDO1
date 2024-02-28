@@ -17,12 +17,15 @@ export default function Profile() {
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
 
   const handleDeletePost = async (postId) => {
-    try {
-      await deletePost(postId);
-      setDeletedPostId(postId);
-      await refetchPosts();
-    } catch (error) {
-      console.error('게시물 삭제 중 오류 발생:', error);
+    const confirmDelete = window.confirm('게시물을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        await deletePost(postId);
+        setDeletedPostId(postId);
+        await refetchPosts();
+      } catch (error) {
+        console.error('게시물 삭제 중 오류 발생:', error);
+      }
     }
   };
 
@@ -86,9 +89,10 @@ const ProfileWrapper = styled.section`
 
 const UserInputList = styled.ul`
   display: block;
-
-  /* list-style-type: none;
-  padding: 0; */
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
 `;
 
 const ListTitle = styled.h2`
