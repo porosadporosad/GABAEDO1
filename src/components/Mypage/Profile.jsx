@@ -1,25 +1,39 @@
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { getCurrentUser } from '../../shared/database';
+import { getCurrentUser, getUsers } from '../../shared/database';
 import UserIntroPage from './UserIntroPage';
 import { getPosts, deletePost } from '../../shared/database';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { getPostsForBookmarks } from '../../shared/database';
 
 export default function Profile() {
   const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
-  const { isLoading: UserIsLoading, data: userData } = useQuery('users', getCurrentUser); //현재 로그인한 사람의 정보
+  const { isLoading: UsersIsLoading, data: usersData } = useQuery('users', getUsers); //모든 유저
+  const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
   const [deletedPostId, setDeletedPostId] = useState(null);
+  const [myBookmarks, setMybookmarks] = useState([]);
   const navigate = useNavigate();
 
-  if (PostsIsLoading || UserIsLoading) {
+  useEffect(() => {
+    if (userData && usersData) {
+      const myInfo = usersData.find((item) => item.userId === userData.userId);
+      const myBookmark = myInfo.bookmark;
+
+      getPostsForBookmarks(myBookmark)
+        .then((posts) => {
+          setMybookmarks(posts);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [userData, usersData]);
+
+  if (PostsIsLoading || UserIsLoading || UsersIsLoading) {
     return <h1>데이터 로드중...</h1>;
   }
 
+  const myInfo = usersData.find((item) => item.userId === userData.userId);
   const myPosts = postsData.filter((post) => post.userId === userData.userId);
-  const myBookmark = userData.myBookmark;
-  console.log(userData);
-  console.log(myBookmark);
 
   const handleDeletePost = async (postId) => {
     const confirmDelete = window.confirm('게시물을 삭제하시겠습니까?');
@@ -57,6 +71,22 @@ export default function Profile() {
           </UserInputList>
           <UserInputList>
             <ListTitle>🔖북마크한 가배도</ListTitle>
+            {myBookmarks.length === 0 ? (
+              <div style={{ textAlign: 'center' }}>아직 북마크한 가배도가 없습니다.</div>
+            ) : (
+              myBookmarks.map((item, index) => (
+                <PostList key={index}>
+                  <WriterAndTitle>
+                    <Writer>{item.nickname} ✨</Writer>
+                    <div>{item.title || '제목 없음'}</div>
+                  </WriterAndTitle>
+                  <BtnArea>
+                    <Button onClick={() => navigate(`/detail/${item.id}`)}>보기</Button>
+                    <Button onClick={() => handleDeletePost(item.id)}>삭제</Button>
+                  </BtnArea>
+                </PostList>
+              ))
+            )}
           </UserInputList>
         </ProfileWrapper>
       </Container>
@@ -69,7 +99,8 @@ const Background = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 100px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 `;
 
 const Container = styled.div`
@@ -135,7 +166,7 @@ const Button = styled.button`
   color: white;
   background-color: #784b31;
   border: none;
-  border-radius: 7px;
+  border-radius: 10px;
   cursor: pointer;
 
   &:hover {
@@ -149,9 +180,19 @@ const PostList = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 4px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
 
   background-color: #fff;
   border-radius: 15px;
+`;
+
+const WriterAndTitle = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const Writer = styled.span`
+  font-family: 'SunBatang-Bold';
+  color: #784b31;
 `;

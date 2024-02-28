@@ -61,7 +61,7 @@ export default function UserIntroPage() {
 
         await updateDoc(userDocRef, { ...userData, nickname: editingText });
         setUserData((prevUserData) => ({ ...prevUserData, nickname: editingText })); // 업데이트된 닉네임을 로컬 상태에 반영
-
+        await queryClient.invalidateQueries('users');
         toast.success('닉네임이 업데이트되었습니다.');
       } else {
         throw new Error('사용자 문서가 존재하지 않습니다.');
@@ -71,9 +71,14 @@ export default function UserIntroPage() {
     }
   };
 
+  const EditBtnHandler = () => {
+    setEditingText(userData.nickname); // 수정 버튼을 누를 때 초기값 설정
+    setIsEditing(true);
+  };
+
   return (
     <ProfileContainer>
-      <ProfileTitle>프로필☕</ProfileTitle>
+      <ProfileTitle>나의 프로필☕</ProfileTitle>
       {userData && (
         <Container>
           <ProfileSection>
@@ -87,15 +92,15 @@ export default function UserIntroPage() {
             />
             <Button onClick={uploadProfile}>프로필사진 변경</Button>
           </ProfileSection>
-
           <MyPostsSection>
             <Inform>
               <UserId>{userData.userId}</UserId>
-              <NickName>{userData.nickname}</NickName>
-            </Inform>
-            {isEditing ? ( // 닉네임 수정 중일 때
-              <div>
+              {isEditing ? (
                 <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
+              ) : (
+                <NickName>{userData.nickname}</NickName>
+              )}
+              {isEditing ? (
                 <Button
                   onClick={() => {
                     updateNickname();
@@ -104,11 +109,10 @@ export default function UserIntroPage() {
                 >
                   완료
                 </Button>
-              </div>
-            ) : (
-              // 닉네임 수정 중이 아닐 때
-              <Button onClick={() => setIsEditing(true)}>닉네임 수정하기</Button>
-            )}
+              ) : (
+                <Button onClick={EditBtnHandler}>닉네임 수정하기</Button>
+              )}
+            </Inform>
           </MyPostsSection>
         </Container>
       )}
@@ -131,15 +135,15 @@ const ProfileTitle = styled.h1`
 
 const Container = styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
 `;
 
 const ProfileSection = styled.section`
-  width: 300px;
+  width: 250px;
   align-items: center;
 `;
 const MyPostsSection = styled.section`
-  margin-left: 50px;
   display: flex;
   flex-direction: column;
 `;
@@ -162,6 +166,7 @@ const Button = styled.button`
   width: 230px;
   margin: 10px auto;
   padding: 13px 20px;
+  font-size: 13pt;
 
   color: white;
   background-color: #784b31;
@@ -177,13 +182,17 @@ const Button = styled.button`
 
 const Inform = styled.div`
   width: 300px;
-  margin: 30px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const UserId = styled.div`
   margin-bottom: 20px;
-  padding: 15px;
-
+  width: 250px;
+  padding: 10px;
+  text-align: center;
   font-size: 20px;
   background-color: #fff;
   border-radius: 20px;
@@ -191,14 +200,18 @@ const UserId = styled.div`
 
 const NickName = styled.div`
   margin-bottom: 20px;
-  padding: 15px;
-
+  width: 250px;
+  padding: 10px;
+  text-align: center;
   font-size: 20px;
   background-color: #fff;
   border-radius: 20px;
 `;
 
 const TextInput = styled.input`
-  margin-top: 10px;
-  padding: 5px;
+  width: 250px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
 `;

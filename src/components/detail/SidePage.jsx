@@ -59,9 +59,8 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     if (!usersIsLoading && Array.isArray(usersData)) {
       const fetchData = async () => {
         const writerInfo = postData.userId;
-        console.log('유저스데이터', usersData);
         const writer = usersData.find((user) => user.userId === writerInfo);
-        if(writer) {
+        if (writer) {
           setWriterIcon(writer.avatar);
         } else {
           console.error('글쓴이를 찾을 수 없습니다!');
@@ -70,7 +69,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
       fetchData();
     }
   }, [usersData, postData]);
-  
+
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
     navigate(`/`);
@@ -118,7 +117,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
         }
         const newData = { ...userData, bookmark: updatedBookmark };
         await updateDoc(userDocRef, newData);
-        await queryClient.invalidateQueries('posts');
+        await queryClient.invalidateQueries('users');
       } else {
         console.log('해당 사용자의 데이터가 없다');
       }
