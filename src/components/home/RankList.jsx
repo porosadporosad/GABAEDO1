@@ -1,42 +1,68 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export default function RankList({ UserRank }) {
+  
+  const duplicatedUserRank = [...UserRank, ...UserRank];
+
   return (
     <ListSection>
-      {UserRank.map((user) => (
-        <RankListBox key={user.nickname}>
-          {/* <figure>
-            <img src={user.img} alt="" />
-          </figure> */}
-          <UserNickname>{user.nickname}</UserNickname>
-          <PostsNumber>{user.number}개의 가배도</PostsNumber>
-        </RankListBox>
-      ))}
+      <InfiniteScroll length={UserRank.length}>
+        {duplicatedUserRank.map((user, index) => (
+          <RankListBox key={index}>
+            {(index === 0 || index === UserRank.length) && <CrownIcon>👑</CrownIcon>}
+            <UserNickname>{user.nickname}</UserNickname>
+            <PostsNumber>{user.number}개의 가배도</PostsNumber>
+          </RankListBox>
+        ))}
+      </InfiniteScroll>
     </ListSection>
   );
 }
 
+const slide = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`;
+
 const ListSection = styled.section`
+  overflow: hidden;
   padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex; /* 변경됨 */
   align-items: center;
-  gap: 15px;
   text-align: center;
 `;
 
-const RankListBox = styled.div`
-  /* height: 100px; */
-  padding: 10px 0;
+const slideInfinite = keyframes`
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+`;
 
+const InfiniteScroll = styled.div`
+  display: flex;
+  animation: ${slideInfinite} 20s linear infinite;
+`;
+
+
+const RankListBox = styled.div`
+  flex: 0 0 auto; 
+  padding: 10px 0;
+  min-width: calc(100% / 5 - 15px); 
   background-color: #e0c3ae;
   border-radius: 20px;
   box-shadow: 2px 2px 5px 2px #b6856aa7;
+  margin-right: 15px; 
 `;
 
 const UserNickname = styled.h4`
   padding: 10px 0;
-
   font-family: 'SunBatang-Medium';
   color: #fff;
 `;
@@ -44,4 +70,11 @@ const UserNickname = styled.h4`
 const PostsNumber = styled.p`
   font-size: 14px;
   color: #b6856a;
+`;
+
+const CrownIcon = styled.span`
+  display: inline-block;
+  margin-right: 5px; 
+  font-size: 20px; 
+  filter: brightness(1.4);
 `;
