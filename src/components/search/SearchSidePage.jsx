@@ -111,4 +111,9 @@ const AddPlaceBtn = styled.button`
   color: #fff;
   font-size: 30px;
   cursor: pointer;
+  transition: box-shadow 0.3s;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+  }
 `;
