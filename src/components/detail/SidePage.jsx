@@ -298,6 +298,11 @@ const Place = styled.div`
   border-radius: 12px;
   padding: 20px;
   cursor: pointer;
+  transition: box-shadow 0.3s;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+  }
 
   & h2 {
     font-family: 'SunBatang-Bold';
