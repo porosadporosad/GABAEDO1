@@ -133,7 +133,7 @@ const ProfileImage = styled.img`
   position: relative;
   border-radius: 50%;
   margin: 0 auto;
-  box-shadow: 0 0 0 8px #ffffff;
+  box-shadow: 0 0 0 5px #c28f7f;
 `;
 
 const Button = styled.button`
