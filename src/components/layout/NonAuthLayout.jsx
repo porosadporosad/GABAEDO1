@@ -1,8 +1,11 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import Header from 'components/Header';
 
 export default function NonAuthLayout() {
-  const isLoggedin = false;
+  const userId = localStorage.getItem('userId');
+  const isLoggedin = userId;
+
   if (isLoggedin) {
     alert(`이미 로그인된 상태입니다.`);
     console.log(`이미 로그인됨`);
@@ -10,7 +13,7 @@ export default function NonAuthLayout() {
   }
   return (
     <>
-      <main />
+      <Header />
       <Outlet />
     </>
   );

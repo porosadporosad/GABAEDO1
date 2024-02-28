@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import Banner from '../components/Banner';
-import CurationList from '../components/CurationList';
+import MainFeed from '../components/MainFeed';
 
-function Home() {
+export default function Home() {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   return (
     <div>
       <Banner onSearch={setSearchKeyword} />
-      <CurationList keyword={searchKeyword} />
+      <MainFeed keyword={searchKeyword} />
     </div>
   );
 }
-
-export default Home;

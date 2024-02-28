@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
-export default function Banner({ onSearch }) { 
+export default function Banner({ onSearch }) {
   const [keyword, setKeyword] = useState('');
 
   return (
@@ -14,7 +14,9 @@ export default function Banner({ onSearch }) {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
-        <button type="button" onClick={() => onSearch(keyword)}>검색</button>
+        <button type="button" onClick={() => onSearch(keyword)}>
+          검색
+        </button>
       </Section>
     </Article>
   );
@@ -44,19 +46,20 @@ const Section = styled.section`
     width: 400px;
     height: 40px;
     margin: 0 auto;
+    padding-left: 10px;
     border: 1px solid #b6856a;
     border-radius: 10px;
   }
 
   & button {
-    width: 100px; 
-    height: 40px; 
-    margin: 0 auto; 
-    background-color: #E0C3AE; 
+    width: 100px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #e0c3ae;
     border: none;
-    border-radius: 10px; 
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px; 
-    color: #FFF9F3; 
+    font-size: 16px;
+    color: #fff9f3;
   }
 `;

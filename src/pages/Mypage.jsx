@@ -1,4 +1,5 @@
-import Profile from 'Profile/Profile';
+import UserIntroPage from 'components/Mypage/UserIntroPage';
+import Profile from '../components/Mypage/Profile';
 import React from 'react';
 
 function Mypage() {
