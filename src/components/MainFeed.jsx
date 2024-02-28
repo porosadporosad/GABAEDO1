@@ -44,7 +44,6 @@ export default function MainFeed({ keyword }) {
   if (UserRank.length >= 5) UserRank.length = 5;
 
   placesData.sort((a, b) => b.createdAt - a.createdAt);
-  console.log(placesData);
 
   // const searchedData = data.filter((post) => post.title.includes(keyword) || post.content.includes(keyword));
 

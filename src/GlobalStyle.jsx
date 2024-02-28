@@ -48,6 +48,10 @@ body {
 	line-height: 1;
   color: #444;
 	font-family: "SunBatang-Light";
+
+  &::-webkit-scrollbar{
+    display:none;
+  }
 }
 ol, ul {
 	list-style: none;
@@ -68,7 +72,6 @@ table {
 * {
   box-sizing: border-box;
 	font-family: "SunBatang-Light";
-  /* overflow-y: scroll; */
 
 
   &::-webkit-scrollbar {
