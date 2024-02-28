@@ -46,10 +46,11 @@ const PostListBox = styled.div`
   box-shadow: 2px 2px 5px 2px #e0c3aea2;
 
   & h2 {
-    font-family: 'SunBatang-Medium';
-    padding: 10px;
     height: 30px;
+    padding: 10px;
+
     font-size: 18px;
+    font-family: 'SunBatang-Medium';
     color: #784b31;
   }
 

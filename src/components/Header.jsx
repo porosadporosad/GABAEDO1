@@ -62,7 +62,7 @@ export default function Header() {
 
   return (
     <MenuHeader>
-      <StLink to="/">
+      <StLink to="/" onClick={() => window.location.reload()}>
         <Logo src={logo} alt="logo" />
       </StLink>
       <nav>
