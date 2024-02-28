@@ -114,7 +114,7 @@ export default function CreatePost({ setModalIsOpen }) {
           ))}
         </HashtagSection>
         <BtnSection>
-          <button
+          <Btn
             type="button"
             onClick={(e) => {
               e.preventDefault();
@@ -122,8 +122,8 @@ export default function CreatePost({ setModalIsOpen }) {
             }}
           >
             취소하기
-          </button>
-          <button>등록하기</button>
+          </Btn>
+          <Btn>등록하기</Btn>
         </BtnSection>
       </PostForm>
     </AddPostModalbody>
@@ -206,15 +206,19 @@ const BtnSection = styled.section`
   height: 50px;
   display: flex;
   gap: 10px;
+`;
 
-  & button {
-    width: 50%;
+const Btn = styled.button`
+  width: 50%;
 
-    font-size: 17px;
-    color: #fff;
-    background-color: #c70000;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
+  font-size: 17px;
+  color: #fff;
+  background-color: #c70000;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #b10000;
   }
 `;

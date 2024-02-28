@@ -6,6 +6,7 @@ import img02 from 'assets/teammate02.png';
 import img03 from 'assets/teammate03.png';
 import img04 from 'assets/teammate04.png';
 import img05 from 'assets/teammate05.png';
+import { Link } from 'react-router-dom';
 
 export default function About() {
   return (
@@ -23,7 +24,9 @@ export default function About() {
       {aboutTeam.map((item) => (
         <Teammates key={item.id}>
           <Icon>
-            <img src={item.avatar} style={{ border: '1px solid #e0c3ae', borderRadius: '50%' }} alt="팀원의 사진" />
+            <Link to={item.link} target="_blank">
+              <img src={item.avatar} style={{ border: '1px solid #e0c3ae', borderRadius: '50%' }} alt="팀원의 사진" />
+            </Link>
           </Icon>
           <TeammateComment>
             <Title2>{item.name}</Title2>
@@ -40,22 +43,37 @@ const aboutTeam = [
     id: 1,
     name: 'KIM SOHYEON',
     comment: '좋아하는 카페 주제로 재밌게 작업할 수 있었습니다. 다들 감사해요. 🫶🏻',
-    avatar: img01
+    avatar: img01,
+    link: 'https://aotoyae.tistory.com/'
   },
   {
     id: 2,
     name: 'KIM YEONJAE',
     comment: '출시해도 될 정도의 높은 퀄리티입니다. 좋은 팀원분들과 함께해서 영광이었습니다.',
-    avatar: img02
+    avatar: img02,
+    link: 'https://velog.io/@tmxk1594/posts'
   },
-  { id: 3, name: 'KIM HYEONGMIN', comment: '퀄리티 높은 프로젝트 재밌었습니다! 우리팀 폼 대단하다아!', avatar: img03 },
+  {
+    id: 3,
+    name: 'KIM HYEONGMIN',
+    comment: '퀄리티 높은 프로젝트 재밌었습니다! 우리팀 폼 대단하다아!',
+    avatar: img03,
+    link: 'https://velog.io/@kim9567/posts'
+  },
   {
     id: 4,
     name: 'PARK JIYEONG',
     comment: '이 구역의 얼죽아 수장. 카페를 너무 좋아해서 가배도 프로젝트 너무 재미있었습니다.',
-    avatar: img04
+    avatar: img04,
+    link: 'https://velog.io/@redberry0217/'
   },
-  { id: 5, name: 'JUNG BOYEON', comment: '다양하게 재밌는 프로젝트 함께 할 수 있어서 좋았습니담🥰', avatar: img05 }
+  {
+    id: 5,
+    name: 'JUNG BOYEON',
+    comment: '다양하게 재밌는 프로젝트 함께 할 수 있어서 좋았습니담🥰',
+    avatar: img05,
+    link: 'https://developeryeon.tistory.com/'
+  }
 ];
 
 const AboutContainer = styled.div`

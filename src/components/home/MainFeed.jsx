@@ -43,7 +43,7 @@ export default function MainFeed() {
 
   return (
     <>
-      <AddPostModal $modalIsOpen={modalIsOpen}>
+      <AddPostModal modalIsOpen={modalIsOpen}>
         <CreatePost setModalIsOpen={setModalIsOpen} />
       </AddPostModal>
       <Article>
@@ -53,7 +53,7 @@ export default function MainFeed() {
             <TitleInfo>원하는 태그별로 지도를 모아보세요.</TitleInfo>
           </TitleBox>
           <CreatePostBtn
-            $isLoggedIn={loginUserData}
+            isLoggedIn={loginUserData}
             onClick={() => {
               setModalIsOpen(!modalIsOpen);
             }}
