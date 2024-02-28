@@ -43,6 +43,9 @@ export default function Profile() {
             <p>작성한 게시물이 없습니다.</p>
           )}
         </UserInputList>
+        <BookmarkWrapper>
+          <p>북마크한 가배도</p>
+        </BookmarkWrapper>
       </ProfileWrapper>
     </Container>
   );
@@ -103,3 +106,5 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: 10px;
 `;
+
+const BookmarkWrapper = styled.section``;

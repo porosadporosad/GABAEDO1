@@ -87,7 +87,7 @@ export default function UserIntroPage() {
                 setNewAvatar(URL.createObjectURL(e.target.files[0]));
               }}
             />
-            <Button onClick={uploadProfile}>사진 업데이트하기</Button>
+            <Button onClick={uploadProfile}>사진 변경</Button>
           </ProfileSection>
 
           <MyPostsSection>
