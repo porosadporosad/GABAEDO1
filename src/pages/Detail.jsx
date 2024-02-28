@@ -19,7 +19,6 @@ function Detail() {
   const { isLoading: isLoadingPosts, isError: isErrorPosts, data: postsData } = useQuery('posts', getPosts);
   const { isLoading: isLoadingPlaces, isError: isErrorPlaces, data: placesData } = useQuery('places', getPlaces);
   const { id } = useParams();
-  console.log(id);
 
   if (isLoadingPosts || isLoadingPlaces) {
     return <h1>Loading</h1>;
