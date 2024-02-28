@@ -273,8 +273,7 @@ const LoginH1 = styled.h1`
 `;
 
 const LoginInput = styled.input`
-  padding: 1rem 0;
-  padding-left: 0.6rem;
+  padding: 1rem 0 1rem 0.6rem;
 
   border: none;
   border-radius: 0.8rem;
