@@ -74,11 +74,12 @@ export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
 const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 25px;
   position: absolute;
   text-align: center;
   background-color: #fff9f3;
   overflow-y: auto;
+  overflow-x: hidden;
 
   & h2 {
     font-family: 'SunBatang-Bold';
