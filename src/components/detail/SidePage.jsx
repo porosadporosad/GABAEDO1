@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useEffect, useState } from 'react';
 import { db } from 'shared/firebase';
 import { doc, getDoc, updateDoc } from '@firebase/firestore';
+import { getUsers } from 'shared/database';
 
 import userImg from 'assets/defaultImg.jpg';
 import bookmarkDefault from 'assets/bookmark_default.png';
@@ -22,6 +23,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const { isLoading, data } = useQuery('user', getCurrentUser);
+  const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
 
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
@@ -63,11 +65,13 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     navigate(`/search/${id}`);
   };
 
-  if (isLoading) {
+  if (isLoading || usersIsLoading) {
     return <div>로딩중</div>;
   }
 
   const writerInfo = postData.userId;
+  console.log('글쓴이정보', writerInfo);
+  // const findWriter = doc(db, 'users', writerInfo);
 
   /** 북마크 버튼 클릭 핸들러 */
   const BookmarkClickHandler = async () => {
