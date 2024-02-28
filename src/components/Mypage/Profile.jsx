@@ -10,6 +10,12 @@ export default function Profile() {
   const { isLoading: UserIsLoading, data: userData } = useQuery('users', getCurrentUser); //현재 로그인한 사람의 정보
   const [deletedPostId, setDeletedPostId] = useState(null);
 
+  if (PostsIsLoading || UserIsLoading) {
+    return <h1>데이터 로드중...</h1>;
+  }
+
+  const myPosts = postsData.filter((post) => post.userId === userData.userId);
+
   const handleDeletePost = async (postId) => {
     try {
       await deletePost(postId);
@@ -19,12 +25,6 @@ export default function Profile() {
       console.error('게시물 삭제 중 오류 발생:', error);
     }
   };
-
-  if (PostsIsLoading || UserIsLoading) {
-    return <h1>데이터 로드중...</h1>;
-  }
-
-  const myPosts = postsData.filter((post) => post.userId === userData.userId);
 
   return (
     <Container>
@@ -36,7 +36,7 @@ export default function Profile() {
             myPosts.map((post) => (
               <li key={post.id}>
                 <div>{post.title || '제목 없음'}</div>
-                <button onClick={() => handleDeletePost(post.id)}>삭제</button>
+                <Button onClick={() => handleDeletePost(post.id)}>삭제</Button>
               </li>
             ))
           ) : (
@@ -51,20 +51,55 @@ export default function Profile() {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  width: 700px;
+  margin: 100px auto;
+  padding: 10rem;
+
+  background-color: #fff9f3;
+  border: 2px solid #e0c3ae;
+  border-radius: 50px;
+  box-shadow: 5px 5px 20px 3px #e0c3ae;
+
+  & h1 {
+    height: 50px;
+    line-height: 5px;
+    font-size: 1.6rem;
+    font-family: 'SunBatang-Medium';
+    color: #784b31;
+  }
 `;
 
 const ProfileWrapper = styled.section`
-  padding: 20rem;
-  width: 900px;
-  border-radius: 20px;
-  background-color: #fff9f3;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  & p {
+    padding: 10px 20px;
+
+    font-size: 13px;
+    color: #784b31;
+    background-color: #fff;
+    border-radius: 30px;
+  }
 `;
 
-const UserInputList = styled.ul``;
-const ListTitle = styled.h1`
-  font-size: 21px;
-  font-weight: bold;
-  margin-top: 15px;
+const UserInputList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+const ListTitle = styled.h2`
+  color: #c70000;
+`;
+
+const Button = styled.button`
+  background-color: #784b31;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 `;
