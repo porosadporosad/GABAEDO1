@@ -21,7 +21,8 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
       lng: selectedPlace.x,
       name: selectedPlace.place_name,
       placeComment: placeComment,
-      postId: id
+      postId: id,
+      createdAt: Date.now()
     };
     try {
       const docRef = await addDoc(collection(db, 'places'), newPlace);

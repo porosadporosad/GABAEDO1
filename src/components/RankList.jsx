@@ -5,6 +5,9 @@ export default function RankList({ UserRank }) {
     <ListSection>
       {UserRank.map((user) => (
         <RankListBox key={user.nickname}>
+          {/* <figure>
+            <img src={user.img} alt="" />
+          </figure> */}
           <UserNickname>{user.nickname}</UserNickname>
           <PostsNumber>{user.number}개의 가배도</PostsNumber>
         </RankListBox>

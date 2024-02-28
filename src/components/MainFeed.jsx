@@ -1,19 +1,23 @@
 import styled from 'styled-components';
-import { getPosts, getCurrentUser } from 'shared/database';
+import { getPosts, getCurrentUser, getPlaces } from 'shared/database';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
 import CreatePost from './CreatePost';
 import { hashtageData } from 'shared/hashtageData';
 import PostsList from './PostsList';
 import RankList from './RankList';
+// import { getUsers } from 'shared/database';
+import PlacesData from './PlacesList';
 
 export default function MainFeed({ keyword }) {
-  const { data: loginUserData } = useQuery('user', getCurrentUser);
   const { isLoading, data } = useQuery('posts', getPosts);
+  const { isLoading: userIsLoading, data: loginUserData } = useQuery('user', getCurrentUser);
+  // const { data: allUserData } = useQuery('users', getUsers);
+  const { isLoading: palcesIsLoading, data: placesData } = useQuery('places', getPlaces);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [menu, setMenu] = useState('');
 
-  if (isLoading) {
+  if (isLoading || userIsLoading || palcesIsLoading) {
     return <h1>Loading</h1>;
   }
 
@@ -27,15 +31,20 @@ export default function MainFeed({ keyword }) {
   // 배열에 유저별로 넣은 뒤 높은 순으로 정렬
   let UserRank = [];
 
-  for (let user in writerUsers) {
-    UserRank.push({ nickname: user, number: writerUsers[user] });
-  }
+  for (let userNickname in writerUsers) {
+    // 순위에 프로필 이미지 넣기....
+    // console.log(allUserData);
+    // const getUser = allUserData.find((user) => user.nickname === userNickname);
+    // console.log(getUser);
 
+    UserRank.push({ nickname: userNickname, number: writerUsers[userNickname] });
+  }
   UserRank.sort((a, b) => b.number - a.number);
 
-  if (UserRank.length >= 5) {
-    UserRank.length = 5;
-  }
+  if (UserRank.length >= 5) UserRank.length = 5;
+
+  placesData.sort((a, b) => b.createdAt - a.createdAt);
+  console.log(placesData);
 
   // const searchedData = data.filter((post) => post.title.includes(keyword) || post.content.includes(keyword));
 
@@ -86,8 +95,11 @@ export default function MainFeed({ keyword }) {
           <TitleInfo>가배도의 베스트 제작자들을 소개합니다.</TitleInfo>
         </TitleBox>
         <RankList UserRank={UserRank} />
-        {/* <ListTitle>카페 모아보기</ListTitle> */}
-        {/* <PostsList searchedData={searchedData} /> */}
+        <TitleBox>
+          <ListTitle>요즘 뜨는 카페</ListTitle>
+          <TitleInfo>최근에 올라온 카페들을 살펴보세요.</TitleInfo>
+        </TitleBox>
+        <PlacesData placesData={placesData} />
         <TitleBox>
           <ListTitle>가배도 전체보기</ListTitle>
           <TitleInfo>가배도의 모든 지도들을 모아보세요.</TitleInfo>
@@ -99,7 +111,7 @@ export default function MainFeed({ keyword }) {
 }
 
 const Article = styled.article`
-  width: 1200px;
+  width: 1220px;
   margin: 0 auto;
 `;
 
