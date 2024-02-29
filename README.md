@@ -3,7 +3,7 @@
 <img src ="https://github.com/porosadporosad/GABAEDO/blob/login/public/readme/image.png?raw=true" width="80%">
 
 * 서울의 카페를 주제별로 모아보고 공유하는 사이트
-* 홈페이지 링크 - http://gabaedo.xyz
+* 홈페이지 링크 - http://www.gabaedo.xyz
 
 ## 개발 기간 : 2024. 02.23 ~ 2024.02.29
 </br></br>
