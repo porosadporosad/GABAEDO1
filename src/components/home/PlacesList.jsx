@@ -16,7 +16,7 @@ export default function PlacesData({ placesData }) {
           params: {
             key: process.env.REACT_APP_YOUTUBE,
             part: 'snippet',
-            q: `카페 ${cafeName}`, // 기본 검색어 설정
+            q: `카페 ${cafeName}`,
             type: 'video',
             maxResults: 6
           }
@@ -27,7 +27,7 @@ export default function PlacesData({ placesData }) {
       }
     };
 
-    fetchData(); // 컴포넌트가 마운트되면 기본 검색어로 데이터를 가져옴
+    fetchData();
   }, [cafeName]);
 
   return (
@@ -39,10 +39,7 @@ export default function PlacesData({ placesData }) {
             <h3>{place.address}</h3>
             <BtnSection>
               <MoveToDetailBtn onClick={() => navigate(`detail/${place.postId}`)}>가배도 보러가기</MoveToDetailBtn>
-              <YoutubeBtn
-                onMouseEnter={() => setCafeName(place.name)}
-                onMouseLeave={() => setCafeName('')}
-              >
+              <YoutubeBtn onMouseEnter={() => setCafeName(place.name)} onMouseLeave={() => setCafeName('')}>
                 <YoutubeIcon src={youtubeIcon} alt="유튜브 아이콘" />
               </YoutubeBtn>
             </BtnSection>
@@ -54,7 +51,13 @@ export default function PlacesData({ placesData }) {
           {searchResults.map((item) => (
             <div key={item.etag}>
               <div>
-                <img src={item.snippet.thumbnails.high.url} alt="" />
+                <a
+                  href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={item.snippet.thumbnails.high.url} alt="" />
+                </a>
               </div>
               <h1>{item.snippet.title}</h1>
             </div>
@@ -132,8 +135,8 @@ const BtnSection = styled.section`
 const MoveToDetailBtn = styled.button`
   padding: 0 10px;
   color: #c70000;
-  text-decoration: none; 
-  
+  text-decoration: none;
+
   &:hover {
     text-decoration: underline;
   }
