@@ -1,4 +1,4 @@
-import Profile from '../components/Mypage/Profile';
+import Profile from 'components/mypage/Profile';
 
 function Mypage() {
   return (
