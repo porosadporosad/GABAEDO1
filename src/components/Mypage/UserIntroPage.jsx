@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { auth, db, storage } from 'shared/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -9,6 +9,7 @@ import { useQueryClient } from 'react-query';
 
 export default function UserIntroPage() {
   const postUser = auth.currentUser;
+  const inputRef = useRef(null);
 
   const [editingText, setEditingText] = useState('');
   const [userData, setUserData] = useState(null);
@@ -20,6 +21,10 @@ export default function UserIntroPage() {
   const onEditNameHandler = (e) => {
     setEditingText(e.target.value);
   };
+
+  useEffect(() => {
+    isEditing && inputRef.current.focus();
+  }, [isEditing]);
 
   useEffect(() => {
     const postUser = auth.currentUser;
@@ -96,7 +101,7 @@ export default function UserIntroPage() {
             <Inform>
               <UserId>{userData.userId}</UserId>
               {isEditing ? (
-                <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
+                <TextInput ref={inputRef} id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
               ) : (
                 <NickName>{userData.nickname}</NickName>
               )}
