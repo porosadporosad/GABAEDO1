@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import loginImg from '../assets/loginImg.png';
-import { toast } from 'react-toastify';
+import loginImg from 'assets/loginImg.png';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../shared/firebase';
+import { useQuery } from 'react-query';
+import { toast } from 'react-toastify';
+import { collection, setDoc, doc } from 'firebase/firestore';
+import { auth, db } from 'shared/firebase';
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from 'firebase/auth';
-import { collection, setDoc, doc } from 'firebase/firestore';
-import { useQuery } from 'react-query';
 import { getUsers } from 'shared/database';
 
 export default function Login() {

@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from 'shared/firebase';
+import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from 'shared/firebase';
 import { hashtageData } from 'constant/hashtageData';
 
 export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
   const [hashtag, setHashtag] = useState(postData.hashtag);
-  const queryClient = useQueryClient();
 
   if (!isOpen) return null;
 
@@ -50,8 +50,8 @@ export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
       toast.warning('태그를 1개 이상 골라주세요.');
       return;
     }
-
     const postRef = doc(db, 'posts', id);
+
     try {
       await updateDoc(postRef, { title, content, hashtag });
       setIsModalOpen(false);
@@ -112,32 +112,35 @@ export default function EditModal({ isOpen, postData, setIsModalOpen, id }) {
 }
 
 const Overlay = styled.div`
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.5);
   z-index: 100;
+
+  background-color: rgba(255, 255, 255, 0.5);
 `;
 
 const ModalContainer = styled.div`
-  background-color: #e0c3ae;
-  border: 2px solid #784b31;
-  box-shadow: 5px 5px 20px 3px #e0c3ae;
+  width: 400px;
   padding: 20px;
-  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+
+  background-color: #e0c3ae;
+  border: 2px solid #784b31;
+  border-radius: 15px;
+  box-shadow: 5px 5px 20px 3px #e0c3ae;
 `;
 
 const ModalText = styled.p`
   margin-bottom: 20px;
+
   font-size: 20pt;
   font-family: 'SunBatang-Bold';
   color: #784b31;
@@ -147,7 +150,6 @@ const PostForm = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-
   gap: 15px;
 
   & h2 {
@@ -187,7 +189,6 @@ const HashtagSection = styled.section`
     font-size: 13px;
     color: #784b31;
     background-color: #fff;
-    /* border: 1px solid #784b31; */
     border-radius: 30px;
   }
 `;
@@ -206,9 +207,9 @@ const BtnSection = styled.section`
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    
+
     &:hover {
-    background-color: #b10000;
-  }
+      background-color: #b10000;
+    }
   }
 `;

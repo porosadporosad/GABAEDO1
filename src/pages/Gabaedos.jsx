@@ -1,5 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
+
 export default function Gabaedos() {
   return <GabaedosContainer>아아웅아아ㅏ</GabaedosContainer>;
 }

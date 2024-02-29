@@ -1,22 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { auth, db, storage } from 'shared/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { updateProfile } from 'firebase/auth';
-import { toast } from 'react-toastify';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { updateProfile } from 'firebase/auth';
+import { auth, db, storage } from 'shared/firebase';
 
 export default function UserIntroPage() {
-  const postUser = auth.currentUser;
   const inputRef = useRef(null);
-
-  const [editingText, setEditingText] = useState('');
-  const [userData, setUserData] = useState(null);
-  const [newPhotoURL, setNewPhotoURL] = useState('');
-  const [newAvatar, setNewAvatar] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
+  const postUser = auth.currentUser;
+
+  const [userData, setUserData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newAvatar, setNewAvatar] = useState('');
+  const [editingText, setEditingText] = useState('');
+  const [newPhotoURL, setNewPhotoURL] = useState('');
 
   const onEditNameHandler = (e) => {
     setEditingText(e.target.value);
@@ -35,7 +35,6 @@ export default function UserIntroPage() {
         avatar: postUser.photoURL
       });
     }
-    // 포토 URL이 바뀔때마다
   }, [newPhotoURL]);
 
   const uploadProfile = async () => {
@@ -70,7 +69,7 @@ export default function UserIntroPage() {
         await updateProfile(postUser, {
           displayName: editingText
         });
-        
+
         toast.success('닉네임이 업데이트되었습니다.');
       } else {
         throw new Error('사용자 문서가 존재하지 않습니다.');

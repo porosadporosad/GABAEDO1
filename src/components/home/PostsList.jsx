@@ -1,17 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function PostsList({ postsData }) {
   const navigate = useNavigate();
 
-  const boxClickHandler = (id) => {
-    navigate(`detail/${id}`);
-  };
-
   return (
     <ListSection>
       {postsData.map((post) => (
-        <PostListBox key={post.id} onClick={() => boxClickHandler(post.id)}>
+        <PostListBox key={post.id} onClick={() => navigate(`detail/${post.id}`)}>
           <h2>{post.title}</h2>
           <h3>{post.content}</h3>
           <HashtagList>

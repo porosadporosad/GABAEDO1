@@ -1,7 +1,7 @@
 import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
 import { Navigate, Outlet } from 'react-router-dom';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
 import { toast } from 'react-toastify';
 
 export default function NonAuthLayout() {
@@ -12,6 +12,7 @@ export default function NonAuthLayout() {
     toast.warning('이미 로그인된 상태입니다.');
     return <Navigate to="/" replace />;
   }
+
   return (
     <>
       <Header />

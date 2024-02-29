@@ -1,36 +1,36 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { getCurrentUser } from 'shared/database';
 import { useQuery, useQueryClient } from 'react-query';
-import { useEffect, useState } from 'react';
-import { db } from 'shared/firebase';
+import { toast } from 'react-toastify';
 import { deleteDoc, doc, getDoc, updateDoc } from '@firebase/firestore';
-import { getUsers } from 'shared/database';
 
+import EditModal from './EditModal';
 import userImg from 'assets/defaultImg.jpg';
 import bookmarkDefault from 'assets/bookmark_default.png';
 import bookmarkSelected from 'assets/bookmark_selected.png';
-import { toast } from 'react-toastify';
-import EditModal from './EditModal';
+import { db } from 'shared/firebase';
+import { getUsers } from 'shared/database';
+import { getCurrentUser } from 'shared/database';
 
 export default function SidePage({ postData, placeData, onPlaceClick }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const uid = localStorage.getItem('uid');
+
   const [isAdding, setIsAdding] = useState(false);
-  const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [writerIcon, setWriterIcon] = useState(userImg);
   const [writerNickname, setWriterNickname] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const uid = localStorage.getItem('uid');
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
+
   const { isLoading: currUserIsLoading, data: currUserData } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
 
   const handlePlaceClick = (place) => {
-    if (onPlaceClick) {
-      onPlaceClick(place.lat, place.lng);
-    }
+    if (onPlaceClick) onPlaceClick(place.lat, place.lng);
   };
 
   /** 북마크 여부에 따라 아이콘 변경 */
@@ -74,12 +74,12 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   }, [usersData, postData, usersIsLoading]);
 
   /** 뒤로가기 버튼 */
-  const GoBackClickHandler = () => {
+  const goBackClickHandler = () => {
     navigate(`/`);
   };
 
   /** 카페 추가하기 버튼 */
-  const AddPlaceBtnHandler = () => {
+  const addPlaceBtnHandler = () => {
     navigate(`/search/${id}`);
   };
 
@@ -88,7 +88,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   }
 
   /** 북마크 버튼 클릭 핸들러 */
-  const BookmarkClickHandler = async () => {
+  const bookmarkClickHandler = async () => {
     //로그인을 안 한 경우
     if (!uid) {
       if (!window.confirm(`로그인이 필요합니다. 로그인 페이지로 이동할까요?`)) {
@@ -107,11 +107,13 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
         let updatedBookmark;
+
         //이미 북마크 되어 있는 게시글이라면
         if (userData.bookmark.includes(id)) {
           alert(`해당 가배도를 북마크 해제합니다.`);
           updatedBookmark = userData.bookmark.filter((item) => item !== id);
           setBookmarkImg(bookmarkDefault);
+
           //아직 북마크 되어 있지 않은 게시글이라면
         } else {
           toast.success(`북마크 성공! 마이페이지에서 확인하세요.`);
@@ -119,6 +121,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           setBookmarkImg(bookmarkSelected);
         }
         const newData = { ...userData, bookmark: updatedBookmark };
+
         await updateDoc(userDocRef, newData);
         await queryClient.invalidateQueries('users');
       } else {
@@ -135,6 +138,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
     try {
       if (!window.confirm(`이 카페를 해당 가배도에서 삭제할까요?`)) return;
       const docRef = doc(db, 'places', id);
+
       await deleteDoc(docRef);
       await queryClient.invalidateQueries('posts');
     } catch (error) {
@@ -148,7 +152,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   return (
     <>
       <SidePageContainer>
-        <GoBackButton onClick={GoBackClickHandler} title="돌아가기">
+        <GoBackButton onClick={goBackClickHandler} title="돌아가기">
           ◀
         </GoBackButton>
         <PostInfo>
@@ -173,7 +177,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
             <Bookmark>
               <img
                 src={bookmarkImg}
-                onClick={BookmarkClickHandler}
+                onClick={bookmarkClickHandler}
                 disabled={isAdding}
                 title="해당 가배도 북마크하기"
                 width="20"
@@ -187,7 +191,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
           </BookmarkAndWriter>
         </PostInfo>
         {!currUserIsLoading && currUserData.userId === writerInfo ? (
-          <AddPlaceBtn onClick={AddPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
+          <AddPlaceBtn onClick={addPlaceBtnHandler}>카페 추가하기</AddPlaceBtn>
         ) : null}
         <PlacesBox>
           {placeData.length === 0 ? (

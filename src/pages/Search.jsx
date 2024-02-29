@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import SearchSidePage from '../components/search/SearchSidePage';
 import AddModal from 'components/search/Addmodal';
+import SearchSidePage from 'components/search/SearchSidePage';
+import { useState } from 'react';
 import { useParams } from 'react-router';
+import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 
 export default function Search() {
-  const [searchResults, setSearchResults] = useState([]);
-  const [zoomLevel, setZoomLevel] = useState(5);
-  const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const [isOpen, setIsOpen] = useState(null);
   const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(5);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [mapCenter, setMapCenter] = useState({ lat: 37.575489, lng: 126.976733 });
 
   const moveToLocation = (lat, lng) => {
     setMapCenter({ lat, lng });

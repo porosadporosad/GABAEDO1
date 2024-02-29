@@ -1,21 +1,20 @@
 import styled from 'styled-components';
-import { getPosts, getCurrentUser, getPlaces } from 'shared/database';
-import { useQuery } from 'react-query';
-import { useState } from 'react';
-import CreatePost from './CreatePost';
-import { hashtageData } from 'constant/hashtageData';
-import PostsList from './PostsList';
 import RankList from './RankList';
-// import { getUsers } from 'shared/database';
+import PostsList from './PostsList';
 import PlacesData from './PlacesList';
-import Loading from 'components/Loading';
+import CreatePost from './CreatePost';
+import Loading from 'components/layout/Loading';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { hashtageData } from 'constant/hashtageData';
+import { getPosts, getCurrentUser, getPlaces } from 'shared/database';
 
 export default function MainFeed() {
   const { isLoading, data } = useQuery('posts', getPosts);
+  const [menu, setMenu] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const { isLoading: userIsLoading, data: loginUserData } = useQuery('user', getCurrentUser);
   const { isLoading: palcesIsLoading, data: placesData } = useQuery('places', getPlaces);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [menu, setMenu] = useState('');
 
   if (isLoading || userIsLoading || palcesIsLoading) {
     return <Loading text="Loading" />;
@@ -172,8 +171,8 @@ const HashtagMenu = styled.nav`
     background-color: transparent;
     border: none;
     cursor: pointer;
-    text-decoration: none; 
-    transition: text-decoration 0.3s; 
+    text-decoration: none;
+    transition: text-decoration 0.3s;
   }
 
   & button:hover {
