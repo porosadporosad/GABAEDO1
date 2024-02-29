@@ -18,15 +18,6 @@ export default function RankList({ UserRank }) {
   );
 }
 
-const slide = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
-
 const ListSection = styled.section`
   overflow: hidden;
   padding: 10px;
