@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { auth, db, storage } from 'shared/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -9,6 +9,7 @@ import { useQueryClient } from 'react-query';
 
 export default function UserIntroPage() {
   const postUser = auth.currentUser;
+  const inputRef = useRef(null);
 
   const [editingText, setEditingText] = useState('');
   const [userData, setUserData] = useState(null);
@@ -20,6 +21,10 @@ export default function UserIntroPage() {
   const onEditNameHandler = (e) => {
     setEditingText(e.target.value);
   };
+
+  useEffect(() => {
+    isEditing && inputRef.current.focus();
+  }, [isEditing]);
 
   useEffect(() => {
     const postUser = auth.currentUser;
@@ -82,11 +87,19 @@ export default function UserIntroPage() {
 
   return (
     <ProfileContainer>
-      <ProfileTitle>나의 프로필☕</ProfileTitle>
+      <ProfileTitle>나의 프로필 ☕</ProfileTitle>
       {userData && (
         <Container>
-          <ProfileSection>
+          <ProfileImgSection>
             <ProfileImage src={newAvatar || userData?.avatar} alt="프로필 사진" />
+          </ProfileImgSection>
+          <MyInfoForm>
+            <UserId>{userData.userId}</UserId>
+            {isEditing ? (
+              <TextInput ref={inputRef} id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
+            ) : (
+              <NickName>{userData.nickname}</NickName>
+            )}
             <FileInput
               type="file"
               onChange={(e) => {
@@ -94,16 +107,8 @@ export default function UserIntroPage() {
                 setNewAvatar(URL.createObjectURL(e.target.files[0]));
               }}
             />
-            <Button onClick={uploadProfile}>프로필사진 변경</Button>
-          </ProfileSection>
-          <MyPostsSection>
-            <Inform>
-              <UserId>{userData.userId}</UserId>
-              {isEditing ? (
-                <TextInput id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
-              ) : (
-                <NickName>{userData.nickname}</NickName>
-              )}
+            <BtnSection>
+              <Button onClick={uploadProfile}>프로필사진 변경</Button>
               {isEditing ? (
                 <Button
                   onClick={() => {
@@ -116,13 +121,14 @@ export default function UserIntroPage() {
               ) : (
                 <Button onClick={EditBtnHandler}>닉네임 수정하기</Button>
               )}
-            </Inform>
-          </MyPostsSection>
+            </BtnSection>
+          </MyInfoForm>
         </Container>
       )}
     </ProfileContainer>
   );
 }
+
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -131,7 +137,7 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileTitle = styled.h1`
-  margin-bottom: 30px;
+  margin-top: 30px;
 
   text-align: center;
   color: #b6856a;
@@ -140,34 +146,58 @@ const ProfileTitle = styled.h1`
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  gap: 20px;
 `;
 
-const ProfileSection = styled.section`
-  width: 250px;
-  align-items: center;
-`;
-const MyPostsSection = styled.section`
+const ProfileImgSection = styled.section`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const ProfileImage = styled.img`
   width: 210px;
   height: 210px;
-  position: relative;
-  display: block;
+  margin: auto 0;
 
   border-radius: 50%;
   box-shadow: 0 0 0 3px #c28f7f;
 `;
 
+const MyInfoForm = styled.section`
+  padding: 10px 0;
+`;
+
 const FileInput = styled.input`
-  margin-top: 10px;
+  width: 100%;
+  margin: 5px 0;
+
+  &::file-selector-button {
+    width: 30%;
+    height: 30px;
+    background-color: #e0c3ae;
+
+    font-family: 'SunBatang-Light';
+    color: #784b31;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      transition: 0.3s;
+      color: #fff;
+      background-color: #b6856a;
+    }
+  }
+`;
+
+const BtnSection = styled.section`
+  display: flex;
+  gap: 10px;
 `;
 
 const Button = styled.button`
-  width: 230px;
+  width: 190px;
   margin: 10px auto;
   padding: 13px 20px;
   font-size: 13pt;
@@ -175,47 +205,44 @@ const Button = styled.button`
   color: white;
   background-color: #784b31;
   border: none;
-  border-radius: 5px;
+  border-radius: 17px;
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s;
+    transition: 0.3s;
     background-color: #c70000;
   }
 `;
 
-const Inform = styled.div`
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const UserId = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  width: 250px;
   padding: 10px;
   text-align: center;
+
   font-size: 20px;
+  color: #784b31;
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 15px;
 `;
 
 const NickName = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  width: 250px;
   padding: 10px;
   text-align: center;
+
   font-size: 20px;
+  color: #784b31;
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 15px;
 `;
 
 const TextInput = styled.input`
-  width: 250px;
-  border: none;
-  border-radius: 20px;
-  padding: 10px;
+  width: 100%;
   margin-bottom: 20px;
+  padding: 12px;
+
+  border: none;
+  border-radius: 15px;
 `;

@@ -172,5 +172,11 @@ const HashtagMenu = styled.nav`
     background-color: transparent;
     border: none;
     cursor: pointer;
+    text-decoration: none; 
+    transition: text-decoration 0.3s; 
+  }
+
+  & button:hover {
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
   }
 `;
