@@ -51,40 +51,42 @@ export default function Profile() {
       <Container>
         <ProfileWrapper>
           <UserIntroPage />
-          <UserInputList>
-            <ListTitle>✏️ 내가 작성한 가배도</ListTitle>
-            {myPosts ? (
-              myPosts.map((post) => (
-                <PostList key={post.id}>
-                  <div>{post.title || '제목 없음'}</div>
-                  <BtnArea>
-                    <Button onClick={() => navigate(`/detail/${post.id}`)}>보기</Button>
-                    <Button onClick={() => handleDeletePost(post.id)}>삭제</Button>
-                  </BtnArea>
-                </PostList>
-              ))
-            ) : (
-              <p>작성한 게시물이 없습니다.</p>
-            )}
-          </UserInputList>
-          <UserInputList>
-            <ListTitle>🔖 북마크한 가배도</ListTitle>
-            {myBookmarks.length === 0 ? (
-              <div style={{ textAlign: 'center' }}>아직 북마크한 가배도가 없습니다.</div>
-            ) : (
-              myBookmarks.map((item, index) => (
-                <PostList key={index}>
-                  <WriterAndTitle>
-                    <Writer>{item.nickname} ✨</Writer>
-                    <div>{item.title || '제목 없음'}</div>
-                  </WriterAndTitle>
-                  <BtnArea>
-                    <Button onClick={() => navigate(`/detail/${item.id}`)}>보기</Button>
-                  </BtnArea>
-                </PostList>
-              ))
-            )}
-          </UserInputList>
+          <ContentSection>
+            <UserInputList>
+              <ListTitle>✏️ 내가 작성한 가배도</ListTitle>
+              {myPosts ? (
+                myPosts.map((post) => (
+                  <PostList key={post.id}>
+                    <div>{post.title || '제목 없음'}</div>
+                    <BtnArea>
+                      <Button onClick={() => navigate(`/detail/${post.id}`)}>보기</Button>
+                      <Button onClick={() => handleDeletePost(post.id)}>삭제</Button>
+                    </BtnArea>
+                  </PostList>
+                ))
+              ) : (
+                <p>작성한 게시물이 없습니다.</p>
+              )}
+            </UserInputList>
+            <UserInputList>
+              <ListTitle>🔖 북마크한 가배도</ListTitle>
+              {myBookmarks.length === 0 ? (
+                <div style={{ textAlign: 'center' }}>아직 북마크한 가배도가 없습니다.</div>
+              ) : (
+                myBookmarks.map((item, index) => (
+                  <PostList key={index}>
+                    <WriterAndTitle>
+                      <Writer>{item.nickname} ✨</Writer>
+                      <div>{item.title || '제목 없음'}</div>
+                    </WriterAndTitle>
+                    <BtnArea>
+                      <Button onClick={() => navigate(`/detail/${item.id}`)}>보기</Button>
+                    </BtnArea>
+                  </PostList>
+                ))
+              )}
+            </UserInputList>
+          </ContentSection>
         </ProfileWrapper>
       </Container>
     </Background>
@@ -104,13 +106,12 @@ const Container = styled.div`
   padding: 20px;
   align-items: center;
 
-  background-color: #e0c3ae;
-  border: 2px solid #e0c3ae;
+  background-color: #fff9f3;
   border-radius: 50px;
   box-shadow: 5px 5px 20px 3px #e0c3aebc;
 
   & h1 {
-    height: 50px;
+    height: 30px;
     line-height: 5px;
 
     font-size: 1.6rem;
@@ -134,12 +135,21 @@ const ProfileWrapper = styled.section`
   }
 `;
 
+const ContentSection = styled.section`
+  margin: 5px;
+  padding: 0 20px 20px 20px;
+
+  background-color: #fff;
+  border: 1px solid #e0c3ae;
+  border-radius: 30px;
+`;
+
 const UserInputList = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  margin: 20px;
+  /* margin: 20px; */
 `;
 
 const ListTitle = styled.h2`
@@ -159,8 +169,8 @@ const Button = styled.button`
   width: 60px;
   height: 30px;
 
-  color: white;
-  background-color: #784b31;
+  color: #784b31;
+  background-color: #e0c3ae;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -175,12 +185,9 @@ const PostList = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 0 20px 10px 20px;
 
-  background-color: #fff;
-  border-radius: 15px;
+  border-bottom: 1px solid #e0c3ae;
 `;
 
 const WriterAndTitle = styled.div`

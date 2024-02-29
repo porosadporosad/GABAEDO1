@@ -143,14 +143,9 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
-  /* gap: 20px; */
-  /* align-items: flex-end; */
-
-  /* border: 1px solid red; */
 `;
 
 const ProfileImgSection = styled.section`
-  /* width: 50%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,20 +155,12 @@ const ProfileImage = styled.img`
   width: 210px;
   height: 210px;
   margin: auto 0;
-  /* position: relative; */
-  /* display: block; */
 
   border-radius: 50%;
   box-shadow: 0 0 0 3px #c28f7f;
 `;
 
 const MyInfoForm = styled.section`
-  /* width: 300px; */
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
-  /* border: 1px solid blue; */
   padding: 10px 0;
 `;
 
