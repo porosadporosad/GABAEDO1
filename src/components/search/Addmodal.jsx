@@ -6,7 +6,7 @@ import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
-function AddModal({ isOpen, onCancel, selectedPlace, id }) {
+export default function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   const [placeComment, setPlaceComment] = useState('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -63,8 +63,6 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
     </Overlay>
   );
 }
-
-export default AddModal;
 
 const Overlay = styled.div`
   width: 100vw;
