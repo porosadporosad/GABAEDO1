@@ -171,7 +171,7 @@ const FileInput = styled.input`
   &::file-selector-button {
     width: 30%;
     height: 30px;
-    background-color: #b6856a;
+    background-color: #e0c3ae;
 
     font-family: 'SunBatang-Light';
     color: #fff;

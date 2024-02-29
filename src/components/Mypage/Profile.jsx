@@ -177,7 +177,7 @@ const Button = styled.button`
 
   &:hover {
     transition: 0.5s;
-    background-color: #c70000;
+    border: 2px solid #c70000;
   }
 `;
 
