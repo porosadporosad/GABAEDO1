@@ -83,10 +83,10 @@ export default function UserIntroPage() {
 
   return (
     <ProfileContainer>
-      <ProfileTitle>나의 프로필☕</ProfileTitle>
+      <ProfileTitle>나의 프로필 ☕</ProfileTitle>
       {userData && (
         <Container>
-          <ProfileSection>
+          <ProfileImgSection>
             <ProfileImage src={newAvatar || userData?.avatar} alt="프로필 사진" />
             <FileInput
               type="file"
@@ -96,8 +96,8 @@ export default function UserIntroPage() {
               }}
             />
             <Button onClick={uploadProfile}>프로필사진 변경</Button>
-          </ProfileSection>
-          <MyPostsSection>
+          </ProfileImgSection>
+          <MyInfoSection>
             <Inform>
               <UserId>{userData.userId}</UserId>
               {isEditing ? (
@@ -118,12 +118,13 @@ export default function UserIntroPage() {
                 <Button onClick={EditBtnHandler}>닉네임 수정하기</Button>
               )}
             </Inform>
-          </MyPostsSection>
+          </MyInfoSection>
         </Container>
       )}
     </ProfileContainer>
   );
 }
+
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -132,7 +133,7 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileTitle = styled.h1`
-  margin-bottom: 30px;
+  margin-top: 30px;
 
   text-align: center;
   color: #b6856a;
@@ -141,16 +142,21 @@ const ProfileTitle = styled.h1`
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  /* align-items: flex-end; */
+
+  border: 1px solid red;
 `;
 
-const ProfileSection = styled.section`
-  width: 250px;
-  align-items: center;
+const ProfileImgSection = styled.section`
+  /* width: 250px; */
+  /* align-items: center; */
+  border: 1px solid blue;
 `;
-const MyPostsSection = styled.section`
+
+const MyInfoSection = styled.section`
   display: flex;
   flex-direction: column;
+  border: 1px solid blue;
 `;
 
 const ProfileImage = styled.img`
@@ -176,7 +182,7 @@ const Button = styled.button`
   color: white;
   background-color: #784b31;
   border: none;
-  border-radius: 5px;
+  border-radius: 17px;
   cursor: pointer;
 
   &:hover {

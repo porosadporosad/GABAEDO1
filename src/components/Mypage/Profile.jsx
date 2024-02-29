@@ -92,7 +92,6 @@ export default function Profile() {
 }
 
 const Background = styled.div`
-  background-color: #fff9f3;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -101,14 +100,14 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
-  width: 800px;
-  padding: 50px;
+  width: 700px;
+  padding: 20px;
   align-items: center;
 
   background-color: #e0c3ae;
-  border: 1px solid #b6856a;
+  border: 2px solid #e0c3ae;
   border-radius: 50px;
-  box-shadow: 5px 5px 20px 3px #e0c3ae;
+  box-shadow: 5px 5px 20px 3px #e0c3aebc;
 
   & h1 {
     height: 50px;
