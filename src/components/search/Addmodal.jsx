@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from 'shared/firebase';
 
-function AddModal({ isOpen, onCancel, selectedPlace, id }) {
+export default function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [placeComment, setPlaceComment] = useState('');
@@ -64,8 +64,6 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
     </Overlay>
   );
 }
-
-export default AddModal;
 
 const Overlay = styled.div`
   width: 100vw;

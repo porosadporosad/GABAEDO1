@@ -1,6 +1,6 @@
 import Profile from 'components/mypage/Profile';
 
-function Mypage() {
+export default function Mypage() {
   return (
     <>
       <Profile />
@@ -8,4 +8,3 @@ function Mypage() {
   );
 }
 
-export default Mypage;
