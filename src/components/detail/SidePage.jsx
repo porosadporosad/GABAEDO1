@@ -19,6 +19,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   const [isAdding, setIsAdding] = useState(false);
   const [bookmarkImg, setBookmarkImg] = useState(bookmarkDefault);
   const [writerIcon, setWriterIcon] = useState(userImg);
+  const [writerNickname, setWriterNickname] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const uid = localStorage.getItem('uid');
   const queryClient = useQueryClient();
@@ -26,6 +27,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
   const { id } = useParams();
   const { isLoading: currUserIsLoading, data: currUserData } = useQuery('user', getCurrentUser);
   const { isLoading: usersIsLoading, data: usersData } = useQuery('users', getUsers);
+
   const handlePlaceClick = (place) => {
     if (onPlaceClick) {
       onPlaceClick(place.lat, place.lng);
@@ -63,13 +65,14 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
         const writer = usersData.find((user) => user.userId === writerInfo);
         if (writer) {
           setWriterIcon(writer.avatar);
+          setWriterNickname(writer.nickname);
         } else {
           console.error('글쓴이를 찾을 수 없습니다!');
         }
       };
       fetchData();
     }
-  }, [usersData, postData]);
+  }, [usersData, postData, usersIsLoading]);
 
   /** 뒤로가기 버튼 */
   const GoBackClickHandler = () => {
@@ -180,7 +183,7 @@ export default function SidePage({ postData, placeData, onPlaceClick }) {
             </Bookmark>
             <Writer>
               <img src={writerIcon} alt="사용자 아바타" width="25" style={{ borderRadius: '50%' }} />
-              <WriterNickname>{postData.nickname}</WriterNickname>
+              <WriterNickname>{writerNickname}</WriterNickname>
             </Writer>
           </BookmarkAndWriter>
         </PostInfo>
