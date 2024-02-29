@@ -176,8 +176,9 @@ const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s;
-    border: 2px solid #c70000;
+    transition: 0.3s;
+    color: #fff;
+    background-color: #b6856a;
   }
 `;
 

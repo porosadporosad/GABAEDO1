@@ -174,9 +174,16 @@ const FileInput = styled.input`
     background-color: #e0c3ae;
 
     font-family: 'SunBatang-Light';
-    color: #fff;
+    color: #784b31;
     border: none;
     border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      transition: 0.3s;
+      color: #fff;
+      background-color: #b6856a;
+    }
   }
 `;
 
@@ -198,7 +205,7 @@ const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    transition: 0.5s;
+    transition: 0.3s;
     background-color: #c70000;
   }
 `;
