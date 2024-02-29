@@ -88,6 +88,14 @@ export default function UserIntroPage() {
         <Container>
           <ProfileImgSection>
             <ProfileImage src={newAvatar || userData?.avatar} alt="프로필 사진" />
+          </ProfileImgSection>
+          <MyInfoForm>
+            <UserId>{userData.userId}</UserId>
+            {isEditing ? (
+              <TextInput ref={inputRef} id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
+            ) : (
+              <NickName>{userData.nickname}</NickName>
+            )}
             <FileInput
               type="file"
               onChange={(e) => {
@@ -95,16 +103,8 @@ export default function UserIntroPage() {
                 setNewAvatar(URL.createObjectURL(e.target.files[0]));
               }}
             />
-            <Button onClick={uploadProfile}>프로필사진 변경</Button>
-          </ProfileImgSection>
-          <MyInfoSection>
-            <Inform>
-              <UserId>{userData.userId}</UserId>
-              {isEditing ? (
-                <TextInput ref={inputRef} id="nickname" type="text" value={editingText} onChange={onEditNameHandler} />
-              ) : (
-                <NickName>{userData.nickname}</NickName>
-              )}
+            <BtnSection>
+              <Button onClick={uploadProfile}>프로필사진 변경</Button>
               {isEditing ? (
                 <Button
                   onClick={() => {
@@ -117,8 +117,8 @@ export default function UserIntroPage() {
               ) : (
                 <Button onClick={EditBtnHandler}>닉네임 수정하기</Button>
               )}
-            </Inform>
-          </MyInfoSection>
+            </BtnSection>
+          </MyInfoForm>
         </Container>
       )}
     </ProfileContainer>
@@ -142,39 +142,64 @@ const ProfileTitle = styled.h1`
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  gap: 20px;
+  /* gap: 20px; */
   /* align-items: flex-end; */
 
-  border: 1px solid red;
+  /* border: 1px solid red; */
 `;
 
 const ProfileImgSection = styled.section`
-  /* width: 250px; */
-  /* align-items: center; */
-  border: 1px solid blue;
-`;
-
-const MyInfoSection = styled.section`
+  /* width: 50%; */
   display: flex;
   flex-direction: column;
-  border: 1px solid blue;
+  align-items: center;
 `;
 
 const ProfileImage = styled.img`
   width: 210px;
   height: 210px;
-  position: relative;
-  display: block;
+  margin: auto 0;
+  /* position: relative; */
+  /* display: block; */
 
   border-radius: 50%;
   box-shadow: 0 0 0 3px #c28f7f;
 `;
 
+const MyInfoForm = styled.section`
+  /* width: 300px; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+  /* border: 1px solid blue; */
+  padding: 10px 0;
+`;
+
 const FileInput = styled.input`
-  margin-top: 10px;
+  width: 100%;
+  margin: 5px 0;
+
+  &::file-selector-button {
+    width: 30%;
+    height: 30px;
+    background-color: #b6856a;
+
+    font-family: 'SunBatang-Light';
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+  }
+`;
+
+const BtnSection = styled.section`
+  display: flex;
+  gap: 10px;
 `;
 
 const Button = styled.button`
-  width: 230px;
+  width: 190px;
   margin: 10px auto;
   padding: 13px 20px;
   font-size: 13pt;
@@ -191,38 +216,35 @@ const Button = styled.button`
   }
 `;
 
-const Inform = styled.div`
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const UserId = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  width: 250px;
   padding: 10px;
   text-align: center;
+
   font-size: 20px;
+  color: #784b31;
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 15px;
 `;
 
 const NickName = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  width: 250px;
   padding: 10px;
   text-align: center;
+
   font-size: 20px;
+  color: #784b31;
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 15px;
 `;
 
 const TextInput = styled.input`
-  width: 250px;
-  border: none;
-  border-radius: 20px;
-  padding: 10px;
+  width: 100%;
   margin-bottom: 20px;
+  padding: 12px;
+
+  border: none;
+  border-radius: 15px;
 `;
