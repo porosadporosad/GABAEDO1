@@ -31,7 +31,7 @@ const slide = keyframes`
 const ListSection = styled.section`
   overflow: hidden;
   padding: 10px;
-  display: flex; /* 변경됨 */
+  display: flex; 
   align-items: center;
   text-align: center;
 `;
@@ -58,7 +58,11 @@ const RankListBox = styled.div`
   background-color: #e0c3ae;
   border-radius: 20px;
   box-shadow: 2px 2px 5px 2px #b6856aa7;
-  margin-right: 15px; 
+  margin-right: 15px;  
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  flex-direction: column;
 `;
 
 const UserNickname = styled.h4`
@@ -74,7 +78,7 @@ const PostsNumber = styled.p`
 
 const CrownIcon = styled.span`
   display: inline-block;
-  margin-right: 5px; 
   font-size: 20px; 
   filter: brightness(1.4);
+  margin-bottom: 5px;
 `;
