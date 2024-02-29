@@ -12,7 +12,6 @@ export default function Profile() {
   const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
   const { isLoading: UsersIsLoading, data: usersData } = useQuery('users', getUsers); //모든 유저
   const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
-  const [deletedPostId, setDeletedPostId] = useState(null);
   const [myBookmarks, setMybookmarks] = useState([]);
   const navigate = useNavigate();
 
@@ -40,7 +39,6 @@ export default function Profile() {
     if (confirmDelete) {
       try {
         await deletePost(postId);
-        setDeletedPostId(postId);
         await refetchPosts();
       } catch (error) {
         console.error('게시물 삭제 중 오류 발생:', error);
