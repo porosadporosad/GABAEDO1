@@ -1,5 +1,5 @@
-import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
+import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
 import { auth, db } from 'shared/firebase';
 
 //파이어베이스에서 유저 정보 불러오기

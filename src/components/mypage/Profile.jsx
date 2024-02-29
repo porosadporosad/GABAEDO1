@@ -1,19 +1,20 @@
 import styled from 'styled-components';
-import { useQuery } from 'react-query';
-import { getCurrentUser, getUsers } from '../../shared/database';
+import Loading from 'components/layout/Loading';
 import UserIntroPage from './UserIntroPage';
-import { getPosts, deletePost } from '../../shared/database';
-import Loading from 'components/Loading';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getPostsForBookmarks } from '../../shared/database';
+import { useQuery } from 'react-query';
+import { getCurrentUser, getUsers } from 'shared/database';
+import { getPosts, deletePost } from 'shared/database';
+import { getPostsForBookmarks } from 'shared/database';
 
 export default function Profile() {
-  const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts); //모든 게시글
-  const { isLoading: UsersIsLoading, data: usersData } = useQuery('users', getUsers); //모든 유저
-  const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser); //현재 로그인한 사람의 정보
-  const [myBookmarks, setMybookmarks] = useState([]);
   const navigate = useNavigate();
+  const [myBookmarks, setMybookmarks] = useState([]);
+
+  const { isLoading: PostsIsLoading, data: postsData, refetch: refetchPosts } = useQuery('posts', getPosts);
+  const { isLoading: UsersIsLoading, data: usersData } = useQuery('users', getUsers);
+  const { isLoading: UserIsLoading, data: userData } = useQuery('user', getCurrentUser);
 
   useEffect(() => {
     if (userData && usersData) {

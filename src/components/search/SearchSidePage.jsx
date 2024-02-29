@@ -2,19 +2,20 @@ import styled from 'styled-components';
 import { SearchBar } from 'components/search/MapSearchPage';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import LocationIcon from '../../assets/location.png';
+import LocationIcon from 'assets/location.png';
 
 export default function SearchSidePage({ onSearch, searchResults, onMoveToLocation }) {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const GoBackClickHandler = () => {
+  const navigate = useNavigate();
+
+  const goBackClickHandler = () => {
     navigate(`/detail/${id}`);
   };
 
   return (
     <>
       <StSidePageContainer>
-        <StGoBackButton onClick={GoBackClickHandler} title="돌아가기">
+        <StGoBackButton onClick={goBackClickHandler} title="돌아가기">
           ◀
         </StGoBackButton>
         <SearchBar onSearch={onSearch} />

@@ -1,15 +1,16 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from 'shared/firebase';
+import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from 'shared/firebase';
 
-function AddModal({ isOpen, onCancel, selectedPlace, id }) {
-  const [placeComment, setPlaceComment] = useState('');
+export default function AddModal({ isOpen, onCancel, selectedPlace, id }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [placeComment, setPlaceComment] = useState('');
+
   if (!isOpen) return null;
 
   const handleAdd = async () => {
@@ -63,8 +64,6 @@ function AddModal({ isOpen, onCancel, selectedPlace, id }) {
     </Overlay>
   );
 }
-
-export default AddModal;
 
 const Overlay = styled.div`
   width: 100vw;

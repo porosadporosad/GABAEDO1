@@ -1,21 +1,22 @@
-import { addDoc, collection } from 'firebase/firestore';
+import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentUser } from 'shared/database';
-import { db } from 'shared/firebase';
-import styled from 'styled-components';
-import { hashtageData } from 'constant/hashtageData';
 import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from 'shared/firebase';
+import { getCurrentUser } from 'shared/database';
+import { hashtageData } from 'constant/hashtageData';
 
 export default function CreatePost({ setModalIsOpen }) {
   const navigate = useNavigate();
   const { data } = useQuery('user', getCurrentUser);
+  const queryClient = useQueryClient();
   const { userId, nickname } = data;
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtag, setHashtag] = useState([]);
-  const queryClient = useQueryClient();
 
   const handleOnInput = (e, maxlength) => {
     const {
@@ -68,7 +69,6 @@ export default function CreatePost({ setModalIsOpen }) {
       const docRef = await addDoc(collection(db, 'posts'), newPost);
       const postId = docRef.id;
 
-      // 모달 끄기
       setModalIsOpen(false);
       await queryClient.invalidateQueries('posts');
       navigate(`detail/${postId}`);

@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from 'pages/Home';
+import About from 'pages/About';
 import Login from 'pages/Login';
+import Search from 'pages/Search';
 import Detail from 'pages/Detail';
 import Mypage from 'pages/Mypage';
-import About from 'pages/About';
-import NonAuthLayout from 'components/layout/NonAuthLayout';
-import AuthLayout from 'components/layout/AuthLayout';
-import Layout from 'components/layout/Layout';
-import Search from '../pages/Search';
 import Gabaedos from 'pages/Gabaedos';
+import Layout from 'components/layout/Layout';
+import AuthLayout from 'components/layout/AuthLayout';
+import NonAuthLayout from 'components/layout/NonAuthLayout';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export default function Router() {
   return (

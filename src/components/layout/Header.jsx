@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { auth } from '../shared/firebase';
+import logo from 'assets/logo.png';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { toast } from 'react-toastify';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getCurrentUser } from 'shared/database';
-import { useQuery } from 'react-query';
-import logo from '../assets/logo.png';
+import { auth } from 'shared/firebase';
 
 export default function Header() {
-  const [isLogin, setIsLogin] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data } = useQuery('user', getCurrentUser);
+
+  const [isLogin, setIsLogin] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const loginCheck = () => {

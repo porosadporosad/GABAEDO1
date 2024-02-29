@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import logo from 'assets/gabaedo_biglogo.png';
 import img01 from 'assets/teammate01.png';

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useState } from 'react';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Searchmodal({ closeModal, selectedPlace, placeData }) {
   const cafe = placeData.find((cafes) => cafes.name === selectedPlace.name);

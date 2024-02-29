@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import { useQuery } from 'react-query';
-import { getPosts, getPlaces } from 'shared/database';
 import SidePage from 'components/detail/SidePage';
-import { useParams } from 'react-router';
 import Searchmodal from 'components/detail/Searchmodal';
-import Loading from 'components/Loading';
+import Loading from 'components/layout/Loading';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { useQuery } from 'react-query';
+import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
+import { getPosts, getPlaces } from 'shared/database';
 
 const mapCenterDefault = { lat: 37.578611, lng: 126.977222 };
 
-function Detail() {
+export default function Detail() {
   const [isOpenIndex, setIsOpenIndex] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [mapCenter, setMapCenter] = useState(mapCenterDefault);
@@ -96,7 +96,6 @@ function Detail() {
     </StFullScreenContainer>
   );
 }
-export default Detail;
 
 const StFullScreenContainer = styled.div`
   width: 100vw;

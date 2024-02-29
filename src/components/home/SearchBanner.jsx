@@ -50,6 +50,7 @@ const SearchForm = styled.form`
     width: 400px;
     height: 40px;
     padding-left: 10px;
+
     border: 1px solid #b6856a;
     border-radius: 10px;
   }
@@ -57,11 +58,12 @@ const SearchForm = styled.form`
   & button {
     width: 100px;
     height: 40px;
-    background-color: #e0c3ae;
+
+    font-size: 16px;
     border: none;
+    color: #fff9f3;
+    background-color: #e0c3ae;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
-    color: #fff9f3;
   }
 `;

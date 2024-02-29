@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
 export default function RankList({ UserRank }) {
-  
   const duplicatedUserRank = [...UserRank, ...UserRank];
 
   return (
@@ -9,7 +8,11 @@ export default function RankList({ UserRank }) {
       <InfiniteScroll length={UserRank.length}>
         {duplicatedUserRank.map((user, index) => (
           <RankListBox>
-            <UserNickname key={index}>{(index === 0 || index === UserRank.length) && <CrownIcon>👑</CrownIcon>}{user.nickname}{(index === 0 || index === UserRank.length) && <CrownIcon>👑</CrownIcon>}</UserNickname>
+            <UserNickname key={index}>
+              {(index === 0 || index === UserRank.length) && <CrownIcon>👑</CrownIcon>}
+              {user.nickname}
+              {(index === 0 || index === UserRank.length) && <CrownIcon>👑</CrownIcon>}
+            </UserNickname>
             <PostsNumber>{user.number}개의 가배도</PostsNumber>
           </RankListBox>
         ))}
@@ -18,19 +21,10 @@ export default function RankList({ UserRank }) {
   );
 }
 
-const slide = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
-
 const ListSection = styled.section`
   overflow: hidden;
   padding: 10px;
-  display: flex; 
+  display: flex;
   align-items: center;
   text-align: center;
 `;
@@ -49,18 +43,17 @@ const InfiniteScroll = styled.div`
   animation: ${slideInfinite} 20s linear infinite;
 `;
 
-
 const RankListBox = styled.div`
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   padding: 10px 0;
-  min-width: calc(100% / 5 - 15px); 
+  min-width: calc(100% / 5 - 15px);
   background-color: #e0c3ae;
   border-radius: 20px;
   box-shadow: 2px 2px 5px 2px #b6856aa7;
-  margin-right: 15px;  
-  display: flex; 
+  margin-right: 15px;
+  display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   flex-direction: column;
 `;
 
@@ -77,7 +70,7 @@ const PostsNumber = styled.p`
 
 const CrownIcon = styled.span`
   display: inline-block;
-  font-size: 20px; 
+  font-size: 20px;
   filter: brightness(1.4);
   margin-bottom: 5px;
 `;

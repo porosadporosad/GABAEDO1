@@ -1,12 +1,9 @@
-import Profile from '../components/Mypage/Profile';
-import React from 'react';
+import Profile from 'components/mypage/Profile';
 
-function Mypage() {
+export default function Mypage() {
   return (
     <>
       <Profile />
     </>
   );
 }
-
-export default Mypage;

@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import axios from 'axios';
 import youtubeIcon from 'assets/youtube-icon.png';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function PlacesData({ placesData }) {
   const navigate = useNavigate();
@@ -82,10 +82,8 @@ const bounceAnimation = keyframes`
 
 const ListSection = styled.section`
   height: 395px;
-  /* padding: 0 10px; */
   display: grid;
   grid-template-columns: 330px 1fr;
-  /* gap: 15px; */
 `;
 
 const PlacesSection = styled.section`
@@ -100,7 +98,6 @@ const PlaceBox = styled.div`
   margin: 10px 0;
   text-align: center;
 
-  /* border: 1px solid #c70000; */
   background-color: #fff9f3;
   border-radius: 20px;
   box-shadow: 2px 2px 5px 2px #e0c3aea2;
@@ -164,12 +161,11 @@ const InnerBox = styled.div`
   gap: 20px;
   text-align: center;
 
-  /* border-top: 2px solid #e0c3ae; */
-
   & img {
     width: 100%;
     border-radius: 20px;
   }
+
   & h1 {
     margin-top: 2px;
     line-height: 30px;

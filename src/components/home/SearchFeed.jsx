@@ -1,8 +1,8 @@
-import { useQuery } from 'react-query';
-import { getPosts } from 'shared/database';
 import styled from 'styled-components';
 import PostsList from './PostsList';
-import Loading from 'components/Loading';
+import Loading from 'components/layout/Loading';
+import { useQuery } from 'react-query';
+import { getPosts } from 'shared/database';
 
 export default function SearchFeed({ searchKeyword }) {
   const { isLoading, data } = useQuery('posts', getPosts);
