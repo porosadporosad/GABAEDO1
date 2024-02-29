@@ -52,7 +52,7 @@ export default function Profile() {
         <ProfileWrapper>
           <UserIntroPage />
           <UserInputList>
-            <ListTitle>✏️내가 작성한 가배도</ListTitle>
+            <ListTitle>✏️ 내가 작성한 가배도</ListTitle>
             {myPosts ? (
               myPosts.map((post) => (
                 <PostList key={post.id}>
@@ -68,7 +68,7 @@ export default function Profile() {
             )}
           </UserInputList>
           <UserInputList>
-            <ListTitle>🔖북마크한 가배도</ListTitle>
+            <ListTitle>🔖 북마크한 가배도</ListTitle>
             {myBookmarks.length === 0 ? (
               <div style={{ textAlign: 'center' }}>아직 북마크한 가배도가 없습니다.</div>
             ) : (
