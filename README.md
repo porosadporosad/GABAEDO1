@@ -273,7 +273,7 @@
   </tr>
   <tr>
     <td>
-     <img src="src/assets/readme/Readme-about.JPG"/>
+     <img src="src/assets/readme/Readme-about.JPG"/>
     </td>
   </tr>
   </tbody>
