@@ -51,7 +51,7 @@ export default function Profile() {
     <Background>
       <Container>
         <ProfileWrapper>
-          <UserIntroPage />
+          <UserIntroPage myPosts={myPosts} />
           <ContentSection>
             <UserInputList>
               <ListTitle>✏️ 내가 작성한 가배도</ListTitle>

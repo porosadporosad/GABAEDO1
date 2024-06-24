@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import { auth, db, storage } from 'shared/firebase';
 
-export default function UserIntroPage() {
+export default function UserIntroPage({ myPosts }) {
   const inputRef = useRef(null);
   const queryClient = useQueryClient();
   const postUser = auth.currentUser;
@@ -63,9 +63,15 @@ export default function UserIntroPage() {
       if (docSnap.exists()) {
         const userData = docSnap.data();
 
+        myPosts.map(async (item) => {
+          const postRef = doc(db, 'posts', item.id);
+          await updateDoc(postRef, { nickname: editingText });
+        });
+
         await updateDoc(userDocRef, { ...userData, nickname: editingText });
         setUserData((prevUserData) => ({ ...prevUserData, nickname: editingText })); // 업데이트된 닉네임을 로컬 상태에 반영
         await queryClient.invalidateQueries('users');
+        await queryClient.invalidateQueries('posts');
         await updateProfile(postUser, {
           displayName: editingText
         });

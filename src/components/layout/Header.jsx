@@ -5,30 +5,19 @@ import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getCurrentUser } from 'shared/database';
+import { getCurrentUser, getUsers } from 'shared/database';
 import { auth } from 'shared/firebase';
 
 export default function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { data } = useQuery('user', getCurrentUser);
+  const { data: userData, isLoading: isUserDataLoading } = useQuery('user', getCurrentUser);
+
+  const { data: usersData, isLoading: isUsersDataLoading } = useQuery('users', getUsers);
 
   const [isLogin, setIsLogin] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    const loginCheck = () => {
-      // 현재 유저가 로그인 되어있는지 확인
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setIsLogin(true);
-        } else {
-          setIsLogin(false);
-        }
-      });
-    };
-    loginCheck();
-  }, []);
+  const [userImg, setUserImg] = useState(false);
 
   const logoutClick = () => {
     const logoutConfirm = window.confirm('로그아웃 하시겠습니까?');
@@ -61,6 +50,29 @@ export default function Header() {
     setIsActive(!isActive);
   };
 
+  useEffect(() => {
+    const loginCheck = () => {
+      // 현재 유저가 로그인 되어있는지 확인
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setIsLogin(true);
+        } else {
+          setIsLogin(false);
+        }
+      });
+    };
+    loginCheck();
+  }, []);
+
+  useEffect(() => {
+    if (!isUserDataLoading && !isUsersDataLoading && userData && usersData) {
+      const imgData = usersData.find((item) => item.userId === userData.userId);
+      if (imgData) {
+        setUserImg(imgData.avatar);
+      }
+    }
+  }, [isUserDataLoading, isUsersDataLoading, userData, usersData]);
+
   return (
     <MenuHeader>
       <StLink
@@ -79,7 +91,7 @@ export default function Header() {
           {isLogin ? (
             <ProfileBtnDiv>
               <ImgDiv tabIndex={0} onBlur={userMenuOnBlur}>
-                <ImgStyle onClick={userIsActiveBtn} src={data.avatar} alt="프로필사진" />
+                <ImgStyle onClick={userIsActiveBtn} src={userImg} alt="프로필사진" />
               </ImgDiv>
               <UserMenuDiv onBlur={userMenuOnBlur}>
                 <UserUl $isActive={isActive}>

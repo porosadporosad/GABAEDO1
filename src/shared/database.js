@@ -17,18 +17,22 @@ export const getUsers = async () => {
 
 // 현재유저 정보 가져오기
 export const getCurrentUser = () => {
-  const user = auth.currentUser;
-  if (!user) {
-    return false;
-  }
-  const getUser = {
-    userId: user.email,
-    nickname: user.displayName,
-    avatar: user.photoURL
-  };
-  return getUser;
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const getUser = {
+          userId: user.email,
+          nickname: user.displayName,
+          avatar: user.photoURL
+        };
+        resolve(getUser);
+      } else {
+        resolve(false);
+      }
+      unsubscribe();
+    }, reject);
+  });
 };
-
 // 커스텀
 export const useCurrentUser = () => {
   return useQuery('currentUser', getCurrentUser);
